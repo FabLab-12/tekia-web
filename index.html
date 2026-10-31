@@ -54,6 +54,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .snd[aria-pressed="true"]{background:var(--tinta);color:var(--crema)}
 .snd .bars{display:none;gap:2px;align-items:flex-end;height:12px}
 .snd[aria-pressed="true"] .bars{display:inline-flex}
+.snd.pending .bars i{animation:none;height:3px}
+.snd .hint{display:none}.snd.pending .hint{display:inline}.snd.pending .lbl{display:none}
+@media (max-width:640px){.snd.pending .hint{display:none}}
 .snd .bars i{width:2px;background:currentColor;border-radius:1px;animation:eq 1.6s ease-in-out infinite}
 .snd .bars i:nth-child(2){animation-delay:.3s}.snd .bars i:nth-child(3){animation-delay:.6s}
 @keyframes eq{0%,100%{height:3px}50%{height:12px}}
@@ -206,7 +209,7 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
 <header class="top">
   <a href="#umbral" aria-label="TEKIA, volver al inicio"><img src="assets/tekia-emblema-oro-web.png" alt=""></a>
   <nav aria-label="Navegación general"><a href="#f-origen">Ingredientes</a><a href="#f-nosabemos">Cómo elegimos</a><a class="pre" href="#f-precauciones">Precauciones</a><a href="#f-acomp">Acompañamiento</a></nav>
-  <button class="snd" type="button" aria-pressed="false" aria-label="Sonido ambiental"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg><span class="lbl">Sonido</span><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
+  <button class="snd" type="button" aria-pressed="true" aria-label="Sonido ambiental"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg><span class="lbl">Sonido</span><span class="hint">Toca para escuchar</span><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
 </header>
 
 <nav class="depth" aria-label="Profundidad del recorrido">
@@ -485,7 +488,15 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
   function setOn(on){snd.setAttribute('aria-pressed',String(on));
     if(on){if(!AC)build();AC.resume();var t=AC.currentTime;master.gain.cancelScheduledValues(t);master.gain.setTargetAtTime(.5,t,1.2);curScene=null;scene();clearInterval(bellT);bellT=setInterval(bell,3200)}
     else if(AC){var t2=AC.currentTime;master.gain.cancelScheduledValues(t2);master.gain.setTargetAtTime(0,t2,.4);clearInterval(bellT);setTimeout(function(){if(snd.getAttribute('aria-pressed')==='false')AC.suspend()},1800)}}
-  snd.addEventListener('click',function(){setOn(snd.getAttribute('aria-pressed')!=='true')});
+  // El sonido aparece encendido; los navegadores solo dejan sonar tras el primer toque, clic o tecla.
+  var started=false;snd.classList.add('pending');
+  function firstGesture(e){if(started)return;if(e&&e.target&&e.target.closest&&e.target.closest('.snd'))return;started=true;snd.classList.remove('pending');
+    ['pointerdown','keydown','touchend'].forEach(function(ev){document.removeEventListener(ev,firstGesture,true)});
+    if(snd.getAttribute('aria-pressed')==='true')setOn(true)}
+  ['pointerdown','keydown','touchend'].forEach(function(ev){document.addEventListener(ev,firstGesture,true)});
+  snd.addEventListener('click',function(){
+    if(!started){started=true;snd.classList.remove('pending');['pointerdown','keydown','touchend'].forEach(function(ev){document.removeEventListener(ev,firstGesture,true)});setOn(true);return}
+    setOn(snd.getAttribute('aria-pressed')!=='true')});
   window.addEventListener('scroll',function(){scene()},{passive:true});
   document.addEventListener('visibilitychange',function(){if(!AC)return;if(document.hidden)AC.suspend();else if(snd.getAttribute('aria-pressed')==='true')AC.resume()});
 
