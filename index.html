@@ -48,6 +48,17 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   padding:.6rem max(20px,env(safe-area-inset-right,0px)) .6rem max(20px,env(safe-area-inset-left,0px));
   background:var(--bar);-webkit-backdrop-filter:blur(12px) saturate(1.2);backdrop-filter:blur(12px) saturate(1.2);border-bottom:1px solid var(--bar-line)}
 .top>a{justify-self:start}
+.snd{justify-self:end;display:inline-flex;align-items:center;gap:.45rem;min-height:32px;padding:.3rem .8rem;border-radius:99px;border:1px solid currentColor;background:transparent;color:var(--tinta);font:600 .66rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.snd svg{width:16px;height:16px}
+.snd .on{display:none}.snd[aria-pressed="true"] .on{display:inline}.snd[aria-pressed="true"] .off{display:none}
+.snd[aria-pressed="true"]{background:var(--tinta);color:var(--crema)}
+.snd .bars{display:none;gap:2px;align-items:flex-end;height:12px}
+.snd[aria-pressed="true"] .bars{display:inline-flex}
+.snd .bars i{width:2px;background:currentColor;border-radius:1px;animation:eq 1.6s ease-in-out infinite}
+.snd .bars i:nth-child(2){animation-delay:.3s}.snd .bars i:nth-child(3){animation-delay:.6s}
+@keyframes eq{0%,100%{height:3px}50%{height:12px}}
+@media (prefers-reduced-motion: reduce){.snd .bars i{animation:none;height:8px}}
+@media (max-width:640px){.snd .lbl{display:none}}
 .top img{width:38px;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.25))}
 .top nav{display:flex;justify-content:center;gap:.6rem;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
 .top nav a{text-decoration:none;color:var(--top-fg,var(--tinta));border:1px solid currentColor;border-radius:99px;padding:.35rem .9rem;min-height:32px;display:inline-flex;align-items:center;white-space:nowrap;transition:background .2s,color .2s}
@@ -190,6 +201,7 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
 <header class="top">
   <a href="#umbral" aria-label="TEKIA, volver al inicio"><img src="assets/tekia-emblema-oro-web.png" alt=""></a>
   <nav aria-label="Navegación general"><a href="#f-origen">Ingredientes</a><a href="#f-nosabemos">Cómo elegimos</a><a class="pre" href="#f-precauciones">Precauciones</a><a href="#f-acomp">Acompañamiento</a></nav>
+  <button class="snd" type="button" aria-pressed="false" aria-label="Sonido ambiental"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg><span class="lbl">Sonido</span><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
 </header>
 
 <nav class="depth" aria-label="Profundidad del recorrido">
@@ -426,6 +438,45 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
     void c.offsetWidth;c.classList.add('lit');c.focus({preventScroll:true});clearTimeout(litT);litT=setTimeout(function(){c.classList.remove('lit')},4500)}
   document.querySelectorAll('.top nav a, a.lens-btn, a.mount-btn, a.halo').forEach(function(a){a.addEventListener('click',function(){light(a.getAttribute('href').slice(1))})});
   if(location.hash)light(location.hash.slice(1));
+
+  // ---------- Ambiente sonoro (generado; solo suena si la persona lo activa) ----------
+  // Cada sección tiene su propio paisaje de tonos suaves; al cambiar de sección se funden despacio.
+  var snd=document.querySelector('.snd'),AC=null,master=null,buses={},curScene=null,bellT=null;
+  var scenes=['umbral','mente','cuerpo','espiritu','datos'].map(function(id){return document.getElementById(id)});
+  function osc(f,type,g,bus,det){var o=AC.createOscillator(),v=AC.createGain();o.type=type||'sine';o.frequency.value=f;if(det)o.detune.value=det;v.gain.value=g;o.connect(v);v.connect(bus);o.start();return {o:o,g:v}}
+  function lfo(rate,depth,param){var l=AC.createOscillator(),d=AC.createGain();l.frequency.value=rate;d.gain.value=depth;l.connect(d);d.connect(param);l.start()}
+  function noise(bus,g,cut){var len=AC.sampleRate*4,b=AC.createBuffer(1,len,AC.sampleRate),d=b.getChannelData(0),last=0;for(var i=0;i<len;i++){var w=Math.random()*2-1;last=(last+.02*w)/1.02;d[i]=last*3.5}
+    var src=AC.createBufferSource();src.buffer=b;src.loop=true;var f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=cut;var v=AC.createGain();v.gain.value=g;src.connect(f);f.connect(v);v.connect(bus);src.start();return f}
+  function build(){
+    AC=new (window.AudioContext||window.webkitAudioContext)();
+    master=AC.createGain();master.gain.value=0;
+    var lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2400;master.connect(lp);lp.connect(AC.destination);
+    ['umbral','mente','cuerpo','espiritu','datos'].forEach(function(k){var g=AC.createGain();g.gain.value=0;g.connect(master);buses[k]=g});
+    // Umbral: un acorde abierto y grave (La)
+    [[110,.10],[164.81,.06],[220,.04]].forEach(function(n,i){var v=osc(n[0],'sine',n[1],buses.umbral,i*3);lfo(.05+i*.02,n[1]*.4,v.g.gain)});
+    // Mente: tonos claros (Re) y campanitas pentatónicas ocasionales
+    [[146.83,.07],[220,.05],[293.66,.035]].forEach(function(n,i){var v=osc(n[0],'sine',n[1],buses.mente,-4+i*4);lfo(.07+i*.03,n[1]*.35,v.g.gain)});
+    // Cuerpo: fondo grave (Sol) con viento suave
+    [[98,.10],[146.83,.05]].forEach(function(n,i){var v=osc(n[0],i?'triangle':'sine',n[1],buses.cuerpo,i*5);lfo(.04+i*.03,n[1]*.4,v.g.gain)});
+    var wind=noise(buses.cuerpo,.05,500);lfo(.08,260,wind.frequency);
+    // Espíritu: acorde cálido (Do) que respira al ritmo del círculo de luz (9 s)
+    var breath=AC.createGain();breath.gain.value=.8;breath.connect(buses.espiritu);lfo(1/9,.2,breath.gain);
+    [[130.81,.08],[196,.06],[261.63,.045],[329.63,.03]].forEach(function(n,i){osc(n[0],'sine',n[1],breath,-6+i*4);osc(n[0],'sine',n[1]*.5,breath,6-i*3)});
+    // Ficha: casi silencio, una nota grave muy tenue
+    osc(110,'sine',.05,buses.datos);osc(165,'sine',.025,buses.datos);
+  }
+  var penta=[587.33,659.25,739.99,880,987.77,1174.66];
+  function bell(){if(!AC||curScene!=='mente')return;var f=penta[Math.floor(Math.random()*penta.length)],o=AC.createOscillator(),v=AC.createGain(),t=AC.currentTime;
+    o.type='sine';o.frequency.value=f;v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(.035,t+.02);v.gain.exponentialRampToValueAtTime(.0001,t+4);o.connect(v);v.connect(buses.mente);o.start(t);o.stop(t+4.2)}
+  function scene(){var vh=window.innerHeight,cur='umbral';scenes.forEach(function(e){var b=e.getBoundingClientRect();if(b.top<vh*.55&&b.bottom>vh*.45)cur=e.id});
+    if(cur===curScene||!AC)return;curScene=cur;var t=AC.currentTime;
+    Object.keys(buses).forEach(function(k){var g=buses[k].gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.setTargetAtTime(k===cur?1:0,t,k===cur?1.4:1.1)})}
+  function setOn(on){snd.setAttribute('aria-pressed',String(on));
+    if(on){if(!AC)build();AC.resume();var t=AC.currentTime;master.gain.cancelScheduledValues(t);master.gain.setTargetAtTime(.5,t,1.2);curScene=null;scene();clearInterval(bellT);bellT=setInterval(bell,3200)}
+    else if(AC){var t2=AC.currentTime;master.gain.cancelScheduledValues(t2);master.gain.setTargetAtTime(0,t2,.4);clearInterval(bellT);setTimeout(function(){if(snd.getAttribute('aria-pressed')==='false')AC.suspend()},1800)}}
+  snd.addEventListener('click',function(){setOn(snd.getAttribute('aria-pressed')!=='true')});
+  window.addEventListener('scroll',function(){scene()},{passive:true});
+  document.addEventListener('visibilitychange',function(){if(!AC)return;if(document.hidden)AC.suspend();else if(snd.getAttribute('aria-pressed')==='true')AC.resume()});
 
   // ---------- Aparición de textos ----------
   var rv=document.querySelectorAll('[data-rv]');
