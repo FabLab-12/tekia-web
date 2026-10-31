@@ -205,6 +205,13 @@ html.at-top .snd,html.at-top .snd[aria-pressed="true"]{background:transparent;co
 .espiritu .halo i{position:absolute;inset:0;border-radius:50%;animation:breathe 9s ease-in-out infinite;background:inherit;opacity:.6;pointer-events:none}
 .espiritu .halo .orb-label{position:relative;transform:none}
 .espiritu .halo:hover .orb-label,.espiritu .halo:focus-visible .orb-label{transform:scale(1.06)}
+.espiritu .halo{--humo:#B5783F;--humo2:#C1A15C}
+.espiritu .halo svg.engr{position:absolute;inset:6% 10% 14%;width:80%;height:80%;overflow:visible;pointer-events:none}
+.espiritu .halo .orb-label{align-self:end;margin-bottom:9%;background:rgba(255,250,238,.72);color:var(--tinta);border-color:rgba(193,161,92,.75);box-shadow:0 2px 14px rgba(120,90,50,.12);backdrop-filter:blur(4px)}
+.espiritu .halo:hover .orb-label,.espiritu .halo:focus-visible .orb-label{background:rgba(255,250,238,.92);color:#7A4E26}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .espiritu .halo{--humo:#EBD9B0;--humo2:#D9C38A}:root:not([data-theme="light"]) .espiritu .halo .orb-label{background:rgba(255,248,232,.14);color:#F3EAD6;border-color:rgba(217,195,138,.6)}}
+:root[data-theme="dark"] .espiritu .halo{--humo:#EBD9B0;--humo2:#D9C38A}:root[data-theme="dark"] .espiritu .halo .orb-label{background:rgba(255,248,232,.14);color:#F3EAD6;border-color:rgba(217,195,138,.6)}
+@media (max-width:760px){.espiritu .halo svg.engr{inset:4% 10% 10%;width:80%;height:86%}.espiritu .halo .orb-label{margin-bottom:-2%}}
 @media (max-width:760px){.espiritu .halo{position:relative;right:auto;top:auto;margin:0 0 4rem auto;width:62vw;order:2;justify-self:end}}
 @keyframes breathe{50%{transform:scale(1.12);opacity:.25}}
 .espiritu .copy{position:relative;z-index:2;padding-block:6rem;max-width:44rem}
@@ -348,7 +355,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
 
 <section class="espiritu gut" id="espiritu" data-top="dark" aria-labelledby="h-esp">
   <div class="bands" aria-hidden="true"></div>
-  <a class="halo" href="#f-acomp"><i></i><span class="orb-label">Conectar</span></a>
+  <a class="halo" href="#f-acomp"><i></i><svg class="engr" data-kind="smoke" data-tone="luz" viewBox="0 0 200 200" aria-hidden="true"></svg><span class="orb-label">Conectar</span></a>
   <svg class="grain" aria-hidden="true"><rect width="100%" height="100%" filter="url(#n)"/></svg>
   <div class="copy" data-rv>
     <span class="label">Espíritu</span>
@@ -591,8 +598,8 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
     sv.innerHTML='<defs><radialGradient id="'+gid+'"><stop offset="0" stop-color="#C9B071" stop-opacity=".16"/><stop offset="1" stop-color="#C9B071" stop-opacity="0"/></radialGradient></defs>';
     var tierra=sv.getAttribute('data-tone')==='tierra';
     if(!tierra){
-    var bg=document.createElementNS(NS,'circle');bg.setAttribute('cx',100);bg.setAttribute('cy',100);bg.setAttribute('r',96);if(sv.getAttribute('data-disk')){var dk=document.createElementNS(NS,'circle');dk.setAttribute('cx',100);dk.setAttribute('cy',100);dk.setAttribute('r',96);dk.setAttribute('fill','#1A1714');dk.setAttribute('fill-opacity','.9');sv.appendChild(dk)}bg.setAttribute('fill','url(#'+gid+')');bg.setAttribute('stroke','var(--oro)');bg.setAttribute('stroke-opacity','.35');bg.setAttribute('stroke-width','.7');sv.appendChild(bg);
-    for(var i=0;i<34;i++){var a=er()*6.283,r=Math.sqrt(er())*90,c=document.createElementNS(NS,'circle');c.setAttribute('cx',f(100+Math.cos(a)*r));c.setAttribute('cy',f(100+Math.sin(a)*r));c.setAttribute('r',f(.35+er()*1));c.setAttribute('fill','#EDE6D6');c.setAttribute('opacity',f(.25+er()*.6));c.setAttribute('class','dust');c.style.animationDelay=f(-er()*4)+'s';sv.appendChild(c)}
+    var bg=document.createElementNS(NS,'circle');bg.setAttribute('cx',100);bg.setAttribute('cy',100);bg.setAttribute('r',96);if(sv.getAttribute('data-disk')){var dk=document.createElementNS(NS,'circle');dk.setAttribute('cx',100);dk.setAttribute('cy',100);dk.setAttribute('r',96);dk.setAttribute('fill','#1A1714');dk.setAttribute('fill-opacity','.9');sv.appendChild(dk)}bg.setAttribute('fill','url(#'+gid+')');bg.setAttribute('stroke','var(--oro)');bg.setAttribute('stroke-opacity','.35');bg.setAttribute('stroke-width','.7');var luz=sv.getAttribute('data-tone')==='luz';if(!luz)sv.appendChild(bg);
+    for(var i=0;i<34;i++){var a=er()*6.283,r=Math.sqrt(er())*90,c=document.createElementNS(NS,'circle');c.setAttribute('cx',f(100+Math.cos(a)*r));c.setAttribute('cy',f(100+Math.sin(a)*r));c.setAttribute('r',f(.35+er()*1));c.setAttribute('fill',luz?'var(--humo2)':'#EDE6D6');c.setAttribute('opacity',f(.25+er()*.6));c.setAttribute('class','dust');c.style.animationDelay=f(-er()*4)+'s';sv.appendChild(c)}
     }
     var fills=null;if(tierra){ // sin disco ni negro: rellenos de tierra y trazo sepia
       sv.querySelector('defs').innerHTML+='<linearGradient id="tu'+idx+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9D3A6"/><stop offset="1" stop-color="#A9845A"/></linearGradient><linearGradient id="tc'+idx+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6EAD0"/><stop offset="1" stop-color="#D7BC8A"/></linearGradient>';
@@ -630,13 +637,13 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
       P(g,'M100,92 C95,98 95,104 100,108 C105,104 105,98 100,92 Z',.7,.95);
     }else{ // humo que sube en hebras
       var lg=document.createElementNS(NS,'linearGradient');lg.setAttribute('id','sm'+idx);lg.setAttribute('x1',0);lg.setAttribute('y1',1);lg.setAttribute('x2',0);lg.setAttribute('y2',0);
-      lg.innerHTML='<stop offset="0" stop-color="#D9C38A" stop-opacity=".95"/><stop offset=".7" stop-color="#D9C38A" stop-opacity=".5"/><stop offset="1" stop-color="#D9C38A" stop-opacity="0"/>';sv.querySelector('defs').appendChild(lg);
-      for(var i=0;i<9;i++){var e=P(g,'',.55+(i%3)*.15);e.setAttribute('stroke','url(#sm'+idx+')');smokes.push({e:e,ph:i*.55,ph2:er()*6,sp:.8+er()*.4})}
-      P(g,'M90,178 Q100,172 110,178',.6,.7);
+      lg.innerHTML=sv.getAttribute('data-tone')==='luz'?'<stop offset="0" style="stop-color:var(--humo)" stop-opacity=".95"/><stop offset=".6" style="stop-color:var(--humo2)" stop-opacity=".6"/><stop offset="1" style="stop-color:var(--humo2)" stop-opacity="0"/>':'<stop offset="0" stop-color="#D9C38A" stop-opacity=".95"/><stop offset=".7" stop-color="#D9C38A" stop-opacity=".5"/><stop offset="1" stop-color="#D9C38A" stop-opacity="0"/>';sv.querySelector('defs').appendChild(lg);
+      for(var i=0;i<9;i++){var e=P(g,'',.55+(i%3)*.15);e.setAttribute('stroke','url(#sm'+idx+')');smokes.push({sv:sv,e:e,ph:i*.55,ph2:er()*6,sp:.8+er()*.4})}
+      var base=P(g,'M90,178 Q100,172 110,178',.6,.7);if(sv.getAttribute('data-tone')==='luz')base.setAttribute('stroke','var(--humo)');
     }
   });
-  function smoke(t){smokes.forEach(function(s){var d='';for(var y=178;y>=22;y-=4){var a=6+(178-y)*.17,x=100+Math.sin(y*.045+s.ph+t*.0006*s.sp)*a*.55+Math.sin(y*.11+s.ph2+t*.0009)*a*.18;d+=(d?' L':'M')+f(x)+','+y}s.e.setAttribute('d',d)})}
-  smoke(0);(function sm(t){var u=document.getElementById('umbral').getBoundingClientRect();if(!reduce&&u.bottom>0)smoke(t);if(!reduce)requestAnimationFrame(sm)})(0);
+  function smoke(t,all){smokes.forEach(function(s){if(!all){var r=s.sv.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return}var d='';for(var y=178;y>=22;y-=4){var a=6+(178-y)*.17,x=100+Math.sin(y*.045+s.ph+t*.0006*s.sp)*a*.55+Math.sin(y*.11+s.ph2+t*.0009)*a*.18;d+=(d?' L':'M')+f(x)+','+y}s.e.setAttribute('d',d)})}
+  smoke(0,true);(function sm(t){if(!reduce){smoke(t);requestAnimationFrame(sm)}})(0);
 
   // ---------- Acceso: micelio que crece y botón Entrar ----------
   // Sale cada vez que se abre la página; se omite solo si se llega con un enlace directo (#...).
