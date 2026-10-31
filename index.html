@@ -162,7 +162,8 @@ html.at-top .snd,html.at-top .snd[aria-pressed="true"]{background:transparent;co
 .datos .cell.lit h3{color:var(--tinta)}
 .acomp{max-width:62rem;margin:3rem auto 0!important;padding:1.4rem 1.6rem!important;border:1px solid var(--line)!important;border-radius:14px;background:var(--papel)}
 .acomp.lit{background:rgba(201,176,113,.16)!important;border-color:var(--oro)!important}
-.acomp-intro{margin:0 0 1rem;max-width:50ch}
+.acomp-intro{margin:0 0 1rem}
+.acomp-intro .ln:first-child{font-family:var(--serif);font-size:1.35rem;line-height:1.3;margin-bottom:.2rem}
 .datos .acomp-row{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.8rem 2.4rem}
 .acomp-row li{display:flex;flex-direction:column;gap:.15rem;font-size:.9rem}
 .acomp-row span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave);font-weight:600}
@@ -276,6 +277,125 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
 .gate.go .in>:not(.seed),.gate.go .seed img{animation:gOut .5s ease forwards}
 @keyframes gOut{from{opacity:1}to{opacity:0}}
 @media (prefers-reduced-motion: reduce){.art,.dust{animation:none}.gate .rule,.gate img,.gate .tag,.gate .enter,.gate .mute{animation:none;opacity:1;transform:none}.gate .myc path{animation:none;stroke-dashoffset:0}.gate .myc g{animation:none}.gate{transition:opacity .3s}.gate.out{transform:none}}
+/* Ruta de exploración del árbol de decisiones: una capa que se abre desde cada sección (Aprender, Sentir, Conectar) sobre el mismo árbol */
+html.ruta-open,html.ruta-open body{overflow:hidden}
+html.ruta-open .depth{display:none}
+.ruta{position:fixed;inset:0;z-index:8;overflow-y:auto;overscroll-behavior:contain;color:var(--r-fg);background:var(--r-bg)}
+.ruta[hidden]{display:none}
+.ruta[data-mode="ciencia"]{--r-bg:var(--papel);--r-fg:var(--tinta);--r-sub:var(--tinta-suave);--r-fill:var(--tinta);--r-fill-tx:var(--crema);--r-sel:rgba(201,176,113,.2);--r-card:var(--crema);--r-line:var(--line)}
+.ruta[data-mode="naturaleza"]{--r-bg:var(--tierra1);--r-fg:#F8F5EB;--r-sub:#DCCDB6;--r-fill:#E9D3A6;--r-fill-tx:#2F2A27;--r-sel:rgba(201,176,113,.22);--r-card:rgba(20,15,10,.35);--r-line:rgba(248,245,235,.22)}
+.ruta[data-mode="ritual"]{--r-bg:var(--luz1);--r-fg:var(--tinta);--r-sub:var(--tinta-suave);--r-fill:var(--tinta);--r-fill-tx:var(--crema);--r-sel:rgba(255,250,238,.7);--r-card:rgba(255,250,238,.5);--r-line:rgba(47,42,39,.18)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ruta[data-mode="ritual"]{--r-sel:rgba(255,248,232,.14);--r-card:rgba(20,18,15,.35)}}
+:root[data-theme="dark"] .ruta[data-mode="ritual"]{--r-sel:rgba(255,248,232,.14);--r-card:rgba(20,18,15,.35)}
+.ruta-bg{position:fixed;inset:0;pointer-events:none}
+.ruta[data-mode="naturaleza"] .ruta-bg{background:linear-gradient(180deg,#7A5A3A 0%,#5C4430 30%,#3B2E22 75%)}
+.ruta[data-mode="ritual"] .ruta-bg{inset:-10%;background:linear-gradient(90deg,var(--luz3) 0%,var(--luz1) 18%,var(--luz2) 30%,var(--luz3) 48%,var(--luz4) 66%,var(--luz5) 82%,var(--luz3) 100%);background-size:300% 100%;background-position:40% 50%;filter:blur(18px)}
+.ruta .grain{position:fixed}
+.ruta-in{position:relative;z-index:1;max-width:46rem;margin:0 auto;padding-top:calc(4.8rem + env(safe-area-inset-top,0px));padding-bottom:4rem}
+.ruta-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.7rem 1rem;margin-bottom:1.4rem}
+.r-badge{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;border:1px solid currentColor;border-radius:3px;padding:.25rem .55rem;color:var(--r-sub)}
+.miradas{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;order:3;width:100%}
+.miradas>span{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--r-sub);margin-right:.2rem}
+.miradas button,.r-exit{min-height:36px;padding:.3rem .8rem;border-radius:99px;border:1px solid var(--r-line);background:transparent;color:inherit;font:600 .66rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.miradas button[aria-pressed="true"]{background:var(--r-fill);color:var(--r-fill-tx);border-color:var(--r-fill)}
+.r-exit{border-color:currentColor}
+.progreso{display:flex;flex-wrap:wrap;gap:.3rem 1.4rem;margin:0 0 2rem;padding:0;list-style:none;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--r-sub)}
+.progreso li{display:flex;align-items:center;gap:.45rem}
+.progreso li i{width:1.35rem;height:1.35rem;border-radius:50%;border:1px solid currentColor;display:grid;place-items:center;font-style:normal;font-size:.68rem;letter-spacing:0}
+.progreso li[aria-current="step"]{color:var(--r-fg)}
+.progreso li[aria-current="step"] i{background:var(--r-fill);color:var(--r-fill-tx);border-color:var(--r-fill)}
+.progreso li.done i{border-style:solid}
+.r-step{outline:none}
+.r-step.entra{animation:rEntra .6s ease both}
+.ruta[data-mode="ritual"] .r-step.entra{animation-duration:1.1s}
+@keyframes rEntra{from{opacity:0;transform:translateY(10px)}}
+.r-kick{font-family:var(--serif);font-style:italic;font-size:clamp(1.1rem,2.4vw,1.35rem);color:var(--r-sub);margin:0 0 .6rem}
+.r-step h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.8rem,4.6vw,2.7rem);line-height:1.12;margin:0 0 .6rem;outline:none}
+.r-step .r-q{font-size:1.05rem;font-weight:500;margin:0 0 .4rem}
+.r-step .r-sub{color:var(--r-sub);margin:0 0 1.4rem;max-width:52ch}
+.r-note{border-left:2px solid var(--oro);padding:.5rem .9rem;margin:0 0 1.6rem;font-size:.9rem;background:var(--r-card);border-radius:0 6px 6px 0;max-width:56ch}
+.opts{display:grid;gap:.7rem;margin:0 0 1.2rem;padding:0;list-style:none}
+.ruta[data-mode="ciencia"] .opts{grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))}
+.opt{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:.25rem;width:100%;min-height:58px;padding:.85rem 1.1rem;border:1px solid currentColor;border-radius:14px;background:transparent;color:inherit;font:500 1rem/1.35 var(--sans);text-align:left;cursor:pointer;transition:background .25s,border-color .25s}
+.opt:hover{background:var(--r-sel)}
+.ruta[data-mode="ciencia"] .opt .opt-num{font-family:var(--serif);font-size:.95rem;color:var(--r-sub)}
+.ruta[data-mode="ritual"] .opt{border-radius:99px;padding:.85rem 1.4rem;font-family:var(--serif);font-size:1.15rem}
+.opt-mark{display:none;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;font-family:var(--sans)}
+.opt[aria-pressed="true"]{border-width:2px;padding:calc(.85rem - 1px) calc(1.1rem - 1px);background:var(--r-sel)}
+.ruta[data-mode="ritual"] .opt[aria-pressed="true"]{padding:calc(.85rem - 1px) calc(1.4rem - 1px)}
+.opt[aria-pressed="true"] .opt-mark{display:inline-flex;gap:.35rem;align-items:center}
+.opt[aria-disabled="true"]{border-style:dashed;color:var(--r-sub);cursor:not-allowed;background:transparent}
+.opt[aria-disabled="true"]:hover{background:transparent}
+.opt-off{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;font-family:var(--sans)}
+.r-why{margin:0 0 1.6rem}
+.r-link{background:none;border:0;padding:.3rem 0;min-height:36px;color:inherit;font:inherit;font-size:.9rem;text-decoration:underline;text-underline-offset:4px;cursor:pointer;text-align:left}
+.r-why .r-box{margin-top:.4rem}
+.r-box{background:var(--r-card);border:1px solid var(--r-line);border-radius:10px;padding:.9rem 1.1rem;font-size:.92rem;max-width:58ch}
+.r-box[hidden]{display:none}
+.r-acts{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin-top:1.4rem}
+.r-btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:.6rem 1.3rem;border-radius:99px;border:1px solid currentColor;background:transparent;color:inherit;font:600 .74rem/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+.r-btn.main{background:var(--r-fill);color:var(--r-fill-tx);border-color:var(--r-fill)}
+.r-btn:disabled{opacity:.42;cursor:not-allowed}
+.r-msg{font-size:.88rem;margin:0 0 1rem;color:var(--r-fg)}
+.r-msg:empty{display:none}
+.ruta[data-mode="ritual"] .r-step h2{font-style:italic}
+/* Ficha */
+.f-tag{display:inline-block;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;padding:.25rem .6rem;border-radius:3px;background:var(--r-fill);color:var(--r-fill-tx)}
+.f-ed{font-family:var(--serif);font-style:italic;font-size:clamp(1.2rem,2.8vw,1.55rem);line-height:1.3;color:var(--r-sub);margin:.9rem 0 .2rem}
+.f-name{font-family:var(--serif);font-weight:500;font-size:clamp(2.3rem,7vw,4rem);line-height:1.02;margin:.2rem 0 .1rem}
+.f-sci{font-family:var(--serif);font-style:italic;font-size:1.25rem;margin:0 0 .9rem}
+.f-path{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--r-sub);margin:0 0 1.1rem}
+.f-sum{font-size:1.02rem;max-width:56ch;margin:0 0 .8rem}
+.ruta[data-mode="ciencia"] .f-sum{border-left:2px solid var(--verde);padding-left:.9rem}
+.f-why,.f-note{font-size:.88rem;color:var(--r-sub);max-width:56ch;margin:0 0 .5rem}
+.f-deep{display:flex;flex-wrap:wrap;gap:.2rem 1.4rem;margin:1.8rem 0 0;padding:1rem 0 0;border-top:1px solid var(--r-line);list-style:none}
+.f-panel{margin-top:1.1rem;background:var(--r-card);border:1px solid var(--r-line);border-radius:12px;padding:1.2rem 1.3rem;text-align:left}
+.f-panel[hidden]{display:none}
+.f-panel h3{font-family:var(--serif);font-weight:500;font-size:1.5rem;line-height:1.2;margin:0 0 .5rem;outline:none}
+.f-panel p{margin:0 0 .7rem;max-width:60ch}
+.f-panel .p-close{float:right;margin:-.3rem -.3rem .4rem .6rem}
+.study{border-top:1px solid var(--r-line);padding:.9rem 0 .4rem}
+.study h4,.cmp h4{font-family:var(--sans);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 .4rem}
+.study dl{display:grid;grid-template-columns:auto 1fr;gap:.3rem .9rem;margin:0 0 .5rem;font-size:.9rem}
+.study dt{color:var(--r-sub);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding-top:.2rem}
+.study dd{margin:0}
+.study .links,.cmp .links{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;font-size:.86rem;align-items:center}
+.basis{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;border:1px dashed currentColor;border-radius:3px;padding:.15rem .45rem;color:var(--r-sub)}
+.study ul,.f-panel ul{margin:.3rem 0 .6rem;padding-left:1.1rem;font-size:.9rem}
+.typo{border:1px solid var(--r-line);border-radius:12px;padding:2rem 1.2rem;text-align:center;margin:.6rem 0 1rem}
+.typo b{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(2.2rem,8vw,3.6rem);line-height:1;letter-spacing:.02em}
+.typo i{display:block;font-family:var(--serif);font-size:1.3rem;margin-top:.4rem}
+.typo small{display:block;margin-top:1rem;font-size:.72rem;color:var(--r-sub)}
+.lectura p{font-family:var(--serif);font-size:1.22rem;line-height:1.5}
+.saved{font-size:.85rem;font-weight:600}
+.r-nav{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2rem}
+.more.ruta-go{cursor:pointer}
+@media (max-width:560px){.progreso{gap:.3rem .9rem;font-size:.64rem}}
+/* Alineación por mirada: Aprender a la izquierda, Sentir al centro, Conectar a la derecha, siempre dentro del mismo ancho de contenido.
+   Las lecturas largas (estudios, fuentes, compuestos, preparación) se leen alineadas a la izquierda en las tres. */
+.ruta[data-mode="naturaleza"] .ruta-bar,.ruta[data-mode="naturaleza"] .miradas,.ruta[data-mode="naturaleza"] .progreso,.ruta[data-mode="naturaleza"] .r-acts,.ruta[data-mode="naturaleza"] .f-deep,.ruta[data-mode="naturaleza"] .r-nav{justify-content:center}
+.ruta[data-mode="naturaleza"] .r-step,.ruta[data-mode="naturaleza"] .r-msg{text-align:center}
+.ruta[data-mode="naturaleza"] .opt{align-items:center;text-align:center}
+.ruta[data-mode="naturaleza"] :is(.r-sub,.r-note,.r-box,.f-sum,.f-why){margin-left:auto;margin-right:auto}
+.ruta[data-mode="naturaleza"] .r-note{border-left:0;border-top:2px solid var(--oro);border-radius:0 0 6px 6px}
+.ruta[data-mode="ritual"] .ruta-bar,.ruta[data-mode="ritual"] .miradas,.ruta[data-mode="ritual"] .progreso,.ruta[data-mode="ritual"] .r-acts,.ruta[data-mode="ritual"] .f-deep,.ruta[data-mode="ritual"] .r-nav{justify-content:flex-end}
+.ruta[data-mode="ritual"] .r-step,.ruta[data-mode="ritual"] .r-msg{text-align:right}
+.ruta[data-mode="ritual"] .opt{align-items:flex-end;text-align:right}
+.ruta[data-mode="ritual"] :is(.r-sub,.r-note,.r-box,.f-sum,.f-why){margin-left:auto;margin-right:0}
+.ruta[data-mode="ritual"] .r-note{border-left:0;border-right:2px solid var(--oro);border-radius:6px 0 0 6px}
+.ruta[data-mode="ritual"] .r-step h2{font-style:italic}
+.ruta :is(#b-evidencia,#b-preparacion,#b-compuestos,#b-fuentes,.cmp,.f-panel[aria-labelledby="h-cmp"]){text-align:left}
+.ruta :is(#b-evidencia,#b-preparacion,#b-compuestos,#b-fuentes) .r-box{margin-left:0}
+.ruta[data-mode="naturaleza"] #b-hongo{text-align:center}.ruta[data-mode="naturaleza"] #b-hongo p{margin-left:auto;margin-right:auto}
+.ruta[data-mode="ritual"] #b-lectura{text-align:right}.ruta[data-mode="ritual"] #b-lectura p{margin-left:auto}
+@media (prefers-reduced-motion: reduce){.r-step.entra{animation:none}.opt{transition:none}}
+/* Cortes de línea: cada enunciado en su bloque, títulos equilibrados y párrafos sin palabras huérfanas */
+.ln{display:block}
+h1,h2,h3,h4,.r-kick,.f-ed,.f-path,.label,.caps{text-wrap:balance}
+p,li,dd,dt,.opt span,.r-box,.f-panel p{text-wrap:pretty}
+.ph,.snd,.basis,.links a,.f-panel li a{white-space:nowrap}
+@media (max-width:480px){.study dl{grid-template-columns:1fr;gap:.1rem}.study dd{margin-bottom:.5rem}}
+@media (max-width:400px){.r-btn{letter-spacing:.1em;padding-inline:1rem}}
 </style>
 
 </head>
@@ -307,9 +427,9 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
     <h1><span>Tres caminos.</span> <span>Una misma raíz.</span></h1>
     <p class="lines"><span>La ciencia despierta preguntas.</span> <span>La naturaleza invita a sentir.</span> <span>El ritual abre un espacio para&nbsp;conectar.</span> <span class="choose">Elige por dónde empezar.</span></p>
     <ul class="doors" aria-label="Elige por dónde empezar">
-      <li><a href="#mente"><span class="orb"><svg class="engr" data-kind="cap" viewBox="0 0 200 200" aria-hidden="true"></svg></span><span class="pill">Aprender</span><span class="sub">Desde la ciencia</span></a></li>
-      <li><a href="#cuerpo"><span class="orb"><svg class="engr" data-kind="ruffle" viewBox="0 0 200 200" aria-hidden="true"></svg></span><span class="pill">Sentir</span><span class="sub">Desde la naturaleza</span></a></li>
-      <li><a href="#espiritu"><span class="orb"><svg class="engr" data-kind="smoke" viewBox="0 0 200 200" aria-hidden="true"></svg></span><span class="pill">Conectar</span><span class="sub">Desde el ritual</span></a></li>
+      <li><a href="#mente"><span class="orb"><svg class="engr" data-kind="cap" viewBox="0 0 200 200" aria-hidden="true"></svg></span><span class="pill">Aprender</span><span class="sub">Desde la&nbsp;ciencia</span></a></li>
+      <li><a href="#cuerpo"><span class="orb"><svg class="engr" data-kind="ruffle" viewBox="0 0 200 200" aria-hidden="true"></svg></span><span class="pill">Sentir</span><span class="sub">Desde la&nbsp;naturaleza</span></a></li>
+      <li><a href="#espiritu"><span class="orb"><svg class="engr" data-kind="smoke" viewBox="0 0 200 200" aria-hidden="true"></svg></span><span class="pill">Conectar</span><span class="sub">Desde el&nbsp;ritual</span></a></li>
     </ul>
     <a class="cue" href="#mente">O sigue explorando<b aria-hidden="true"></b></a>
   </div>
@@ -329,22 +449,23 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
       <circle id="lensring2" cx="400" cy="300" r="127" fill="none" stroke="#A88B4A" stroke-opacity=".7" stroke-width=".7"/><g id="lensticks"></g>
     </svg>
   </div>
-  <a class="lens-btn" id="lensbtn" href="#f-nosabemos"><span class="orb-label">Aprender</span></a>
+  <a class="lens-btn" id="lensbtn" href="#ruta" data-ruta="ciencia"><span class="orb-label">Aprender</span></a>
   <svg class="grain" aria-hidden="true"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .3  0 0 0 0 .28  0 0 0 0 .24  0 0 0 .55 0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
   <div class="copy" data-rv>
     <span class="label">Mente</span>
     <h2 class="caps" id="h-mente">Entender antes de elegir</h2>
-    <p class="lede">Un hongo no es solo lo que se ve. Lo que se usa, cómo se prepara y qué se ha estudiado cambian según la parte.</p>
+    <p class="lede"><span class="ln">Un hongo no es solo lo que se&nbsp;ve.</span> <span class="ln">Lo que se usa, cómo se prepara y qué se ha estudiado cambian según la&nbsp;parte.</span></p>
     <ol class="legend">
       <li><b>1</b>Sombrero</li><li><b>2</b>Laminillas</li><li><b>3</b>Pie</li><li><b>4</b>Micelio</li>
     </ol>
+    <a class="more ruta-go" href="#ruta" data-ruta="ciencia">Empezar el recorrido</a>
   </div>
 </section>
 
 <section class="cuerpo gut" id="cuerpo" data-top="light" aria-labelledby="h-cuerpo">
   <canvas id="land" aria-hidden="true"></canvas>
   <div class="shade" aria-hidden="true"></div>
-  <a class="mount-btn" id="mountbtn" href="#f-origen">
+  <a class="mount-btn" id="mountbtn" href="#ruta" data-ruta="naturaleza">
     <svg class="engr" data-kind="ruffle" data-tone="tierra" viewBox="22 42 162 136" aria-hidden="true"></svg>
     <span class="orb-label">Sentir</span>
   </a>
@@ -352,8 +473,9 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   <div class="copy" data-rv>
     <span class="label">Cuerpo</span>
     <h2 class="caps" id="h-cuerpo">Todo empieza en algo vivo</h2>
-    <p class="lede">Antes de ser polvo fue una red que creció despacio, un cuerpo que salió a la luz, una cosecha. Este es su camino.</p>
+    <p class="lede"><span class="ln">Antes de ser polvo fue una red que creció despacio, un cuerpo que salió a la luz, una&nbsp;cosecha.</span> <span class="ln">Este es su&nbsp;camino.</span></p>
     <ol class="steps"><li>Cultivo</li><li>Cosecha</li><li>Secado</li><li>Molienda o extracción</li><li>Análisis</li><li>Envasado</li></ol>
+    <a class="more ruta-go" href="#ruta" data-ruta="naturaleza">Empezar el recorrido</a>
   </div>
 </section>
 
@@ -361,13 +483,14 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
 
 <section class="espiritu gut" id="espiritu" data-top="dark" aria-labelledby="h-esp">
   <div class="bands" aria-hidden="true"></div>
-  <a class="halo" href="#f-acomp"><i></i><svg class="engr" data-kind="smoke" data-tone="luz" viewBox="0 0 200 200" aria-hidden="true"></svg><span class="orb-label">Conectar</span></a>
+  <a class="halo" href="#ruta" data-ruta="ritual"><i></i><svg class="engr" data-kind="smoke" data-tone="luz" viewBox="0 0 200 200" aria-hidden="true"></svg><span class="orb-label">Conectar</span></a>
   <svg class="grain" aria-hidden="true"><rect width="100%" height="100%" filter="url(#n)"/></svg>
   <div class="copy" data-rv>
     <span class="label">Espíritu</span>
     <h2 class="caps" id="h-esp" style="margin:.7rem 0 0;font-size:clamp(1.2rem,2.6vw,1.6rem)">El ritual</h2>
     <p class="poem" id="poem"><span>Hay momentos que piden volver.</span><span>A tu ritmo.</span><span>A tus sentidos.</span><span>A ese espacio que también es tuyo.</span></p>
-    <p class="lede">Preparar una bebida caliente puede ser una pausa. Lo que hagas con ese momento es tuyo.</p>
+    <p class="lede"><span class="ln">Preparar una bebida caliente puede ser una&nbsp;pausa.</span> <span class="ln">Lo que hagas con ese momento es&nbsp;tuyo.</span></p>
+    <a class="more ruta-go" href="#ruta" data-ruta="ritual">Empezar el recorrido</a>
     <p style="margin-top:2.4rem;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase"><a href="#datos" style="text-decoration:none">Sigue bajando: la ficha ↓</a></p>
   </div>
 </section>
@@ -385,7 +508,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   </div>
   <div class="cell acomp" id="f-acomp" tabindex="-1" data-rv>
     <h3>Acompañamiento</h3>
-    <p class="acomp-intro">¿Tienes dudas antes de elegir? Escríbenos y te respondemos con calma.</p>
+    <p class="acomp-intro"><span class="ln">¿Tienes dudas antes de&nbsp;elegir?</span> <span class="ln">Escríbenos. Te ayudamos a entender tus&nbsp;opciones.</span></p>
     <ul class="acomp-row">
       <li><span>Correo</span><b class="ph">[pendiente]</b></li>
       <li><span>WhatsApp</span><b class="ph">[pendiente]</b></li>
@@ -396,6 +519,24 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   </div>
 </section>
 </main>
+
+<section class="ruta gut" id="ruta" data-mode="ciencia" aria-label="Ruta de exploración" hidden>
+  <div class="ruta-bg" aria-hidden="true"></div>
+  <div class="ruta-in">
+    <div class="ruta-bar">
+      <span class="r-badge">Ruta de exploración</span>
+      <div class="miradas" role="group" aria-labelledby="miradas-l"><span id="miradas-l">Cambiar de mirada</span>
+        <button type="button" data-mode="ciencia" aria-pressed="true">Aprender</button><button type="button" data-mode="naturaleza" aria-pressed="false">Sentir</button><button type="button" data-mode="ritual" aria-pressed="false">Conectar</button>
+      </div>
+      <button type="button" class="r-exit" id="r-exit">Salir del recorrido</button>
+    </div>
+    <ol class="progreso" aria-label="Progreso del recorrido">
+      <li data-step="interest"><i>1</i>Tu interés</li><li data-step="priority"><i>2</i>Tu prioridad</li><li data-step="focus"><i>3</i>Tu enfoque</li><li data-step="sheet"><i>4</i>El ingrediente</li>
+    </ol>
+    <p class="r-msg" id="r-msg" role="status" aria-live="polite"></p>
+    <div class="r-step" id="r-step"></div>
+  </div>
+</section>
 
 
 <script>
@@ -523,7 +664,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   function depth(){var vh=window.innerHeight,cur=null;secs.forEach(function(s){var b=s.getBoundingClientRect();if(b.top<vh*.5&&b.bottom>vh*.5)cur=s.id});
     links.forEach(function(a){a.setAttribute('aria-current',String(a.dataset.sec===cur))});
     document.querySelector('.depth').classList.toggle('off',!cur);
-    var ub=document.getElementById('umbral').getBoundingClientRect(),top=ub.bottom>60;document.documentElement.classList.toggle('at-top',top);
+    var ub=document.getElementById('umbral').getBoundingClientRect(),top=ub.bottom>60&&!document.documentElement.classList.contains('ruta-open');document.documentElement.classList.toggle('at-top',top);
     var light=cur==='cuerpo'||top;document.documentElement.style.setProperty('--depth-fg',light?'#F8F5EB':'');
     }
 
@@ -546,7 +687,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
 
   // ---------- Ambiente sonoro (generado; solo suena si la persona lo activa) ----------
   // Cada sección tiene su propio paisaje de tonos suaves; al cambiar de sección se funden despacio.
-  var snd=document.querySelector('.snd'),AC=null,master=null,buses={},curScene=null,bellT=null;
+  var snd=document.querySelector('.snd'),rutaScene=null,AC=null,master=null,buses={},curScene=null,bellT=null;
   var scenes=['umbral','mente','cuerpo','espiritu','datos'].map(function(id){return document.getElementById(id)});
   function osc(f,type,g,bus,det){var o=AC.createOscillator(),v=AC.createGain();o.type=type||'sine';o.frequency.value=f;if(det)o.detune.value=det;v.gain.value=g;o.connect(v);v.connect(bus);o.start();return {o:o,g:v}}
   function lfo(rate,depth,param){var l=AC.createOscillator(),d=AC.createGain();l.frequency.value=rate;d.gain.value=depth;l.connect(d);d.connect(param);l.start()}
@@ -574,6 +715,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   function bell(){if(!AC||curScene!=='mente')return;var f=penta[Math.floor(Math.random()*penta.length)],o=AC.createOscillator(),v=AC.createGain(),t=AC.currentTime;
     o.type='sine';o.frequency.value=f;v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(.035,t+.02);v.gain.exponentialRampToValueAtTime(.0001,t+4);o.connect(v);v.connect(buses.mente);o.start(t);o.stop(t+4.2)}
   function scene(){var vh=window.innerHeight,cur='umbral';scenes.forEach(function(e){var b=e.getBoundingClientRect();if(b.top<vh*.55&&b.bottom>vh*.45)cur=e.id});
+    if(rutaScene)cur=rutaScene; // con el recorrido abierto suena el paisaje de su mirada
     if(cur===curScene||!AC)return;curScene=cur;var t=AC.currentTime;
     Object.keys(buses).forEach(function(k){var g=buses[k].gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.setTargetAtTime(k===cur?1:0,t,k===cur?1.4:1.1)})}
   function setOn(on){snd.setAttribute('aria-pressed',String(on));
@@ -707,6 +849,223 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   if(reduce){window.addEventListener('scroll',function(){frame(0)},{passive:true});drawLand(0)}
   frame(performance.now());
   if(reduce)drawLand(0);
+
+
+  // ---------- Sin palabras huérfanas: la última palabra de cada enunciado viaja con la anterior ----------
+  var ORPH='p,li,dd,dt,h1,h2,h3,h4,.ln,.sub,.r-link,.r-btn,.opt>span,.opt-off';
+  function noOrphans(root){[].forEach.call(root.querySelectorAll(ORPH),function(el){if(el.querySelector('.ln'))return;
+    var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),n,last=null;while(n=w.nextNode())if(/\S/.test(n.nodeValue))last=n;
+    if(!last||el.textContent.trim().split(/\s+/).length<3)return;
+    last.nodeValue=last.nodeValue.replace(/ (\S+\s*)$/,'\u00a0$1')})}
+  noOrphans(document);
+
+  // ---------- Ruta de exploración: una rama encendida, tres miradas ----------
+  // A. Configuración: qué ramas están construidas. Es una propiedad de desarrollo, no una regla de compatibilidad.
+  var RUTA={enabled:true,targetIngredient:'hericium_erinaceus',
+    branches:{interest:['mental_activity'],priority:['task_attention'],focus:['focus_a']},
+    offReason:'not_yet'};
+  var OFF_TEXT={not_yet:'No disponible por ahora'};
+  // B. Árbol compartido: los mismos identificadores en las tres miradas. El enfoque usa posiciones comunes (focus_a…d) con nombre propio en cada mirada.
+  var TREE={
+    steps:['interest','priority','focus','sheet'],
+    interest:['mental_activity','physical_activity','rest','explore_unsure'],
+    priority:{mental_activity:['task_attention','memory','mental_fatigue','priority_unsure']},
+    focus:{task_attention:['focus_a','focus_b','focus_c','focus_d']},
+    results:[{when:{interest:'mental_activity',priority:'task_attention',focus:'focus_a'},ingredient:'hericium_erinaceus'}]
+  };
+  var LABELS={mental_activity:'Mi actividad mental',physical_activity:'Mi actividad física',rest:'Mi descanso',explore_unsure:'Todavía no lo sé',
+    task_attention:'Mantener la atención en una tarea',memory:'Recordar información',mental_fatigue:'Entender mi cansancio mental',priority_unsure:'No sé distinguirlo todavía'};
+  // C. Textos y presentación por mirada (cambian el tono, no lo que se pregunta).
+  var MODES={
+    ciencia:{scene:'mente',open:'Entender también forma parte de elegir.',
+      interest:{t:'¿Qué te gustaría explorar primero?',sub:'Empieza por un tema. En cada paso podrás conocer el motivo de la pregunta y consultar información adicional.',why:'¿Para qué sirve esta respuesta?',whyTx:'Organiza el tema que vamos a explorar. No identifica una causa biológica ni determina por sí sola qué complemento te conviene.'},
+      priority:{t:'Pongámosle un poco más de precisión.',why:'¿Por qué distinguimos atención, memoria y cansancio?',whyTx:'Son intereses distintos. Tu respuesta nos ayuda a mostrar investigación relacionada con la pregunta que elegiste, sin tratar todos los resultados como equivalentes.'},
+      focus:{t:'¿Qué te interesa entender primero?',labels:{focus_a:'Qué se ha investigado',focus_b:'Por qué importa la preparación',focus_c:'Qué compuestos se estudian',focus_d:'Precauciones generales'}},
+      sheet:{ed:'De tu pregunta a lo que sabemos.',support:'Esta exploración te acerca a un ingrediente relacionado con el camino que elegiste.',main:'Conocer la evidencia',panel:'evidencia'}},
+    naturaleza:{scene:'cuerpo',open:'Conocer empieza por mirar de cerca.',
+      interest:{t:'¿A qué parte de tu día quieres acercarte?',sub:'Empieza por lo cotidiano. Elige qué te gustaría explorar.',why:'Lo que elegimos observar',whyTx:'Tu respuesta marca el punto de partida del recorrido. No cambia la información del ingrediente ni indica que debas consumirlo.'},
+      priority:{t:'Miremos un poco más de cerca.',why:'Una pregunta más precisa',whyTx:'Elegir un interés concreto nos permite acercarnos a la información que corresponde, sin mezclar preguntas distintas.'},
+      focus:{t:'¿Qué quieres mirar de cerca?',labels:{focus_a:'Cómo se transforma',focus_b:'Qué parte se utiliza',focus_c:'Cómo llega a una preparación',focus_d:'Qué se analiza'}},
+      sheet:{ed:'Conocerlo empieza por mirar de cerca.',support:'Este recorrido te acerca al ingrediente desde su forma, su preparación y su recorrido.',main:'Conocer el hongo',panel:'hongo'}},
+    ritual:{scene:'espiritu',open:'Una pausa para elegir con intención.',
+      interest:{t:'¿Dónde quieres poner tu intención?',sub:'Elige un punto de partida. Puedes recorrerlo a tu ritmo.',why:'Por qué empezamos aquí',whyTx:'Esta elección nos ayuda a orientar la exploración. No necesitas describir algo íntimo ni justificar tu respuesta.'},
+      priority:{t:'Démosle un sentido a esa intención.',why:'Elegir también es prestar atención',whyTx:'Vamos a conocer un ingrediente desde la pregunta que elegiste, sin convertir esa intención en una promesa de resultados.'},
+      focus:{t:'¿Desde dónde quieres acercarte?',labels:{focus_a:'Desde la intención',focus_b:'Desde el gesto cotidiano',focus_c:'Desde el ingrediente',focus_d:'Desde las precauciones'}},
+      sheet:{ed:'Elegir también puede ser una forma de atenderte.',support:'Aquí el recorrido te acerca al ingrediente desde la intención con la que decidiste explorarlo.',main:'Conocer este ingrediente',panel:'lectura'}}
+  };
+  var Q_PRIORITY='¿Qué aspecto de tu actividad mental te interesa?';
+  function label(id){return LABELS[id]||MODES[R.mode].focus.labels[id]}
+  // D. Datos de la ficha y fuentes (iguales en las tres miradas).
+  var INGREDIENTS={hericium_erinaceus:{name:'Melena de león',sci:'Hericium erinaceus',
+    summary:'Algunas preparaciones se han investigado en personas mediante pruebas cognitivas. Los resultados no son uniformes y no permiten asegurar una mejora de la atención cotidiana.'}};
+  var STUDIES=[
+    {id:'s2023',name:'Piloto de 2023',data:'41 adultos sanos. Ensayo con placebo que evaluó efectos agudos y tras 28 días.',
+      result:'Se observó una señal favorable en la velocidad de una tarea Stroop. También hubo resultados nulos y algunos desfavorables en otras medidas.',
+      limit:'No demuestra una mejora general de la concentración ni permite transferir el resultado a cualquier producto.',
+      url:'https://pubmed.ncbi.nlm.nih.gov/38004235/',doi:'10.3390/nu15224842',
+      cite:'Docherty S, Doughty FL, Smith EF. Nutrients. 2023;15(22):4842.',
+      basis:'Basado en el resumen publicado',
+      details:['Diseño: piloto aleatorizado, doble ciego, con placebo y grupos paralelos.','Participantes: 41 adultos sanos de 18 a 45 años.','Mediciones: pruebas cognitivas (entre ellas Stroop), estrés percibido y ánimo, 60 minutos después de la toma el día 1 y el día 29.','Según el resumen: tras una sola toma, respuestas más rápidas en Stroop; tras 28 días, una tendencia a menos estrés percibido que no llegó a ser estadísticamente significativa. Los autores piden cautela por el tamaño de la muestra.','Preparación: el resumen no indica si se usó cuerpo fructífero, micelio o un extracto.','Producto: lo aportó una empresa que, según los autores, no participó en el diseño ni en el análisis.']},
+    {id:'s2025',name:'Ensayo agudo de 2025',data:'18 adultos sanos. Estudio aleatorizado, doble ciego, cruzado, con placebo.',
+      result:'No se encontró una mejora global de cognición o ánimo. Hubo un resultado favorable en una prueba de destreza manual.',
+      limit:'Ese resultado motor no demuestra una mejora de la atención cotidiana. El ensayo tampoco resuelve los efectos de un uso prolongado.',
+      url:'https://pubmed.ncbi.nlm.nih.gov/40276537/',doi:'10.3389/fnut.2025.1405796',
+      cite:'Surendran G, Saye J, Mohd Jalil SB, et al. Front Nutr. 2025;12:1405796.',
+      basis:'Basado en el texto completo publicado',
+      details:['Diseño: una sola toma de una bebida con extracto o de una bebida placebo, en días separados por una semana; mediciones antes y 90 minutos después.','Participantes: 18 adultos sanos de 18 a 35 años.','Preparación: extracto de cuerpo fructífero en bebida.','Resultado principal: sin diferencia en el índice global de cognición ni en el de ánimo.','Favorable: mejor desempeño en una prueba de destreza manual (Grooved Pegboard).','Desfavorable: peor desempeño en una prueba de atención (Flanker) frente al placebo, y peor en Trail Making B respecto al inicio.','Conflictos: dos autores trabajan en una empresa que usa melena de león en sus productos y que contribuyó al pago de la publicación.']}
+  ];
+  var COMPOUND={name:'Hericenona E',kind:'Estudio en células',
+    text:'Un estudio en células PC12 investigó su participación en el crecimiento de prolongaciones celulares en presencia del factor de crecimiento nervioso, NGF. Es investigación celular, no demostración de regeneración neuronal ni de mejora de la concentración en personas.',
+    url:'https://pubmed.ncbi.nlm.nih.gov/25288148/',doi:'10.1039/c4fo00452c',cite:'Phan CW, Lee GS, Hong SL, et al. Food Funct. 2014;5(12):3160-9.',basis:'Basado en el resumen publicado'};
+
+  // E. Respuestas y estado de navegación (solo en memoria: no se guarda en la URL ni se envía a ningún lado).
+  var R={open:false,mode:'ciencia',step:'interest',answers:{},saved:false,boxes:{},opener:null,origin:null};
+  var ruta=document.getElementById('ruta'),stepEl=document.getElementById('r-step'),msgEl=document.getElementById('r-msg');
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function isOn(step,id){return RUTA.enabled&&RUTA.branches[step].indexOf(id)>=0}
+  function optionsFor(step){return step==='interest'?TREE.interest:step==='priority'?(TREE.priority[R.answers.interest]||[]):(TREE.focus[R.answers.priority]||[])}
+  // Solo el recorrido completo y construido abre su ficha; cualquier otra combinación no devuelve nada.
+  function resultFor(a){for(var i=0;i<TREE.results.length;i++){var w=TREE.results[i].when,ok=true;
+      for(var k in w){if(a[k]!==w[k]||!isOn(k,a[k]))ok=false}
+      if(ok)return TREE.results[i].ingredient}return null}
+  function validStep(){ // último paso al que se puede llegar con las respuestas actuales
+    var a=R.answers;if(!a.interest||!isOn('interest',a.interest))return 'interest';
+    if(!a.priority||optionsFor('priority').indexOf(a.priority)<0||!isOn('priority',a.priority))return 'priority';
+    if(!a.focus||optionsFor('focus').indexOf(a.focus)<0||!isOn('focus',a.focus))return 'focus';
+    return resultFor(a)?'sheet':'focus'}
+  var STEP_MSG={interest:'Para seguir, primero elige tu interés.',priority:'Para seguir, primero elige tu prioridad.',focus:'Para ver la ficha, primero elige tu enfoque.'};
+  function go(step,focusHead){var ok=validStep(),order=TREE.steps;
+    if(order.indexOf(step)>order.indexOf(ok)){step=ok;msgEl.textContent=STEP_MSG[ok]}else msgEl.textContent='';
+    R.step=step;render(true,focusHead!==false)}
+
+  function box(key,label,body,cls){var o=!!R.boxes[key];
+    return '<div class="'+(cls||'r-why')+'"><button type="button" class="r-link" aria-expanded="'+o+'" aria-controls="b-'+key+'" data-box="'+key+'">'+esc(label)+'</button><div class="r-box" id="b-'+key+'"'+(o?'':' hidden')+'>'+body+'</div></div>'}
+  function opts(step){var list=optionsFor(step),sel=R.answers[step],h='<ul class="opts" role="list">';
+    list.forEach(function(id,i){var on=isOn(step,id),p=sel===id;
+      h+='<li><button type="button" class="opt" data-step="'+step+'" data-id="'+id+'" '+(on?'aria-pressed="'+p+'"':'aria-disabled="true" aria-describedby="off-'+id+'"')+'>'+
+        (MODEn()==='ciencia'?'<span class="opt-num" aria-hidden="true">0'+(i+1)+'</span>':'')+
+        '<span>'+esc(label(id))+'</span>'+
+        (on?'<span class="opt-mark"><span aria-hidden="true">✓</span> Seleccionada</span>':'<span class="opt-off" id="off-'+id+'">'+esc(OFF_TEXT[RUTA.offReason])+'</span>')+'</button></li>'});
+    return h+'</ul>'}
+  function MODEn(){return R.mode}
+  function stepInterest(m){var t=m.interest;
+    return '<p class="r-kick">'+esc(m.open)+'</p>'+
+      '<p class="r-note"><span class="ln">Esta ruta de exploración, sobre la atención, te lleva a conocer la melena de&nbsp;león.</span> <span class="ln">Las demás rutas se abrirán más&nbsp;adelante.</span></p>'+
+      '<h2 id="r-h" tabindex="-1">'+esc(t.t)+'</h2><p class="r-sub">'+esc(t.sub)+'</p>'+
+      '<div role="group" aria-labelledby="r-h">'+opts('interest')+'</div>'+box('w-interest',t.why,'<p style="margin:0">'+esc(t.whyTx)+'</p>')+
+      '<div class="r-acts"><button type="button" class="r-btn main" data-act="next"'+(R.answers.interest&&isOn('interest',R.answers.interest)?'':' disabled')+'>Continuar</button></div>'}
+  function stepPriority(m){var t=m.priority;
+    return '<h2 id="r-h" tabindex="-1">'+esc(t.t)+'</h2><p class="r-q" id="r-q">'+esc(Q_PRIORITY)+'</p>'+
+      '<div role="group" aria-labelledby="r-q">'+opts('priority')+'</div>'+box('w-priority',t.why,'<p style="margin:0">'+esc(t.whyTx)+'</p>')+
+      '<div class="r-acts"><button type="button" class="r-btn" data-act="back">Volver</button><button type="button" class="r-btn main" data-act="focus"'+(R.answers.priority&&isOn('priority',R.answers.priority)?'':' disabled')+'>Continuar</button></div>'}
+  function stepFocus(m){var t=m.focus;
+    return '<h2 id="r-h" tabindex="-1">'+esc(t.t)+'</h2>'+
+      '<div role="group" aria-labelledby="r-h">'+opts('focus')+'</div>'+
+      '<div class="r-acts"><button type="button" class="r-btn" data-act="back">Volver</button><button type="button" class="r-btn main" data-act="sheet"'+(validStep()==='sheet'?'':' disabled')+'>Ver la ficha</button></div>'}
+  function lk(url,tx){return '<a href="'+url+'" target="_blank" rel="noopener">'+tx+'</a>'}
+  function doi(d){return lk('https://doi.org/'+d,'DOI&nbsp;'+esc(d))}
+  function panel(key,title,body){var o=!!R.boxes[key];
+    return '<section class="f-panel" id="b-'+key+'" aria-labelledby="h-'+key+'"'+(o?'':' hidden')+'><button type="button" class="r-link p-close" data-close="'+key+'">Cerrar</button><h3 id="h-'+key+'" tabindex="-1">'+esc(title)+'</h3>'+body+'</section>'}
+  function evidence(){var h='<p>Estos son ejemplos de investigación sobre preparaciones concretas. No representan por sí solos toda la evidencia sobre melena de león.</p>';
+    STUDIES.forEach(function(s){h+='<article class="study"><h4>'+esc(s.name)+'</h4><dl><dt>Datos</dt><dd>'+esc(s.data)+'</dd><dt>Resultado</dt><dd>'+esc(s.result)+'</dd><dt>Límite</dt><dd>'+esc(s.limit)+'</dd></dl>'+
+      '<div class="links">'+lk(s.url,'Ver estudio')+doi(s.doi)+'<span class="basis">'+esc(s.basis)+'</span></div>'+
+      box('d-'+s.id,'Detalles del estudio','<ul>'+s.details.map(function(d){return '<li>'+esc(d)+'</li>'}).join('')+'</ul><p style="margin:0;font-size:.8rem">'+esc(s.cite)+' Las cantidades usadas en el estudio no se muestran aquí: son datos de investigación, no indicaciones.</p>')+'</article>'});
+    return h}
+  function compound(){var c=COMPOUND;return '<div class="cmp"><h4>'+esc(c.name)+' <span class="basis">'+esc(c.kind)+'</span></h4><p>'+esc(c.text)+'</p><div class="links">'+lk(c.url,'Ver estudio')+doi(c.doi)+'<span class="basis">'+esc(c.basis)+'</span></div><p style="font-size:.8rem;margin-top:.6rem">'+esc(c.cite)+' Todavía no mostramos su estructura química: no contamos con una imagen verificada.</p></div>'}
+  function sources(){var all=STUDIES.concat([COMPOUND]);return '<ul>'+all.map(function(s){return '<li>'+esc(s.cite)+' '+lk(s.url,'PubMed')+' · '+doi(s.doi)+'</li>'}).join('')+'</ul>'}
+  function stepSheet(m){var ing=INGREDIENTS[resultFor(R.answers)],t=m.sheet,mode=R.mode;
+    // El módulo que corresponde al enfoque elegido va primero en la lista de profundidad.
+    var deep=[['evidencia','Qué se ha investigado'],['preparacion','Por qué importa la preparación'],['compuestos','Qué compuestos se investigan'],['fuentes','Fuentes']];
+    if(mode==='naturaleza')deep.unshift(['hongo','Cómo se transforma']);
+    if(mode==='ritual')deep.unshift(['lectura','Desde la intención']);
+    var h='<span class="f-tag">Ingrediente en exploración</span><p class="f-ed">'+esc(t.ed)+'</p>'+
+      '<h2 class="f-name" id="r-h" tabindex="-1">'+esc(ing.name)+'</h2><p class="f-sci">'+esc(ing.sci)+'</p>'+
+      '<p class="f-path">Recorrido: Actividad mental → Atención en una tarea → '+esc(label(R.answers.focus))+'</p>'+
+      '<p class="f-sum">'+esc(ing.summary)+'</p><p class="f-why">'+esc(t.support)+'</p>'+
+      '<div class="r-acts"><button type="button" class="r-btn main" data-open="'+t.panel+'" aria-expanded="'+!!R.boxes[t.panel]+'" aria-controls="b-'+t.panel+'">'+esc(t.main)+'</button>'+
+      '<button type="button" class="r-btn" data-act="save"'+(R.saved?' aria-pressed="true"':'')+'>'+(R.saved?'Guardado en este recorrido':'Guardar en mi exploración')+'</button></div>'+
+      '<p class="saved" role="status">'+(R.saved?'Guardado en este recorrido. Se borra al recargar la página.':'')+'</p>';
+    // Paneles propios de cada mirada
+    if(mode==='naturaleza')h+=panel('hongo','Cómo se transforma','<div class="typo" role="img" aria-label="Composición tipográfica provisional: Melena de león, Hericium erinaceus"><b>Melena de león</b><i>Hericium erinaceus</i><small>Composición provisional: todavía no tenemos una fotografía verificada del ingrediente.</small></div>'+
+      '<p><b>Identificación.</b> Nombre común: melena de león. Nombre científico: <i>Hericium erinaceus</i>. Es un hongo.</p>'+
+      '<p><b>Organismo y preparación.</b> El organismo es el hongo vivo, con su micelio y su cuerpo fructífero. Lo que se estudia en personas es una preparación: una parte concreta, procesada de una forma concreta. Lo observado con una preparación no se traslada por sí solo a otra.</p>'+
+      '<p><b>De organismo a preparación.</b> En general, el camino pasa por cultivo, cosecha, secado, molienda o extracción, análisis y envasado. Cada paso cambia lo que llega a la preparación final.</p>'+
+      '<p>TEKIA todavía no ha documentado la procedencia ni la preparación de su ingrediente.</p><p><button type="button" class="r-link" data-open="evidencia" aria-controls="b-evidencia">Ver qué encontraron los estudios</button></p>');
+    if(mode==='ritual')h+=panel('lectura','Desde la intención','<div class="lectura"><p>Elegiste poner tu intención en tu actividad mental, y en particular en mantener la atención en una tarea.</p>'+
+      '<p>El ingrediente que conoceremos es la melena de león, <i>Hericium erinaceus</i>, un hongo.</p>'+
+      '<p>Algunas de sus preparaciones se han estudiado con pruebas cognitivas en grupos pequeños de personas. Los resultados no son uniformes.</p>'+
+      '<p>Esta lectura no promete que el hongo cambie tu manera de concentrarte. Lo que sí te pertenece es la atención con la que eliges.</p></div><p><button type="button" class="r-link" data-open="evidencia" aria-controls="b-evidencia">Ver qué encontraron los estudios</button></p>');
+    // En Ciencia los compuestos tienen más protagonismo: van a la vista, antes de los enlaces de profundidad.
+    if(mode==='ciencia')h+='<section class="f-panel" aria-labelledby="h-cmp"><h3 id="h-cmp">¿Qué compuestos se investigan?</h3>'+compound()+'</section>';
+    h+='<ul class="f-deep" aria-label="Profundizar">'+deep.filter(function(d){return !(mode==='ciencia'&&d[0]==='compuestos')}).map(function(d){return '<li><button type="button" class="r-link" data-open="'+d[0]+'" aria-expanded="'+!!R.boxes[d[0]]+'" aria-controls="b-'+d[0]+'">'+esc(d[1])+'</button></li>'}).join('')+
+      '<li><a class="r-link" href="#f-precauciones" data-leave="f-precauciones">Precauciones generales</a></li></ul>';
+    h+=panel('evidencia','¿Qué encontraron los estudios?',evidence());
+    h+=panel('preparacion','Por qué importa la preparación','<p>Los estudios no usan “el hongo” en general, sino una preparación concreta: una parte del hongo (cuerpo fructífero o micelio), en polvo o como extracto, obtenida con un proceso determinado.</p><p>Por eso un resultado no se traslada automáticamente a otra preparación ni a un producto. La preparación del ingrediente de TEKIA todavía no está definida ni documentada.</p>');
+    if(mode!=='ciencia')h+=panel('compuestos','¿Qué compuestos se investigan?',compound());
+    h+=panel('fuentes','Fuentes',sources());
+    h+='<div class="r-nav"><button type="button" class="r-btn" data-act="back">Volver</button><button type="button" class="r-btn" data-act="interest">Cambiar mi interés</button><button type="button" class="r-btn" data-act="reset">Reiniciar el recorrido</button><button type="button" class="r-btn" data-act="home">Volver al inicio</button></div>';
+    return h}
+  function render(anim,focusHead){var m=MODES[R.mode];
+    ruta.setAttribute('data-mode',R.mode);
+    [].forEach.call(ruta.querySelectorAll('.miradas button'),function(b){b.setAttribute('aria-pressed',String(b.dataset.mode===R.mode))});
+    var order=TREE.steps,ci=order.indexOf(R.step);
+    [].forEach.call(ruta.querySelectorAll('.progreso li'),function(li){var i=order.indexOf(li.dataset.step);
+      if(i===ci)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');li.classList.toggle('done',i<ci);
+      li.querySelector('i').textContent=i<ci?'✓':String(i+1)});
+    stepEl.innerHTML=R.step==='interest'?stepInterest(m):R.step==='priority'?stepPriority(m):R.step==='focus'?stepFocus(m):stepSheet(m);noOrphans(stepEl);
+    stepEl.classList.remove('entra');if(anim&&!reduce){void stepEl.offsetWidth;stepEl.classList.add('entra')}
+    if(focusHead){var h=document.getElementById('r-h');h&&h.focus({preventScroll:true});ruta.scrollTop=0}
+  }
+  function setMode(mode){if(!MODES[mode])return;R.mode=mode;rutaScene=R.open?MODES[mode].scene:null;
+    var sel=document.activeElement&&document.activeElement.closest('.miradas')?'.miradas [data-mode="'+mode+'"]':null;
+    var y=ruta.scrollTop;render(false,false);ruta.scrollTop=y;if(sel)ruta.querySelector(sel).focus();
+    if(R.open)scene()}
+  var mainEl=document.querySelector('main'),depthEl=document.querySelector('.depth');
+  function openRuta(mode,opener){R.opener=opener||null;R.open=true;if(mode)R.mode=mode;
+    ruta.hidden=false;document.documentElement.classList.add('ruta-open');mainEl.inert=true;depthEl.inert=true;
+    rutaScene=MODES[R.mode].scene;scene();
+    go(R.step,true)}
+  function closeRuta(focusBack){if(!R.open)return;R.open=false;ruta.hidden=true;document.documentElement.classList.remove('ruta-open');mainEl.inert=false;depthEl.inert=false;
+    rutaScene=null;curScene=null;scene();updateGo();
+    if(focusBack&&R.opener&&document.contains(R.opener))R.opener.focus({preventScroll:true})}
+  function updateGo(){var started=!!R.answers.interest;[].forEach.call(document.querySelectorAll('.ruta-go'),function(a){a.textContent=started?'Continuar el recorrido':'Empezar el recorrido'})}
+
+  // Entradas: el botón de cada sección y su enlace abren el recorrido en su propia mirada.
+  [].forEach.call(document.querySelectorAll('[data-ruta]'),function(a){a.addEventListener('click',function(e){e.preventDefault();openRuta(a.getAttribute('data-ruta'),a)})});
+  ruta.querySelector('.miradas').addEventListener('click',function(e){var b=e.target.closest('button[data-mode]');if(b)setMode(b.dataset.mode)});
+  document.getElementById('r-exit').addEventListener('click',function(){closeRuta(true)});
+  // La barra superior sigue funcionando: sus enlaces cierran la capa (sin borrar respuestas) y llevan a su destino.
+  document.querySelector('header.top').addEventListener('click',function(e){if(R.open&&e.target.closest('a'))closeRuta(false)},true);
+  stepEl.addEventListener('click',function(e){
+    var t=e.target.closest('button, a');if(!t)return;
+    if(t.classList.contains('opt')){
+      // El bloqueo vive en el código: una opción apagada no cambia el estado, se active con ratón, toque o teclado.
+      var step=t.dataset.step,id=t.dataset.id;if(!isOn(step,id)||optionsFor(step).indexOf(id)<0){e.preventDefault();return}
+      R.answers[step]=id; // si cambia una respuesta anterior, se descartan las que ya no le corresponden
+      if(R.answers.priority&&optionsFor('priority').indexOf(R.answers.priority)<0)delete R.answers.priority;
+      if(R.answers.focus&&optionsFor('focus').indexOf(R.answers.focus)<0)delete R.answers.focus;
+      msgEl.textContent='';render(false,false);var b=stepEl.querySelector('.opt[data-id="'+id+'"]');b&&b.focus();return}
+    if(t.dataset.box){var k=t.dataset.box,bx=document.getElementById('b-'+k);R.boxes[k]=!R.boxes[k];bx.hidden=!R.boxes[k];t.setAttribute('aria-expanded',String(R.boxes[k]));return}
+    if(t.dataset.open){var k2=t.dataset.open,p=document.getElementById('b-'+k2);R.boxes[k2]=true;p.hidden=false;p.dataset.opener=openerKey(t);
+      [].forEach.call(stepEl.querySelectorAll('[data-open="'+k2+'"][aria-expanded]'),function(x){x.setAttribute('aria-expanded','true')});
+      var h=p.querySelector('h3');h.focus({preventScroll:true});p.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'});return}
+    if(t.dataset.close){var k3=t.dataset.close,p2=document.getElementById('b-'+k3);R.boxes[k3]=false;p2.hidden=true;
+      [].forEach.call(stepEl.querySelectorAll('[data-open="'+k3+'"][aria-expanded]'),function(x){x.setAttribute('aria-expanded','false')});
+      var back=p2.dataset.opener&&stepEl.querySelector(p2.dataset.opener);(back||document.getElementById('r-h')).focus();return}
+    if(t.dataset.leave){e.preventDefault();var id2=t.dataset.leave;closeRuta(false);var c=document.getElementById(id2);c&&c.scrollIntoView({block:'start'});light(id2);return}
+    var act=t.dataset.act;
+    if(act==='next')go('priority');
+    else if(act==='focus')go('focus');
+    else if(act==='sheet')go('sheet');
+    else if(act==='back')go(TREE.steps[Math.max(0,TREE.steps.indexOf(R.step)-1)]);
+    else if(act==='interest')go('interest');
+    else if(act==='save'){R.saved=true;var y=ruta.scrollTop;render(false,false);ruta.scrollTop=y;stepEl.querySelector('[data-act="save"]').focus()}
+    else if(act==='reset'){R.answers={};R.saved=false;R.boxes={};msgEl.textContent='';go('interest')}
+    else if(act==='home'){closeRuta(false);var u=document.getElementById('umbral');u.scrollIntoView({block:'start'});var h1=u.querySelector('h1');h1.setAttribute('tabindex','-1');h1.focus({preventScroll:true})}
+  });
+  function openerKey(t){if(t.dataset.open&&t.closest('.r-acts'))return '.r-acts [data-open="'+t.dataset.open+'"]';
+    if(t.closest('.f-deep'))return '.f-deep [data-open="'+t.dataset.open+'"]';
+    if(t.closest('.f-panel')){var pid=t.closest('.f-panel').id;return '#'+pid+' [data-open="'+t.dataset.open+'"]'}return null}
 })();
 </script>
 </body>
