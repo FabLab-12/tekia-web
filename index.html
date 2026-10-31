@@ -212,10 +212,41 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
   .cue b,.espiritu .bands{animation:none}
   .poem span{opacity:1;transition:none}
 }
+/* Acceso: pantalla animada con botón Entrar (antes de la landing) */
+html.gated,html.gated body{overflow:hidden}
+#umbral h1:focus{outline:none}
+.gate{position:fixed;inset:0;z-index:20;background:var(--crema);display:grid;place-items:center;text-align:center;overflow:hidden;transition:opacity 1s ease,transform 1s ease}
+.gate.out{opacity:0;transform:scale(1.05);pointer-events:none}
+.gate .in{position:relative;z-index:2;padding:2rem max(20px,env(safe-area-inset-left,0px))}
+.gate .seed{position:relative;display:inline-block}
+.gate svg.myc{position:absolute;left:50%;top:50%;width:1600px;height:1600px;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;overflow:visible}
+.gate .myc path{fill:none;stroke:var(--oro);stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:grow 2.6s ease-out forwards}
+@keyframes grow{to{stroke-dashoffset:0}}
+.gate .myc g{animation:pulse 7s 3s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.55}}
+.gate img{display:block;width:min(46vw,190px);margin:0 auto;opacity:0;transform:scale(.9);animation:gIn 1.6s .3s ease forwards}
+.gate img.l{display:var(--logo-light)}.gate img.d{display:var(--logo-dark)}
+.gate .tag{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(1.25rem,3.2vw,1.6rem);color:var(--tinta-suave);margin:1.4rem 0 2.2rem;opacity:0;animation:gIn 1.4s 1s ease forwards}
+.gate .enter{min-height:48px;padding:.85rem 2.6rem;border-radius:99px;border:1px solid var(--tinta);background:var(--tinta);color:var(--crema);font:600 .82rem/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;cursor:pointer;opacity:0;animation:gIn 1.2s 1.3s ease forwards;transition:transform .3s,box-shadow .3s}
+.gate .enter:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(47,42,39,.18)}
+.gate .mute{display:block;margin:.6rem auto 0;min-height:44px;padding:0 .8rem;background:none;border:0;color:var(--tinta-suave);font:500 .7rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;cursor:pointer;opacity:0;animation:gIn 1.2s 1.5s ease forwards}
+@keyframes gIn{to{opacity:1;transform:none}}
+.gate svg.burst{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+.gate .burst path{fill:none;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:grow .55s ease-out forwards}
+.gate.go .in{opacity:.25;transition:opacity 1s ease}
+@media (prefers-reduced-motion: reduce){.gate img,.gate .tag,.gate .enter,.gate .mute{animation:none;opacity:1;transform:none}.gate .myc path{animation:none;stroke-dashoffset:0}.gate .myc g{animation:none}.gate{transition:opacity .3s}.gate.out{transform:none}}
 </style>
 
 </head>
 <body>
+<div class="gate" id="gate">
+  <div class="in">
+    <div class="seed"><svg class="myc" id="myc" viewBox="-800 -800 1600 1600" aria-hidden="true"></svg><img class="l" src="assets/tekia-logo-transparente-web.png" alt="TEKIA"><img class="d" src="assets/tekia-logo-negativo-web.png" alt="TEKIA"></div>
+    <p class="tag">Todo empieza bajo la tierra.</p>
+    <button class="enter" type="button" id="enter">Entrar</button>
+    <button class="mute" type="button" id="enter-mute">Entrar sin sonido</button>
+  </div>
+</div>
 <header class="top">
   <a href="#umbral" aria-label="TEKIA, volver al inicio"><img src="assets/tekia-emblema-oro-web.png" alt=""></a>
   <nav aria-label="Navegación general"><a href="#f-origen">Ingredientes</a><a href="#f-nosabemos">Cómo elegimos</a><a class="pre" href="#f-precauciones">Precauciones</a><a href="#f-acomp">Acompañamiento</a></nav>
@@ -508,13 +539,50 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
   function done(){started=true;snd.classList.remove('pending');GEST.forEach(function(ev){document.removeEventListener(ev,firstGesture,true)})}
   function tryStart(){if(snd.getAttribute('aria-pressed')!=='true')return;setOn(true);
     var p=AC.resume();if(p&&p.then)p.then(function(){if(AC.state==='running')done()},function(){});else if(AC.state==='running')done()}
-  function firstGesture(e){if(started)return;if(e&&e.target&&e.target.closest&&e.target.closest('.snd'))return;tryStart()}
+  function firstGesture(e){if(started)return;if(e&&e.target&&e.target.closest&&e.target.closest('.snd, #enter-mute'))return;tryStart()}
   GEST.forEach(function(ev){document.addEventListener(ev,firstGesture,true)});
   snd.addEventListener('click',function(){
     if(!started){snd.setAttribute('aria-pressed','true');tryStart();return}
     setOn(snd.getAttribute('aria-pressed')!=='true')});
   window.addEventListener('scroll',function(){scene()},{passive:true});
   document.addEventListener('visibilitychange',function(){if(!AC)return;if(document.hidden)AC.suspend();else if(snd.getAttribute('aria-pressed')==='true')AC.resume()});
+
+  // ---------- Acceso: micelio que crece y botón Entrar ----------
+  // Se omite si se llega con un enlace directo (#...) o si ya se entró en esta visita.
+  var gate=document.getElementById('gate'),seen=false;
+  try{seen=sessionStorage.getItem('tekia-entrada')==='1'}catch(e){}
+  var behind=[document.querySelector('header.top'),document.querySelector('main'),document.querySelector('.depth')];
+  if(seen||location.hash){gate.parentNode.removeChild(gate)}else{
+    document.documentElement.classList.add('gated');behind.forEach(function(e){e.inert=true});
+    var myc=document.getElementById('myc'),ms=11;function mr(){ms=(ms*16807)%2147483647;return ms/2147483647}
+    var layers=[];function grow(x,y,ang,len,d,w){if(d<=0||len<8)return;
+      var x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len,mx=(x+x2)/2+(mr()-.5)*len*.4,my=(y+y2)/2+(mr()-.5)*len*.4,k=7-d;
+      if(!layers[k]){layers[k]=document.createElementNS(NS,'g');myc.appendChild(layers[k])}
+      var pth=document.createElementNS(NS,'path');pth.setAttribute('d','M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1));
+      pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.opacity=(.85-k*.08).toFixed(2);pth.style.animationDelay=(.15+k*.32).toFixed(2)+'s';layers[k].appendChild(pth);
+      var n=mr()<.6?2:1;for(var j=0;j<n;j++)grow(x2,y2,ang+(mr()-.5)*1.2,len*(.7+mr()*.2),d-1,Math.max(.5,w*.75))}
+    for(var a=0;a<14;a++){var an=a/14*6.283+mr()*.3;grow(Math.cos(an)*78,Math.sin(an)*78,an,85+mr()*40,7,1.4)}
+    var enterBtn=document.getElementById('enter'),muteBtn=document.getElementById('enter-mute');
+    // Al pulsar Entrar, el micelio brota desde el botón hasta cubrir la pantalla y da paso a la landing.
+    function burst(){var W=innerWidth,H=innerHeight,r=enterBtn.getBoundingClientRect(),ox=r.left+r.width/2,oy=r.top+r.height/2,R=Math.hypot(W,H);
+      var sv=document.createElementNS(NS,'svg');sv.setAttribute('class','burst');sv.setAttribute('viewBox','0 0 '+W+' '+H);sv.setAttribute('aria-hidden','true');gate.appendChild(sv);
+      var cols=['var(--oro)','var(--verde)','var(--ambar)'];
+      function br(x,y,ang,len,d,w){if(d<=0||len<6)return;var x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len,mx=(x+x2)/2+(mr()-.5)*len*.45,my=(y+y2)/2+(mr()-.5)*len*.45,k=9-d;
+        var pth=document.createElementNS(NS,'path');pth.setAttribute('d','M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1));
+        pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.stroke=cols[mr()<.6?0:(mr()<.7?1:2)];pth.style.animationDelay=(k*.12+mr()*.06).toFixed(2)+'s';sv.appendChild(pth);
+        var n=mr()<.62?2:1;for(var j=0;j<n;j++)br(x2,y2,ang+(mr()-.5)*1.1,len*(.78+mr()*.12),d-1,Math.max(.6,w*.8))}
+      for(var a=0;a<24;a++){var an=a/24*6.283+mr()*.2;br(ox,oy,an,R*(.16+mr()*.05),9,2.4)}}
+    function reveal(){if(!gate)return;gate.classList.add('out');document.documentElement.classList.remove('gated');behind.forEach(function(e){e.inert=false});
+      try{sessionStorage.setItem('tekia-entrada','1')}catch(e){}
+      var g=gate;gate=null;setTimeout(function(){g.parentNode&&g.parentNode.removeChild(g)},reduce?300:1000);
+      var h=document.querySelector('#umbral h1');h.setAttribute('tabindex','-1');h.focus({preventScroll:true});orbsOn()}
+    function enter(){if(!gate||gate.classList.contains('go'))return;gate.classList.add('go');if(reduce){reveal();return}burst();setTimeout(reveal,1450)}
+    // Entrar cuenta como primer toque: el sonido arranca ahí. "Entrar sin sonido" lo deja apagado.
+    enterBtn.addEventListener('click',enter);
+    muteBtn.addEventListener('click',function(){snd.setAttribute('aria-pressed','false');snd.classList.remove('pending');enter()});
+    gate.addEventListener('keydown',function(e){if(e.key==='Escape')enter()});
+    enterBtn.focus({preventScroll:true});
+  }
 
   // ---------- Aparición de textos ----------
   var rv=document.querySelectorAll('[data-rv]');
