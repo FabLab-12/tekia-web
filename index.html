@@ -156,6 +156,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 @keyframes drift{from{background-position:0% 50%}to{background-position:100% 50%}}
 /* Botones-símbolo: lupa (Observar), montaña (Recorrer), luz (Viajar) */
 .orb-label{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .95rem;border-radius:99px;background:#F8F5EB;color:#2F2A27;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;box-shadow:0 2px 14px rgba(0,0,0,.18);white-space:nowrap;transition:transform .3s}
+.lens-btn .orb-label,.halo .orb-label,.mount-btn{opacity:var(--on,0);transition:opacity .35s,transform .3s,background .3s}
+.lens-btn .orb-label,.halo .orb-label{filter:blur(calc((1 - var(--on,0)) * 4px))}
+.mount-btn{filter:blur(calc((1 - var(--on,0)) * 3px))}
+.lens-btn[data-off] ,.halo[data-off],.mount-btn[data-off]{pointer-events:none}
+.lens-btn:focus-visible .orb-label,.halo:focus-visible .orb-label,.mount-btn:focus-visible{opacity:1;filter:none}
 .lens-btn{position:absolute;z-index:3;border-radius:50%;display:grid;place-items:end center;text-decoration:none;color:inherit}
 .lens-btn .orb-label{transform:translateY(55%)}
 .lens-btn:hover .orb-label,.lens-btn:focus-visible .orb-label,.mount-btn:hover .orb-label,.mount-btn:focus-visible .orb-label,.halo:hover .orb-label,.halo:focus-visible .orb-label{transform:translateY(55%) scale(1.06);background:#fff}
@@ -255,7 +260,7 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
       <path d="M0,150 L78,58 L100,78 L138,20 L240,150 Z" fill="url(#mg)" stroke="#C9B071" stroke-width="2" stroke-linejoin="round"/>
       <path d="M124,38 L138,20 L152,38 L144,34 L138,40 L131,34 Z" fill="#F8F5EB" opacity=".85"/>
       <path d="M60,150 C90,120 110,128 128,100 S170,86 180,60" fill="none" stroke="#F8F5EB" stroke-width="1.6" stroke-dasharray="4 5" opacity=".8"/></svg>
-    <span class="orb-label">Recorrer</span>
+    <span class="orb-label">Sentir</span>
   </a>
   <p class="media-note"><span class="ph">[video o fotografía real del cultivo, pendiente]</span></p>
   <div class="copy" data-rv>
@@ -438,6 +443,12 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
     void c.offsetWidth;c.classList.add('lit');c.focus({preventScroll:true});clearTimeout(litT);litT=setTimeout(function(){c.classList.remove('lit')},4500)}
   document.querySelectorAll('.top nav a, a.lens-btn, a.mount-btn, a.halo').forEach(function(a){a.addEventListener('click',function(){light(a.getAttribute('href').slice(1))})});
   if(location.hash)light(location.hash.slice(1));
+
+  // ---------- Los botones se encienden al acercarse a su sección y se apagan al alejarse ----------
+  var orbs=[[document.getElementById('lensbtn'),mente],[document.getElementById('mountbtn'),cuerpo],[esp.querySelector('.halo'),esp]];
+  function orbsOn(){var vh=window.innerHeight;orbs.forEach(function(o){var b=o[1].getBoundingClientRect(),c=(b.top+b.bottom)/2,d=Math.abs(c-vh/2)/(vh*.75);
+    var on=Math.max(0,Math.min(1,(1-d)*1.8));o[0].style.setProperty('--on',on.toFixed(3));if(on<.15)o[0].setAttribute('data-off','');else o[0].removeAttribute('data-off')})}
+  window.addEventListener('scroll',orbsOn,{passive:true});window.addEventListener('resize',orbsOn);orbsOn();
 
   // ---------- Ambiente sonoro (generado; solo suena si la persona lo activa) ----------
   // Cada sección tiene su propio paisaje de tonos suaves; al cambiar de sección se funden despacio.
