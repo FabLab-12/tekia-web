@@ -247,10 +247,10 @@ html.gated,html.gated body{overflow:hidden}
 .gate{position:fixed;inset:0;z-index:20;background-color:var(--noche);color:var(--noche-tx);display:grid;place-items:center;text-align:center;overflow:hidden;transition:background-color 1.6s ease}
 /* Salida: el fondo se disuelve y el micelio sigue creciendo hacia los bordes hasta salirse de la pantalla */
 .gate.out{background-color:rgba(26,23,20,0);pointer-events:none}
-.gate.out .in,.gate.out svg.myc{opacity:0;transition:opacity .9s ease}
-/* las líneas siguen creciendo hasta salirse de la pantalla, siempre finas, y se desvanecen */
-.gate .burst{transition:opacity 2s ease-in .9s}
-.gate.out .burst{opacity:0}
+/* las mismas líneas del fondo siguen creciendo hasta salirse de la pantalla, siempre finas, y luego se desvanecen */
+.gate.out svg.myc{opacity:0;transition:opacity 1.6s ease-in 1.3s}
+.gate .myc g.ext{animation:none}
+.gate .myc .ext path{animation-duration:.5s;animation-timing-function:linear}
 html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
 @keyframes arrive{from{opacity:0;transform:translateY(16px)}}
 .gate .in{position:relative;z-index:2;padding:2rem max(20px,env(safe-area-inset-left,0px))}
@@ -272,9 +272,8 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
 .gate .enter:hover{transform:translateY(-2px);background:rgba(237,230,214,.08);box-shadow:0 0 24px rgba(201,176,113,.25)}
 .gate .mute{display:block;margin:1rem auto 0;min-height:44px;padding:0 .8rem;background:none;border:0;color:var(--tinta-suave);font:500 .7rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;cursor:pointer;opacity:0;animation:gIn 1.2s 1.5s ease forwards;color:var(--noche-sub)}
 @keyframes gIn{to{opacity:1;transform:none}}
-.gate svg.burst{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
-.gate .burst path{fill:none;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:grow .55s ease-out forwards}
-.gate.go .in{opacity:0;transition:opacity .5s ease}
+.gate.go .in>:not(.seed),.gate.go .seed img{animation:gOut .5s ease forwards}
+@keyframes gOut{from{opacity:1}to{opacity:0}}
 @media (prefers-reduced-motion: reduce){.art,.dust{animation:none}.gate .rule,.gate img,.gate .tag,.gate .enter,.gate .mute{animation:none;opacity:1;transform:none}.gate .myc path{animation:none;stroke-dashoffset:0}.gate .myc g{animation:none}.gate{transition:opacity .3s}.gate.out{transform:none}}
 </style>
 
@@ -658,30 +657,33 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   var gate=document.getElementById('gate'),seen=false;
   var behind=[document.querySelector('header.top'),document.querySelector('main'),document.querySelector('.depth')];
   if(seen||location.hash){gate.parentNode.removeChild(gate)}else{
+    // Después del acceso siempre se empieza arriba: no se recupera dónde se quedó la última vez.
+    if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);
     document.documentElement.classList.add('gated');behind.forEach(function(e){e.inert=true});
     var myc=document.getElementById('myc'),ms=11;function mr(){ms=(ms*16807)%2147483647;return ms/2147483647}
-    var layers=[];function grow(x,y,ang,len,d,w){if(d<=0||len<8)return;
+    var layers=[],tips=[],t0=performance.now();function grow(x,y,ang,len,d,w){if(d<=0||len<8)return;
       var x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len,mx=(x+x2)/2+(mr()-.5)*len*.4,my=(y+y2)/2+(mr()-.5)*len*.4,k=7-d;
       if(!layers[k]){layers[k]=document.createElementNS(NS,'g');myc.appendChild(layers[k])}
       var pth=document.createElementNS(NS,'path');pth.setAttribute('d','M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1));
       pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.opacity=(.6-k*.05).toFixed(2);pth.style.animationDelay=(.1+k*.3).toFixed(2)+'s';layers[k].appendChild(pth);
+      if(d===1)tips.push([x2,y2,ang,w,(.1+k*.3)+3.2]);
       var n=mr()<.6?2:1;for(var j=0;j<n;j++)grow(x2,y2,ang+(mr()-.5)*1.1,len*(.78+mr()*.14),d-1,Math.max(.35,w*.78))}
     for(var a=0;a<22;a++){var an=a/22*6.283+mr()*.25;grow(Math.cos(an)*95,Math.sin(an)*95,an,110+mr()*60,7,1.1)}
     var enterBtn=document.getElementById('enter'),muteBtn=document.getElementById('enter-mute');
-    // Al pulsar Entrar, el micelio brota desde el botón hasta cubrir la pantalla y da paso a la landing.
-    function burst(){var W=innerWidth,H=innerHeight,r=enterBtn.getBoundingClientRect(),ox=r.left+r.width/2,oy=r.top+r.height/2,R=Math.hypot(W,H);
-      var sv=document.createElementNS(NS,'svg');sv.setAttribute('class','burst');sv.setAttribute('viewBox','0 0 '+W+' '+H);sv.setAttribute('aria-hidden','true');sv.style.transformOrigin=ox.toFixed(0)+'px '+oy.toFixed(0)+'px';gate.appendChild(sv);
-      var cols=['var(--oro)','var(--noche-tx)','var(--ambar)'];
-      function br(x,y,ang,len,d,w){if(d<=0||len<6)return;var x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len,mx=(x+x2)/2+(mr()-.5)*len*.45,my=(y+y2)/2+(mr()-.5)*len*.45,k=10-d;
+    // Al pulsar Entrar, las mismas líneas del fondo siguen creciendo desde sus puntas hasta salirse de la pantalla.
+    function extend(){var R=Math.hypot(innerWidth,innerHeight)/2+60,el=(performance.now()-t0)/1000,ex=document.createElementNS(NS,'g');ex.setAttribute('class','ext');myc.appendChild(ex);
+      function seg(x,y,ang,w,step,wait){var d=Math.hypot(x,y);if(d>R||step>40)return;
+        var len=34+mr()*22,x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len,mx=(x+x2)/2+(mr()-.5)*len*.4,my=(y+y2)/2+(mr()-.5)*len*.4;
         var pth=document.createElementNS(NS,'path');pth.setAttribute('d','M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1));
-        pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.stroke=cols[mr()<.6?0:(mr()<.7?1:2)];pth.style.animationDelay=(k*.14+mr()*.06).toFixed(2)+'s';sv.appendChild(pth);
-        var n=mr()<.55?2:1;for(var j=0;j<n;j++)br(x2,y2,ang+(mr()-.5)*1.1,len*(.8+mr()*.1),d-1,Math.max(.35,w*.86))}
-      for(var a=0;a<20;a++){var an=a/20*6.283+mr()*.2;br(ox,oy,an,R*(.17+mr()*.04),10,1)}}
+        pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.opacity='.42';pth.style.animationDelay=(wait+step*.11).toFixed(2)+'s';ex.appendChild(pth);
+        var out=Math.atan2(y2,x2),na=ang+(mr()-.5)*.7;na+=Math.atan2(Math.sin(out-na),Math.cos(out-na))*.25; // deriva suave hacia afuera
+        seg(x2,y2,na,w,step+1,wait);if(mr()<.07)seg(x2,y2,na+(mr()<.5?-1:1)*(.35+mr()*.3),w,step+1,wait)}
+      tips.forEach(function(t,i){if(tips.length>160&&i%Math.ceil(tips.length/160))return;seg(t[0],t[1],t[2],Math.max(.35,t[3]),0,Math.min(.5,Math.max(0,t[4]-el)))})}
     function reveal(){if(!gate)return;gate.classList.add('out');document.documentElement.classList.remove('gated');behind.forEach(function(e){e.inert=false});
       var g=gate,de=document.documentElement;gate=null;if(!reduce){de.classList.add('arriving');setTimeout(function(){de.classList.remove('arriving')},2200)}
-      setTimeout(function(){g.parentNode&&g.parentNode.removeChild(g)},reduce?300:2800);
+      setTimeout(function(){g.parentNode&&g.parentNode.removeChild(g)},reduce?300:3200);scrollTo(0,0);
       var h=document.querySelector('#umbral h1');h.setAttribute('tabindex','-1');h.focus({preventScroll:true});orbsOn()}
-    function enter(){if(!gate||gate.classList.contains('go'))return;gate.classList.add('go');if(reduce){reveal();return}burst();setTimeout(reveal,750)}
+    function enter(){if(!gate||gate.classList.contains('go'))return;gate.classList.add('go');scrollTo(0,0);if(reduce){reveal();return}extend();setTimeout(reveal,600)}
     // Entrar cuenta como primer toque: el sonido arranca ahí. "Entrar sin sonido" lo deja apagado.
     enterBtn.addEventListener('click',enter);
     muteBtn.addEventListener('click',function(){snd.setAttribute('aria-pressed','false');snd.classList.remove('pending');enter()});
