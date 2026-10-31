@@ -191,17 +191,17 @@ html.at-top .snd,html.at-top .snd[aria-pressed="true"]{background:transparent;co
 .lens-btn{position:absolute;z-index:3;border-radius:50%;display:grid;place-items:end center;text-decoration:none;color:inherit}
 .lens-btn .orb-label{transform:translateY(55%)}
 .lens-btn:hover .orb-label,.lens-btn:focus-visible .orb-label,.mount-btn:hover .orb-label,.mount-btn:focus-visible .orb-label,.halo:hover .orb-label,.halo:focus-visible .orb-label{transform:translateY(55%) scale(1.06);background:#1A1714;color:var(--oro-claro)}
-.mount-btn{position:absolute;z-index:3;right:max(6vw,24px);bottom:calc(36% + var(--my,0px));width:clamp(130px,15vw,190px);display:grid;justify-items:center;text-decoration:none;color:inherit}
+.mount-btn{position:absolute;z-index:3;right:max(6vw,24px);bottom:calc(36% + var(--my,0px));width:clamp(150px,20vw,240px);display:grid;justify-items:center;text-decoration:none;color:inherit}
 .mount-btn svg{width:100%;height:auto;display:block;overflow:visible;transition:transform .4s}
 .mount-btn:hover svg,.mount-btn:focus-visible svg{transform:translateY(-6px)}
-.mount-btn .orb-label{margin-top:-1.1rem;transform:translateY(0)}
+.mount-btn .orb-label{margin-top:-.4rem;transform:translateY(0)}
 .mount-btn:hover .orb-label,.mount-btn:focus-visible .orb-label{transform:scale(1.06)}
-@media (max-width:640px){.mount-btn{bottom:calc(58% + var(--my,0px));width:118px}}
-.espiritu .halo{position:absolute;z-index:3;right:max(5vw,20px);top:50%;width:min(46vmin,440px);aspect-ratio:1;margin-top:calc(min(46vmin,440px) / -2);border-radius:50%;display:grid;place-items:center;text-decoration:none;color:inherit;transform:scale(var(--hs,.8));opacity:var(--ho,.6)}
-.espiritu .halo svg{position:absolute;inset:14%;width:72%;height:72%;overflow:visible;transition:transform .6s,filter .6s}
-.espiritu .halo:hover svg,.espiritu .halo:focus-visible svg{transform:scale(1.04);filter:drop-shadow(0 0 22px rgba(201,176,113,.4))}
-.espiritu .halo i{position:absolute;inset:0;border-radius:50%;animation:breathe 9s ease-in-out infinite;background:radial-gradient(circle,rgba(201,176,113,.35) 0%,rgba(201,176,113,.12) 45%,rgba(201,176,113,0) 70%);opacity:.6;pointer-events:none}
-.espiritu .halo .orb-label{position:absolute;bottom:6%;transform:none}
+@media (max-width:640px){.mount-btn{bottom:calc(58% + var(--my,0px));width:130px}}
+.espiritu .halo{position:absolute;z-index:3;right:max(5vw,20px);top:50%;width:min(46vmin,440px);aspect-ratio:1;margin-top:calc(min(46vmin,440px) / -2);border-radius:50%;display:grid;place-items:center;text-decoration:none;color:inherit;
+  background:radial-gradient(circle,rgba(224,170,120,.38) 0%,rgba(201,176,113,.16) 40%,rgba(201,176,113,0) 70%);transform:scale(var(--hs,.8));opacity:var(--ho,.6)}
+.espiritu .halo::before{content:"";position:absolute;inset:18%;border-radius:50%;border:1px solid rgba(255,248,232,.6)}
+.espiritu .halo i{position:absolute;inset:0;border-radius:50%;animation:breathe 9s ease-in-out infinite;background:inherit;opacity:.6;pointer-events:none}
+.espiritu .halo .orb-label{position:relative;transform:none}
 .espiritu .halo:hover .orb-label,.espiritu .halo:focus-visible .orb-label{transform:scale(1.06)}
 @media (max-width:760px){.espiritu .halo{position:relative;right:auto;top:auto;margin:0 0 4rem auto;width:62vw;order:2;justify-self:end}}
 @keyframes breathe{50%{transform:scale(1.12);opacity:.25}}
@@ -330,7 +330,10 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   <canvas id="land" aria-hidden="true"></canvas>
   <div class="shade" aria-hidden="true"></div>
   <a class="mount-btn" id="mountbtn" href="#f-origen">
-    <svg class="engr" data-kind="mount" data-disk="1" viewBox="0 0 200 200" aria-hidden="true"></svg>
+    <svg viewBox="0 0 240 150" aria-hidden="true"><defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9A877"/><stop offset="1" stop-color="#6E5236"/></linearGradient></defs>
+      <path d="M0,150 L78,58 L100,78 L138,20 L240,150 Z" fill="url(#mg)" stroke="#C9B071" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M124,38 L138,20 L152,38 L144,34 L138,40 L131,34 Z" fill="#F8F5EB" opacity=".85"/>
+      <path d="M60,150 C90,120 110,128 128,100 S170,86 180,60" fill="none" stroke="#F8F5EB" stroke-width="1.6" stroke-dasharray="4 5" opacity=".8"/></svg>
     <span class="orb-label">Sentir</span>
   </a>
   <!-- Pendiente: video o fotografía real del cultivo (Teka_UX.md) -->
@@ -346,7 +349,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
 
 <section class="espiritu gut" id="espiritu" data-top="dark" aria-labelledby="h-esp">
   <div class="bands" aria-hidden="true"></div>
-  <a class="halo" href="#f-acomp"><i></i><svg class="engr" data-kind="light" data-disk="1" viewBox="0 0 200 200" aria-hidden="true"></svg><span class="orb-label">Conectar</span></a>
+  <a class="halo" href="#f-acomp"><i></i><span class="orb-label">Conectar</span></a>
   <svg class="grain" aria-hidden="true"><rect width="100%" height="100%" filter="url(#n)"/></svg>
   <div class="copy" data-rv>
     <span class="label">Espíritu</span>
@@ -402,12 +405,16 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   var A=el('text',{x:122,y:100,'font-size':16,'font-family':'Georgia,serif',style:'fill:var(--tinta)'});A.textContent='A';
   var B=el('text',{x:122,y:505,'font-size':16,'font-family':'Georgia,serif',style:'fill:var(--tinta)'});B.textContent='B';
   // hongo: sombrero, laminillas, pie
-  var cx=400;
-  el('path',{d:'M290,190 C300,110 500,110 510,190 Z',style:ink,'stroke-width':1.8});
-  for(var g=0;g<22;g++){var gx=296+g*9.6;el('line',{x1:gx,y1:190,x2:cx+(gx-cx)*0.32,y2:206,style:ink,'stroke-width':.7})}
-  el('path',{d:'M290,190 Q400,214 510,190',style:ink,'stroke-width':1.2});
-  el('path',{d:'M384,206 C380,240 378,270 372,300 M416,206 C420,240 422,270 428,300',style:ink,'stroke-width':1.6});
-  for(var h=0;h<9;h++){el('line',{x1:386+h*3.4,y1:226+h*7,x2:392+h*3.4,y2:230+h*7,style:ink,'stroke-width':.5})}
+  // el mismo hongo del primer círculo de la bienvenida (sombrero con laminillas y pie), a escala de la lámina
+  var cx=400,T='translate(243,27.4) scale(1.57)',cs=5;function cr(){cs=(cs*16807)%2147483647;return cs/2147483647}
+  function C(d,w){el('path',{d:d,style:ink,'stroke-width':w,transform:T})}
+  function q(n){return n.toFixed(1)}function bz(t,a,b,c,d){var u=1-t;return u*u*u*a+3*u*u*t*b+3*u*t*t*c+t*t*t*d}
+  C('M30,94 C38,38 162,38 170,94',1.1);C('M30,94 Q100,124 170,94',.9);C('M30,94 Q100,82 170,94',.5);
+  for(var j=1;j<7;j++)C('M'+q(30+j*7)+','+q(94-j*1.5)+' C'+q(40+j*6)+','+q(40+j*5)+' '+q(160-j*6)+','+q(40+j*5)+' '+q(170-j*7)+','+q(94-j*1.5),.35);
+  for(var i=0;i<=46;i++){var t=i/46,u=1-t,x=u*u*30+2*u*t*100+t*t*170,y=u*u*94+2*u*t*124+t*t*94;C('M100,103 Q'+q((100+x)/2)+','+q((103+y)/2+3)+' '+q(x)+','+q(y),.35)}
+  for(var i=0;i<=34;i++){var t=i/34,x=bz(t,30,38,162,170),y=bz(t,94,38,38,94);C('M'+q(x)+','+q(y)+' l'+q((100-x)*.05)+','+q(5+cr()*9),.3)}
+  C('M93,110 C91,134 88,152 85,174',.9);C('M107,110 C109,134 112,152 115,174',.9);C('M85,174 Q100,181 115,174',.7);
+  for(var i=0;i<6;i++){var x0=95+i*2.2;C('M'+q(x0)+',114 C'+q(x0-1)+',140 '+q(x0-3)+',158 '+q(x0-5+i*.6)+',172',.3)}
   // micelio: ramificación determinista
   var seed=7;function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647}
   function branch(x,y,ang,len,depth,w){
@@ -424,9 +431,9 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
     el('circle',{cx:n[0],cy:n[1],r:11,style:ink,'stroke-width':1});
     var t=el('text',{x:n[0],y:n[1]+4.5,'text-anchor':'middle','font-size':13,'font-family':'Georgia,serif',style:'fill:var(--tinta)'});t.textContent=n[2];
   });
-  el('line',{x1:509,y1:156,x2:470,y2:170,style:ink,'stroke-width':.7});
-  el('line',{x1:529,y1:212,x2:480,y2:204,style:ink,'stroke-width':.7});
-  el('line',{x1:444,y1:262,x2:424,y2:262,style:ink,'stroke-width':.7});
+  el('line',{x1:509,y1:156,x2:468,y2:128,style:ink,'stroke-width':.7});
+  el('line',{x1:529,y1:212,x2:480,y2:194,style:ink,'stroke-width':.7});
+  el('line',{x1:444,y1:262,x2:421,y2:262,style:ink,'stroke-width':.7});
   el('line',{x1:590,y1:424,x2:560,y2:400,style:ink,'stroke-width':.7});
 
   // ---------- La lámina se dibuja al bajar ----------
