@@ -111,13 +111,25 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .media-note .ph{background:rgba(248,245,235,.75);opacity:1}
 
 /* Cierre: la ficha (lo que sabemos y no) */
-.datos{scroll-margin-top:3.5rem;background:var(--crema);padding-block:4.5rem 3.2rem}
+.datos{scroll-margin-top:3.5rem;background:var(--crema);padding-block:4.5rem 4.5rem}
 .datos .head{max-width:62rem;margin:0 auto 2rem}
 .datos .head h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15;margin:.6rem 0 .3rem}
 .datos .head p{margin:0;color:var(--tinta-suave);max-width:50ch}
 .datos .label{background:var(--verde);color:#fff}
 .datos .in{max-width:62rem;margin:0 auto;display:grid;gap:1.2rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .datos .in>div{min-width:0}
+.datos .cell{scroll-margin-top:5rem;padding:1rem;margin:-1rem;border-radius:10px;border:1px solid transparent;transition:background .5s,border-color .5s,box-shadow .5s}
+.datos .cell:focus{outline:none}
+.datos .cell.lit{background:rgba(201,176,113,.16);border-color:var(--oro);box-shadow:0 0 0 4px rgba(201,176,113,.18)}
+.datos .cell.lit h3{color:var(--tinta)}
+.acomp{max-width:62rem;margin:3rem auto 0!important;padding:1.4rem 1.6rem!important;border:1px solid var(--line)!important;border-radius:14px;background:var(--papel)}
+.acomp.lit{background:rgba(201,176,113,.16)!important;border-color:var(--oro)!important}
+.acomp-intro{margin:0 0 1rem;max-width:50ch}
+.datos .acomp-row{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.8rem 2.4rem}
+.acomp-row li{display:flex;flex-direction:column;gap:.15rem;font-size:.9rem}
+.acomp-row span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave);font-weight:600}
+.acomp-note{margin:1rem 0 0;font-size:.8rem;color:var(--tinta-suave)}
+@media (prefers-reduced-motion: reduce){.datos .cell{transition:none}}
 .datos h3{font-family:var(--sans);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 .5rem;color:var(--tinta-suave);font-weight:600}
 .datos dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem .8rem;margin:0;font-size:.9rem}
 .datos dt{color:var(--tinta-suave)}.datos dd{margin:0}
@@ -162,7 +174,7 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
 <body>
 <header class="top">
   <a href="#umbral" aria-label="TEKIA, volver al inicio"><img src="assets/tekia-emblema-oro-web.png" alt=""></a>
-  <nav aria-label="Navegación general"><a href="#datos">Ingredientes</a><a href="#datos">Cómo elegimos</a><a class="pre" href="#datos">Precauciones</a><a href="#datos">Acompañamiento</a></nav>
+  <nav aria-label="Navegación general"><a href="#f-origen">Ingredientes</a><a href="#f-nosabemos">Cómo elegimos</a><a class="pre" href="#f-precauciones">Precauciones</a><a href="#f-acomp">Acompañamiento</a></nav>
 </header>
 
 <nav class="depth" aria-label="Profundidad del recorrido">
@@ -237,25 +249,31 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
   </div>
 </section>
 
-<section class="datos gut" id="datos" data-top="dark" aria-labelledby="h-ficha">
-  <div class="head" data-rv><span class="label">La ficha</span><h2 id="h-ficha">Lo que sabemos y lo que no</h2><p>Al final del recorrido, los hechos sin adorno. Lo que falta de documentar se dice.</p></div>
+<section class="datos gut" id="datos" data-top="dark" aria-label="La ficha">
   <div class="in" data-rv>
-    <div><h3>De dónde viene</h3><dl>
+    <div class="cell" id="f-origen" tabindex="-1"><h3>De dónde viene</h3><dl>
       <dt>Especie</dt><dd><span class="ph">[pendiente]</span></dd>
       <dt>Parte usada</dt><dd><span class="ph">[pendiente]</span></dd>
       <dt>Procedencia</dt><dd><span class="ph">[pendiente de documentar]</span></dd>
       <dt>Análisis del lote</dt><dd><span class="ph">[pendiente]</span></dd></dl></div>
-    <div><h3>Lo que aún no sabemos</h3><ul>
+    <div class="cell" id="f-nosabemos" tabindex="-1"><h3>Lo que aún no sabemos</h3><ul>
       <li>De dónde viene exactamente</li><li>Qué parte del hongo se usa y cómo se extrae</li><li>Qué mide el análisis de cada lote</li></ul></div>
-    <div><h3>Antes de considerarlo</h3><div class="caution"><b>Precauciones.</b> <span class="ph">[pendientes de revisión]</span> Si estás embarazada, lactando o tomas medicamentos, consúltalo antes con tu médico.</div></div>
+    <div class="cell" id="f-precauciones" tabindex="-1"><h3>Antes de considerarlo</h3><div class="caution"><b>Precauciones.</b> <span class="ph">[pendientes de revisión]</span> Si estás embarazada, lactando o tomas medicamentos, consúltalo antes con tu médico.</div></div>
+  </div>
+  <div class="cell acomp" id="f-acomp" tabindex="-1" data-rv>
+    <h3>Acompañamiento</h3>
+    <p class="acomp-intro">¿Tienes dudas antes de elegir? Escríbenos y te respondemos con calma.</p>
+    <ul class="acomp-row">
+      <li><span>Correo</span><b class="ph">[pendiente]</b></li>
+      <li><span>WhatsApp</span><b class="ph">[pendiente]</b></li>
+      <li><span>Redes</span><b class="ph">[pendiente]</b></li>
+      <li><span>Horario de atención</span><b class="ph">[pendiente]</b></li>
+    </ul>
+    <p class="acomp-note">Este acompañamiento no sustituye la consulta con un profesional de la salud.</p>
   </div>
 </section>
 </main>
 
-<footer class="gut"><div class="in">
-  <span>TEKIA · prototipo de recorrido v0.12 · 30 oct 2026 · Propuesta, sin productos ni beneficios reales.</span>
-  <span>Animaciones generadas en la página; ninguna imagen de terceros.</span>
-</div></footer>
 
 <script>
 (function(){
@@ -377,6 +395,15 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
 
   function frame(t){drawPlate();placeLens(t);if(isVisible(cv)){landProgress();drawLand(t)}poem();depth();if(!reduce)requestAnimationFrame(frame)}
   function isVisible(e){var b=e.getBoundingClientRect();return b.bottom>0&&b.top<window.innerHeight}
+  // ---------- La barra ilumina el apartado de la ficha ----------
+  var litT;
+  function light(id){var c=document.getElementById(id);if(!c||!c.classList.contains('cell'))return;
+    document.querySelectorAll('.cell.lit').forEach(function(e){e.classList.remove('lit')});
+    c.classList.add('shown');if(c.closest('[data-rv]'))c.closest('[data-rv]').classList.add('shown');
+    void c.offsetWidth;c.classList.add('lit');c.focus({preventScroll:true});clearTimeout(litT);litT=setTimeout(function(){c.classList.remove('lit')},4500)}
+  document.querySelectorAll('.top nav a').forEach(function(a){a.addEventListener('click',function(){light(a.getAttribute('href').slice(1))})});
+  if(location.hash)light(location.hash.slice(1));
+
   // ---------- Aparición de textos ----------
   var rv=document.querySelectorAll('[data-rv]');
   if('IntersectionObserver' in window&&!reduce){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('shown');io.unobserve(e.target)}})},{threshold:.15});rv.forEach(function(e){io.observe(e)})}
