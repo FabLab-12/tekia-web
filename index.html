@@ -182,7 +182,7 @@ html.at-top .snd,html.at-top .snd[aria-pressed="true"]{background:transparent;co
   background-size:500% 100%;filter:blur(18px)}
 @keyframes drift{from{background-position:0% 50%}to{background-position:100% 50%}}
 /* Botones-símbolo: lupa (Observar), montaña (Recorrer), luz (Viajar) */
-.orb-label{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .95rem;border-radius:99px;background:#F8F5EB;color:#2F2A27;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;box-shadow:0 2px 14px rgba(0,0,0,.18);white-space:nowrap;transition:transform .3s}
+.orb-label{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1.1rem;border-radius:99px;background:rgba(26,23,20,.88);color:#EDE6D6;border:1px solid rgba(201,176,113,.55);font-family:var(--serif);font-size:.98rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;box-shadow:0 2px 14px rgba(0,0,0,.18);white-space:nowrap;transition:transform .3s,color .3s}
 .lens-btn .orb-label,.halo .orb-label,.mount-btn{opacity:var(--on,0);transition:opacity .35s,transform .3s,background .3s}
 .lens-btn .orb-label,.halo .orb-label{filter:blur(calc((1 - var(--on,0)) * 4px))}
 .mount-btn{filter:blur(calc((1 - var(--on,0)) * 3px))}
@@ -190,18 +190,18 @@ html.at-top .snd,html.at-top .snd[aria-pressed="true"]{background:transparent;co
 .lens-btn:focus-visible .orb-label,.halo:focus-visible .orb-label,.mount-btn:focus-visible{opacity:1;filter:none}
 .lens-btn{position:absolute;z-index:3;border-radius:50%;display:grid;place-items:end center;text-decoration:none;color:inherit}
 .lens-btn .orb-label{transform:translateY(55%)}
-.lens-btn:hover .orb-label,.lens-btn:focus-visible .orb-label,.mount-btn:hover .orb-label,.mount-btn:focus-visible .orb-label,.halo:hover .orb-label,.halo:focus-visible .orb-label{transform:translateY(55%) scale(1.06);background:#fff}
-.mount-btn{position:absolute;z-index:3;right:max(6vw,24px);bottom:calc(36% + var(--my,0px));width:clamp(150px,20vw,240px);display:grid;justify-items:center;text-decoration:none;color:inherit}
+.lens-btn:hover .orb-label,.lens-btn:focus-visible .orb-label,.mount-btn:hover .orb-label,.mount-btn:focus-visible .orb-label,.halo:hover .orb-label,.halo:focus-visible .orb-label{transform:translateY(55%) scale(1.06);background:#1A1714;color:var(--oro-claro)}
+.mount-btn{position:absolute;z-index:3;right:max(6vw,24px);bottom:calc(36% + var(--my,0px));width:clamp(130px,15vw,190px);display:grid;justify-items:center;text-decoration:none;color:inherit}
 .mount-btn svg{width:100%;height:auto;display:block;overflow:visible;transition:transform .4s}
 .mount-btn:hover svg,.mount-btn:focus-visible svg{transform:translateY(-6px)}
-.mount-btn .orb-label{margin-top:-.4rem;transform:translateY(0)}
+.mount-btn .orb-label{margin-top:-1.1rem;transform:translateY(0)}
 .mount-btn:hover .orb-label,.mount-btn:focus-visible .orb-label{transform:scale(1.06)}
-@media (max-width:640px){.mount-btn{bottom:calc(58% + var(--my,0px));width:130px}}
-.espiritu .halo{position:absolute;z-index:3;right:max(5vw,20px);top:50%;width:min(46vmin,440px);aspect-ratio:1;margin-top:calc(min(46vmin,440px) / -2);border-radius:50%;display:grid;place-items:center;text-decoration:none;color:inherit;
-  background:radial-gradient(circle,rgba(224,170,120,.38) 0%,rgba(201,176,113,.16) 40%,rgba(201,176,113,0) 70%);transform:scale(var(--hs,.8));opacity:var(--ho,.6)}
-.espiritu .halo::before{content:"";position:absolute;inset:18%;border-radius:50%;border:1px solid rgba(255,248,232,.6)}
-.espiritu .halo i{position:absolute;inset:0;border-radius:50%;animation:breathe 9s ease-in-out infinite;background:inherit;opacity:.6;pointer-events:none}
-.espiritu .halo .orb-label{position:relative;transform:none}
+@media (max-width:640px){.mount-btn{bottom:calc(58% + var(--my,0px));width:118px}}
+.espiritu .halo{position:absolute;z-index:3;right:max(5vw,20px);top:50%;width:min(46vmin,440px);aspect-ratio:1;margin-top:calc(min(46vmin,440px) / -2);border-radius:50%;display:grid;place-items:center;text-decoration:none;color:inherit;transform:scale(var(--hs,.8));opacity:var(--ho,.6)}
+.espiritu .halo svg{position:absolute;inset:14%;width:72%;height:72%;overflow:visible;transition:transform .6s,filter .6s}
+.espiritu .halo:hover svg,.espiritu .halo:focus-visible svg{transform:scale(1.04);filter:drop-shadow(0 0 22px rgba(201,176,113,.4))}
+.espiritu .halo i{position:absolute;inset:0;border-radius:50%;animation:breathe 9s ease-in-out infinite;background:radial-gradient(circle,rgba(201,176,113,.35) 0%,rgba(201,176,113,.12) 45%,rgba(201,176,113,0) 70%);opacity:.6;pointer-events:none}
+.espiritu .halo .orb-label{position:absolute;bottom:6%;transform:none}
 .espiritu .halo:hover .orb-label,.espiritu .halo:focus-visible .orb-label{transform:scale(1.06)}
 @media (max-width:760px){.espiritu .halo{position:relative;right:auto;top:auto;margin:0 0 4rem auto;width:62vw;order:2;justify-self:end}}
 @keyframes breathe{50%{transform:scale(1.12);opacity:.25}}
@@ -309,8 +309,8 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
       </defs>
       <use href="#plate"/>
       <g clip-path="url(#lensclip)"><rect x="0" y="0" width="800" height="560" style="fill:var(--papel)"/><g id="zoomed"><use href="#plate"/></g></g>
-      <circle id="lensring" cx="400" cy="300" r="120" fill="url(#lensglow)" style="stroke:var(--tinta)" stroke-opacity=".18" stroke-width="10"/>
-      <circle id="lensring2" cx="400" cy="300" r="125" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2"/>
+      <circle id="lensring" cx="400" cy="300" r="120" fill="url(#lensglow)" stroke="#A88B4A" stroke-width="1.4"/>
+      <circle id="lensring2" cx="400" cy="300" r="127" fill="none" stroke="#A88B4A" stroke-opacity=".7" stroke-width=".7"/><g id="lensticks"></g>
     </svg>
   </div>
   <a class="lens-btn" id="lensbtn" href="#f-nosabemos"><span class="orb-label">Aprender</span></a>
@@ -329,10 +329,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   <canvas id="land" aria-hidden="true"></canvas>
   <div class="shade" aria-hidden="true"></div>
   <a class="mount-btn" id="mountbtn" href="#f-origen">
-    <svg viewBox="0 0 240 150" aria-hidden="true"><defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9A877"/><stop offset="1" stop-color="#6E5236"/></linearGradient></defs>
-      <path d="M0,150 L78,58 L100,78 L138,20 L240,150 Z" fill="url(#mg)" stroke="#C9B071" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M124,38 L138,20 L152,38 L144,34 L138,40 L131,34 Z" fill="#F8F5EB" opacity=".85"/>
-      <path d="M60,150 C90,120 110,128 128,100 S170,86 180,60" fill="none" stroke="#F8F5EB" stroke-width="1.6" stroke-dasharray="4 5" opacity=".8"/></svg>
+    <svg class="engr" data-kind="mount" data-disk="1" viewBox="0 0 200 200" aria-hidden="true"></svg>
     <span class="orb-label">Sentir</span>
   </a>
   <!-- Pendiente: video o fotografía real del cultivo (Teka_UX.md) -->
@@ -348,7 +345,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
 
 <section class="espiritu gut" id="espiritu" data-top="dark" aria-labelledby="h-esp">
   <div class="bands" aria-hidden="true"></div>
-  <a class="halo" href="#f-acomp"><i></i><span class="orb-label">Conectar</span></a>
+  <a class="halo" href="#f-acomp"><i></i><svg class="engr" data-kind="light" data-disk="1" viewBox="0 0 200 200" aria-hidden="true"></svg><span class="orb-label">Conectar</span></a>
   <svg class="grain" aria-hidden="true"><rect width="100%" height="100%" filter="url(#n)"/></svg>
   <div class="copy" data-rv>
     <span class="label">Espíritu</span>
@@ -444,6 +441,9 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   }
 
   // ---------- Lupa: se mueve con el scroll y respira sola ----------
+  var ticks=document.getElementById('lensticks');(function(){for(var i=0;i<72;i++){var a=i/72*6.283,l=i%6?4:9,t=document.createElementNS(NS,'line');t.setAttribute('x1',(Math.cos(a)*121).toFixed(1));t.setAttribute('y1',(Math.sin(a)*121).toFixed(1));t.setAttribute('x2',(Math.cos(a)*(121+l)).toFixed(1));t.setAttribute('y2',(Math.sin(a)*(121+l)).toFixed(1));t.setAttribute('stroke','#A88B4A');t.setAttribute('stroke-width',i%6?.5:.9);ticks.appendChild(t)}
+    [[129,148,1.2],[133,152,.6]].forEach(function(h){var t=document.createElementNS(NS,'path');t.setAttribute('d','M'+(h[0]*.707).toFixed(1)+','+(h[0]*.707).toFixed(1)+' L'+(h[0]*.707+52).toFixed(1)+','+(h[0]*.707+52).toFixed(1));t.setAttribute('stroke','#A88B4A');t.setAttribute('stroke-width',h[2]);t.setAttribute('stroke-linecap','round');ticks.appendChild(t)});
+    for(var k=0;k<5;k++){var t=document.createElementNS(NS,'line'),o=98+k*9;t.setAttribute('x1',o-4);t.setAttribute('y1',o+4);t.setAttribute('x2',o+4);t.setAttribute('y2',o-4);t.setAttribute('stroke','#A88B4A');t.setAttribute('stroke-width','.5');ticks.appendChild(t)}})();
   var lens=document.getElementById('lensc'),r1=document.getElementById('lensring'),r2=document.getElementById('lensring2'),zoomed=document.getElementById('zoomed');
   var mente=document.getElementById('mente');
   function placeLens(t){
@@ -451,7 +451,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
     var p=Math.min(1,Math.max(0,(vh-rect.top)/(rect.height+vh)));
     var lx=300+p*220+(reduce?0:Math.sin(t/2600)*14), ly=170+p*230+(reduce?0:Math.cos(t/3100)*10), z=1.8;
     lens.setAttribute('cx',lx);lens.setAttribute('cy',ly);
-    r1.setAttribute('cx',lx);r1.setAttribute('cy',ly);r2.setAttribute('cx',lx);r2.setAttribute('cy',ly);
+    r1.setAttribute('cx',lx);r1.setAttribute('cy',ly);r2.setAttribute('cx',lx);r2.setAttribute('cy',ly);ticks.setAttribute('transform','translate('+lx.toFixed(1)+','+ly.toFixed(1)+')');
     zoomed.setAttribute('transform','translate('+(lx-lx*z)+','+(ly-ly*z)+') scale('+z+')');
     var rb=r2.getBoundingClientRect(),mb=mente.getBoundingClientRect(),lb=document.getElementById('lensbtn');
     lb.style.left=(rb.left-mb.left)+'px';lb.style.top=(rb.top-mb.top)+'px';lb.style.width=rb.width+'px';lb.style.height=rb.height+'px';
@@ -582,7 +582,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
   [].slice.call(document.querySelectorAll('svg.engr')).forEach(function(sv,idx){
     var kind=sv.getAttribute('data-kind'),gid='gl'+idx;
     sv.innerHTML='<defs><radialGradient id="'+gid+'"><stop offset="0" stop-color="#C9B071" stop-opacity=".16"/><stop offset="1" stop-color="#C9B071" stop-opacity="0"/></radialGradient></defs>';
-    var bg=document.createElementNS(NS,'circle');bg.setAttribute('cx',100);bg.setAttribute('cy',100);bg.setAttribute('r',96);bg.setAttribute('fill','url(#'+gid+')');bg.setAttribute('stroke','var(--oro)');bg.setAttribute('stroke-opacity','.35');bg.setAttribute('stroke-width','.7');sv.appendChild(bg);
+    var bg=document.createElementNS(NS,'circle');bg.setAttribute('cx',100);bg.setAttribute('cy',100);bg.setAttribute('r',96);if(sv.getAttribute('data-disk')){var dk=document.createElementNS(NS,'circle');dk.setAttribute('cx',100);dk.setAttribute('cy',100);dk.setAttribute('r',96);dk.setAttribute('fill','#1A1714');dk.setAttribute('fill-opacity','.9');sv.appendChild(dk)}bg.setAttribute('fill','url(#'+gid+')');bg.setAttribute('stroke','var(--oro)');bg.setAttribute('stroke-opacity','.35');bg.setAttribute('stroke-width','.7');sv.appendChild(bg);
     for(var i=0;i<34;i++){var a=er()*6.283,r=Math.sqrt(er())*90,c=document.createElementNS(NS,'circle');c.setAttribute('cx',f(100+Math.cos(a)*r));c.setAttribute('cy',f(100+Math.sin(a)*r));c.setAttribute('r',f(.35+er()*1));c.setAttribute('fill','#EDE6D6');c.setAttribute('opacity',f(.25+er()*.6));c.setAttribute('class','dust');c.style.animationDelay=f(-er()*4)+'s';sv.appendChild(c)}
     var g=document.createElementNS(NS,'g');g.setAttribute('class','art');sv.appendChild(g);
     if(kind==='cap'){ // sombrero visto de lado, con laminillas y pie
@@ -599,6 +599,18 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
         P(g,'M'+f(cx-w*.07)+','+f(st)+' C'+f(cx-w*.06)+','+f(st+12)+' '+f(cx-w*.04)+','+f(sb-8)+' '+f(cx-3)+','+f(sb),.7);
         P(g,'M'+f(cx+w*.07)+','+f(st)+' C'+f(cx+w*.06)+','+f(st+12)+' '+f(cx+w*.04)+','+f(sb-8)+' '+f(cx+3)+','+f(sb),.7)}
       funnel(86,74,112,170,.4);funnel(130,104,70,172,2.1);
+    }else if(kind==='mount'){ // montaña grabada con sendero
+      P(g,'M24,150 L72,84 L88,100 L116,52 L176,150',1);P(g,'M104,72 L116,52 L128,72 L121,68 L116,75 L110,68 Z',.6,.85);
+      for(var i=0;i<22;i++){var t=i/21,x=116+t*56,y=52+t*98;P(g,'M'+f(x)+','+f(y)+' l'+f(-10-er()*16)+','+f(4+er()*4),.35,.55)}
+      for(var i=0;i<10;i++){var t=i/9,x=72+t*14,y=84+t*16;P(g,'M'+f(x)+','+f(y)+' l'+f(5+er()*6)+','+f(6+er()*5),.3,.45)}
+      for(var j=1;j<5;j++)P(g,'M'+f(40+j*4)+','+f(150-j*9)+' Q100,'+f(132-j*10)+' '+f(166-j*3)+','+f(150-j*8),.3,.35);
+      P(g,'M60,150 C84,128 102,134 116,112 S144,96 150,78',.7,.9).setAttribute('stroke-dasharray','2 4');
+      P(g,'M150,46 m-9,0 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0',.6,.8);for(var i=0;i<12;i++){var a=i/12*6.283;P(g,'M'+f(150+Math.cos(a)*12)+','+f(46+Math.sin(a)*12)+' l'+f(Math.cos(a)*5)+','+f(Math.sin(a)*5),.35,.6)}
+      P(g,'M28,150 L172,150',.6,.7);
+    }else if(kind==='light'){ // luz: anillos y rayos finos
+      for(var j=0;j<4;j++)P(g,'M100,'+(100-10-j*13)+' a'+(10+j*13)+','+(10+j*13)+' 0 1,0 .1,0',j?.4:.8,j?(.75-j*.12):.95);
+      for(var i=0;i<60;i++){var a=i/60*6.283,r0=58+er()*6,r1=r0+8+er()*(i%5?14:28);P(g,'M'+f(100+Math.cos(a)*r0)+','+f(100+Math.sin(a)*r0)+' L'+f(100+Math.cos(a)*r1)+','+f(100+Math.sin(a)*r1),i%5?.3:.55,.7)}
+      P(g,'M100,92 C95,98 95,104 100,108 C105,104 105,98 100,92 Z',.7,.95);
     }else{ // humo que sube en hebras
       var lg=document.createElementNS(NS,'linearGradient');lg.setAttribute('id','sm'+idx);lg.setAttribute('x1',0);lg.setAttribute('y1',1);lg.setAttribute('x2',0);lg.setAttribute('y2',0);
       lg.innerHTML='<stop offset="0" stop-color="#D9C38A" stop-opacity=".95"/><stop offset=".7" stop-color="#D9C38A" stop-opacity=".5"/><stop offset="1" stop-color="#D9C38A" stop-opacity="0"/>';sv.querySelector('defs').appendChild(lg);
