@@ -233,8 +233,9 @@ html.gated,html.gated body{overflow:hidden}
 /* Salida: el fondo se disuelve y el micelio sigue creciendo hacia los bordes hasta salirse de la pantalla */
 .gate.out{background-color:rgba(26,23,20,0);pointer-events:none}
 .gate.out .in,.gate.out svg.myc{opacity:0;transition:opacity .9s ease}
-.gate .burst{transition:transform 2.6s cubic-bezier(.45,0,.25,1),opacity 2.6s ease}
-.gate.out .burst{transform:scale(3);opacity:0}
+/* las líneas siguen creciendo hasta salirse de la pantalla, siempre finas, y se desvanecen */
+.gate .burst{transition:opacity 2s ease-in .9s}
+.gate.out .burst{opacity:0}
 html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
 @keyframes arrive{from{opacity:0;transform:translateY(16px)}}
 .gate .in{position:relative;z-index:2;padding:2rem max(20px,env(safe-area-inset-left,0px))}
@@ -640,11 +641,11 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
     function burst(){var W=innerWidth,H=innerHeight,r=enterBtn.getBoundingClientRect(),ox=r.left+r.width/2,oy=r.top+r.height/2,R=Math.hypot(W,H);
       var sv=document.createElementNS(NS,'svg');sv.setAttribute('class','burst');sv.setAttribute('viewBox','0 0 '+W+' '+H);sv.setAttribute('aria-hidden','true');sv.style.transformOrigin=ox.toFixed(0)+'px '+oy.toFixed(0)+'px';gate.appendChild(sv);
       var cols=['var(--oro)','var(--noche-tx)','var(--ambar)'];
-      function br(x,y,ang,len,d,w){if(d<=0||len<6)return;var x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len,mx=(x+x2)/2+(mr()-.5)*len*.45,my=(y+y2)/2+(mr()-.5)*len*.45,k=9-d;
+      function br(x,y,ang,len,d,w){if(d<=0||len<6)return;var x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len,mx=(x+x2)/2+(mr()-.5)*len*.45,my=(y+y2)/2+(mr()-.5)*len*.45,k=10-d;
         var pth=document.createElementNS(NS,'path');pth.setAttribute('d','M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1));
-        pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.stroke=cols[mr()<.6?0:(mr()<.7?1:2)];pth.style.animationDelay=(k*.12+mr()*.06).toFixed(2)+'s';sv.appendChild(pth);
-        var n=mr()<.62?2:1;for(var j=0;j<n;j++)br(x2,y2,ang+(mr()-.5)*1.1,len*(.78+mr()*.12),d-1,Math.max(.6,w*.8))}
-      for(var a=0;a<24;a++){var an=a/24*6.283+mr()*.2;br(ox,oy,an,R*(.16+mr()*.05),9,2.4)}}
+        pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.stroke=cols[mr()<.6?0:(mr()<.7?1:2)];pth.style.animationDelay=(k*.14+mr()*.06).toFixed(2)+'s';sv.appendChild(pth);
+        var n=mr()<.55?2:1;for(var j=0;j<n;j++)br(x2,y2,ang+(mr()-.5)*1.1,len*(.8+mr()*.1),d-1,Math.max(.35,w*.86))}
+      for(var a=0;a<20;a++){var an=a/20*6.283+mr()*.2;br(ox,oy,an,R*(.17+mr()*.04),10,1)}}
     function reveal(){if(!gate)return;gate.classList.add('out');document.documentElement.classList.remove('gated');behind.forEach(function(e){e.inert=false});
       var g=gate,de=document.documentElement;gate=null;if(!reduce){de.classList.add('arriving');setTimeout(function(){de.classList.remove('arriving')},2200)}
       setTimeout(function(){g.parentNode&&g.parentNode.removeChild(g)},reduce?300:2800);
