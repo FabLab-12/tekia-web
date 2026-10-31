@@ -118,9 +118,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .datos .label{background:var(--verde);color:#fff}
 .datos .in{max-width:62rem;margin:0 auto;display:grid;gap:1.2rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .datos .in>div{min-width:0}
-.datos .cell{scroll-margin-top:5rem;padding:1rem;margin:-1rem;border-radius:10px;border:1px solid transparent;transition:background .5s,border-color .5s,box-shadow .5s}
+.datos .cell{scroll-margin-top:5rem;padding:.8rem .9rem;margin:0;border-radius:10px;border:1px solid transparent;transition:background .5s,border-color .5s,box-shadow .5s}
 .datos .cell:focus{outline:none}
-.datos .cell.lit{background:rgba(201,176,113,.16);border-color:var(--oro);box-shadow:0 0 0 4px rgba(201,176,113,.18)}
+.datos .cell.lit{background:rgba(201,176,113,.14);border-color:var(--oro)}
 .datos .cell.lit h3{color:var(--tinta)}
 .acomp{max-width:62rem;margin:3rem auto 0!important;padding:1.4rem 1.6rem!important;border:1px solid var(--line)!important;border-radius:14px;background:var(--papel)}
 .acomp.lit{background:rgba(201,176,113,.16)!important;border-color:var(--oro)!important}
@@ -143,12 +143,27 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   linear-gradient(90deg,var(--luz3) 0%,var(--luz1) 18%,var(--luz2) 30%,var(--luz3) 48%,var(--luz4) 66%,var(--luz5) 82%,var(--luz3) 100%);
   background-size:500% 100%;filter:blur(18px)}
 @keyframes drift{from{background-position:0% 50%}to{background-position:100% 50%}}
-.espiritu .halo{position:absolute;left:50%;top:50%;width:90vmin;height:90vmin;margin:-45vmin 0 0 -45vmin;border-radius:50%;background:radial-gradient(circle,rgba(255,250,235,.75) 0%,rgba(255,250,235,.25) 40%,rgba(255,250,235,0) 70%);transform:scale(var(--hs,.4));opacity:var(--ho,.3);pointer-events:none}
-.espiritu .halo i{position:absolute;inset:0;border-radius:50%;animation:breathe 9s ease-in-out infinite;background:inherit;opacity:.6}
+/* Botones-símbolo: lupa (Observar), montaña (Recorrer), luz (Viajar) */
+.orb-label{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .95rem;border-radius:99px;background:#F8F5EB;color:#2F2A27;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;box-shadow:0 2px 14px rgba(0,0,0,.18);white-space:nowrap;transition:transform .3s}
+.lens-btn{position:absolute;z-index:3;border-radius:50%;display:grid;place-items:end center;text-decoration:none;color:inherit}
+.lens-btn .orb-label{transform:translateY(55%)}
+.lens-btn:hover .orb-label,.lens-btn:focus-visible .orb-label,.mount-btn:hover .orb-label,.mount-btn:focus-visible .orb-label,.halo:hover .orb-label,.halo:focus-visible .orb-label{transform:translateY(55%) scale(1.06);background:#fff}
+.mount-btn{position:absolute;z-index:3;right:max(6vw,24px);bottom:calc(36% + var(--my,0px));width:clamp(150px,20vw,240px);display:grid;justify-items:center;text-decoration:none;color:inherit}
+.mount-btn svg{width:100%;height:auto;display:block;overflow:visible;transition:transform .4s}
+.mount-btn:hover svg,.mount-btn:focus-visible svg{transform:translateY(-6px)}
+.mount-btn .orb-label{margin-top:-.4rem;transform:translateY(0)}
+.mount-btn:hover .orb-label,.mount-btn:focus-visible .orb-label{transform:scale(1.06)}
+@media (max-width:640px){.mount-btn{bottom:calc(58% + var(--my,0px));width:130px}}
+.espiritu .halo{position:absolute;z-index:3;right:max(5vw,20px);top:50%;width:min(46vmin,440px);aspect-ratio:1;margin-top:calc(min(46vmin,440px) / -2);border-radius:50%;display:grid;place-items:center;text-decoration:none;color:inherit;
+  background:radial-gradient(circle,rgba(224,160,106,.85) 0%,rgba(201,176,113,.45) 38%,rgba(201,176,113,0) 70%);transform:scale(var(--hs,.8));opacity:var(--ho,.6)}
+.espiritu .halo::before{content:"";position:absolute;inset:18%;border-radius:50%;border:1px solid rgba(255,248,232,.6)}
+.espiritu .halo i{position:absolute;inset:0;border-radius:50%;animation:breathe 9s ease-in-out infinite;background:inherit;opacity:.6;pointer-events:none}
+.espiritu .halo .orb-label{position:relative;transform:none}
+.espiritu .halo:hover .orb-label,.espiritu .halo:focus-visible .orb-label{transform:scale(1.06)}
+@media (max-width:760px){.espiritu .halo{position:relative;right:auto;top:auto;margin:0 0 4rem auto;width:62vw;order:2;justify-self:end}}
 @keyframes breathe{50%{transform:scale(1.12);opacity:.25}}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .espiritu .halo{background:radial-gradient(circle,rgba(212,184,120,.32) 0%,rgba(212,184,120,.1) 40%,rgba(212,184,120,0) 70%)}}
-:root[data-theme="dark"] .espiritu .halo{background:radial-gradient(circle,rgba(212,184,120,.32) 0%,rgba(212,184,120,.1) 40%,rgba(212,184,120,0) 70%)}
 .espiritu .copy{position:relative;z-index:2;padding-block:6rem;max-width:44rem}
+@media (min-width:761px){.espiritu .copy{max-width:min(44rem,52vw)}}
 .espiritu .label{background:rgba(255,255,255,.35);color:var(--tinta)}
 .poem{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(1.8rem,4.6vw,2.9rem);line-height:1.3;margin:1rem 0 1.4rem}
 .poem span{display:block;opacity:.25;transition:opacity 1.2s ease}
@@ -208,6 +223,7 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
       <circle id="lensring2" cx="400" cy="300" r="125" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2"/>
     </svg>
   </div>
+  <a class="lens-btn" id="lensbtn" href="#f-nosabemos"><span class="orb-label">Observar</span></a>
   <svg class="grain" aria-hidden="true"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .3  0 0 0 0 .28  0 0 0 0 .24  0 0 0 .55 0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
   <div class="copy" data-rv>
     <span class="label">Mente</span>
@@ -216,20 +232,25 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
     <ol class="legend">
       <li><b>1</b>Sombrero</li><li><b>2</b>Laminillas</li><li><b>3</b>Pie</li><li><b>4</b>Micelio</li>
     </ol>
-    <a class="more" href="#datos">Lo que se sabe →</a>
   </div>
 </section>
 
 <section class="cuerpo gut" id="cuerpo" data-top="light" aria-labelledby="h-cuerpo">
   <canvas id="land" aria-hidden="true"></canvas>
   <div class="shade" aria-hidden="true"></div>
+  <a class="mount-btn" id="mountbtn" href="#f-origen">
+    <svg viewBox="0 0 240 150" aria-hidden="true"><defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9A877"/><stop offset="1" stop-color="#6E5236"/></linearGradient></defs>
+      <path d="M0,150 L78,58 L100,78 L138,20 L240,150 Z" fill="url(#mg)" stroke="#C9B071" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M124,38 L138,20 L152,38 L144,34 L138,40 L131,34 Z" fill="#F8F5EB" opacity=".85"/>
+      <path d="M60,150 C90,120 110,128 128,100 S170,86 180,60" fill="none" stroke="#F8F5EB" stroke-width="1.6" stroke-dasharray="4 5" opacity=".8"/></svg>
+    <span class="orb-label">Recorrer</span>
+  </a>
   <p class="media-note"><span class="ph">[video o fotografía real del cultivo, pendiente]</span></p>
   <div class="copy" data-rv>
     <span class="label">Cuerpo</span>
     <h2 class="caps" id="h-cuerpo">Todo empieza en algo vivo</h2>
     <p class="lede">Antes de ser polvo fue una red que creció despacio, un cuerpo que salió a la luz, una cosecha. Este es su camino.</p>
     <ol class="steps"><li>Cultivo</li><li>Cosecha</li><li>Secado</li><li>Molienda o extracción</li><li>Análisis</li><li>Envasado</li></ol>
-    <a class="more" href="#datos">De dónde viene →</a>
   </div>
 </section>
 
@@ -237,14 +258,13 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
 
 <section class="espiritu gut" id="espiritu" data-top="dark" aria-labelledby="h-esp">
   <div class="bands" aria-hidden="true"></div>
-  <div class="halo" aria-hidden="true"><i></i></div>
+  <a class="halo" href="#f-acomp"><i></i><span class="orb-label">Viajar</span></a>
   <svg class="grain" aria-hidden="true"><rect width="100%" height="100%" filter="url(#n)"/></svg>
   <div class="copy" data-rv>
     <span class="label">Espíritu</span>
     <h2 class="caps" id="h-esp" style="margin:.7rem 0 0;font-size:clamp(1.2rem,2.6vw,1.6rem)">El ritual</h2>
     <p class="poem" id="poem"><span>Hay momentos que piden volver.</span><span>A tu ritmo.</span><span>A tus sentidos.</span><span>A ese espacio que también es tuyo.</span></p>
     <p class="lede">Preparar una bebida caliente puede ser una pausa. Lo que hagas con ese momento es tuyo.</p>
-    <a class="ritual" href="#umbral">Entrar en el ritual</a>
     <p style="margin-top:2.4rem;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase"><a href="#datos" style="text-decoration:none">Sigue bajando: la ficha ↓</a></p>
   </div>
 </section>
@@ -343,6 +363,8 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
     lens.setAttribute('cx',lx);lens.setAttribute('cy',ly);
     r1.setAttribute('cx',lx);r1.setAttribute('cy',ly);r2.setAttribute('cx',lx);r2.setAttribute('cy',ly);
     zoomed.setAttribute('transform','translate('+(lx-lx*z)+','+(ly-ly*z)+') scale('+z+')');
+    var rb=r2.getBoundingClientRect(),mb=mente.getBoundingClientRect(),lb=document.getElementById('lensbtn');
+    lb.style.left=(rb.left-mb.left)+'px';lb.style.top=(rb.top-mb.top)+'px';lb.style.width=rb.width+'px';lb.style.height=rb.height+'px';
   }
 
   // ---------- Paisaje vivo (generado): colinas, luz baja y esporas ----------
@@ -352,6 +374,7 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
   function hill(base,amp,freq,off,col){ctx.beginPath();ctx.moveTo(0,H);for(var x=0;x<=W;x+=8){var y=H*base+Math.sin(x*freq+off)*amp+Math.sin(x*freq*2.7+off*1.3)*amp*.35;ctx.lineTo(x,y)}ctx.lineTo(W,H);ctx.closePath();ctx.fillStyle=col;ctx.fill()}
   var cuerpo=document.getElementById('cuerpo'),cp=.5,stepEls=[].slice.call(document.querySelectorAll('.steps li'));
   function landProgress(){var b=cuerpo.getBoundingClientRect(),vh=window.innerHeight;cp=Math.min(1,Math.max(0,(vh-b.top)/(b.height+vh)));
+    document.getElementById('mountbtn').style.setProperty('--my',reduce?'0px':((.5-cp)*120).toFixed(1)+'px');
     var k=(vh-b.top)/vh;stepEls.forEach(function(li,i){li.classList.toggle('on',reduce||k>.55+i*.08)})}
   function drawLand(t){
     if(!W)return;
@@ -378,7 +401,7 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
   var verses=[].slice.call(document.querySelectorAll('#poem span')),esp=document.getElementById('espiritu');
   var halo=esp.querySelector('.halo'),bands=esp.querySelector('.bands');
   function poem(){var b=esp.getBoundingClientRect(),vh=window.innerHeight;var p=(vh-b.top)/(vh*.9);
-    var hp=reduce?1:Math.min(1,Math.max(0,p));halo.style.setProperty('--hs',(.35+hp*.85).toFixed(3));halo.style.setProperty('--ho',(.2+hp*.8).toFixed(3));
+    var hp=reduce?1:Math.min(1,Math.max(0,p));halo.style.setProperty('--hs',(.7+hp*.3).toFixed(3));halo.style.setProperty('--ho',(.45+hp*.55).toFixed(3));
     if(!reduce){var ep=Math.min(1,Math.max(0,(vh-b.top)/(b.height+vh)));
       bands.style.backgroundPosition=(ep*100+Math.sin(performance.now()/6000)*4).toFixed(2)+'% 50%';
       bands.style.filter='blur(18px) hue-rotate('+((ep-.5)*70).toFixed(1)+'deg) saturate('+(1+ep*.6).toFixed(2)+')';
@@ -401,7 +424,7 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
     document.querySelectorAll('.cell.lit').forEach(function(e){e.classList.remove('lit')});
     c.classList.add('shown');if(c.closest('[data-rv]'))c.closest('[data-rv]').classList.add('shown');
     void c.offsetWidth;c.classList.add('lit');c.focus({preventScroll:true});clearTimeout(litT);litT=setTimeout(function(){c.classList.remove('lit')},4500)}
-  document.querySelectorAll('.top nav a').forEach(function(a){a.addEventListener('click',function(){light(a.getAttribute('href').slice(1))})});
+  document.querySelectorAll('.top nav a, a.lens-btn, a.mount-btn, a.halo').forEach(function(a){a.addEventListener('click',function(){light(a.getAttribute('href').slice(1))})});
   if(location.hash)light(location.hash.slice(1));
 
   // ---------- Aparición de textos ----------
