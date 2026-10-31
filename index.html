@@ -15,7 +15,7 @@
   --verde:#415A34; --oro:#C9B071; --ambar:#BF7A3F; --ambar-texto:#9A5A26; --ambar-suave:#F7ECE0;
   --tierra1:#3B2E22; --tierra2:#7A5A3A; --tierra3:#B98E5E; --cielo:#E7D9C2;
   --luz1:#EFE3C8; --luz2:#C9D3BE; --luz3:#B9C4D6; --luz4:#E4CDB8; --luz5:#D7CBE0;
-  --on-dark:#F8F5EB; --line:#D8D0BC;
+  --on-dark:#F8F5EB; --noche:#1A1714; --noche-tx:#EDE6D6; --noche-sub:#B4AA97; --oro-claro:#D9C38A; --line:#D8D0BC;
   --logo-light:block; --logo-dark:none; --bar:rgba(248,245,235,.72); --bar-line:rgba(47,42,39,.08);
   --serif:"Cormorant Garamond","EB Garamond",Garamond,Georgia,serif;
   --sans:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -69,6 +69,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .top nav{display:flex;justify-content:center;gap:.6rem;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
 .top nav a{text-decoration:none;color:var(--top-fg,var(--tinta));border:1px solid currentColor;border-radius:99px;padding:.35rem .9rem;min-height:32px;display:inline-flex;align-items:center;white-space:nowrap;transition:background .2s,color .2s}
 .top nav a:hover{background:var(--tinta);color:var(--crema)}
+html.at-top .top{background:rgba(26,23,20,.55);border-bottom-color:rgba(237,230,214,.14)}
+html.at-top .top nav a{border-color:transparent;color:var(--noche-tx)}
+html.at-top .top nav a:hover{border-color:rgba(237,230,214,.5);background:transparent}
+html.at-top .snd,html.at-top .snd[aria-pressed="true"]{background:transparent;color:var(--noche-tx);border-color:transparent}
 @media (max-width:860px){.top nav{gap:.4rem;font-size:.62rem;letter-spacing:.1em}.top nav a{padding:.3rem .6rem}}
 @media (max-width:640px){.top{grid-template-columns:auto 1fr auto}.top nav a{display:none}.top nav a.pre{display:inline-flex}}
 
@@ -86,22 +90,32 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .depth{transition:opacity .3s,visibility .3s}
 
 /* 0 · Umbral */
-.umbral{min-height:92vh;display:grid;place-items:center;text-align:center;padding-block:6rem 3rem;background:var(--crema)}
+.umbral{min-height:100vh;display:grid;place-items:center;text-align:center;padding-block:6.5rem 3rem;background:var(--noche);color:var(--noche-tx)}
 .umbral img{width:150px;margin:0 auto 1.6rem}
 .umbral img.l{display:var(--logo-light)}.umbral img.d{display:var(--logo-dark)}
-.umbral h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,6vw,3.6rem);line-height:1.1;margin:0 0 .9rem}
+.umbral h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1.08;margin:0 0 1.1rem}
 .umbral h1 span{display:block}
-.umbral p{color:var(--tinta-suave);max-width:44ch;margin:0 auto 2.2rem}
+.umbral p{font-family:var(--serif);font-size:clamp(1.1rem,2.3vw,1.35rem);line-height:1.5;color:var(--noche-sub);max-width:44ch;margin:0 auto clamp(2rem,5vh,3.2rem)}
 /* Tres entradas: el texto de apoyo va dentro del mismo enlace (una sola parada de teclado) */
-.doors{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem 1.6rem;margin:0;padding:0;list-style:none}
-.doors li{width:11rem;max-width:calc(100vw - 40px)}
-.doors a{text-decoration:none;width:100%;display:flex;flex-direction:column;align-items:center;gap:.45rem;border-radius:14px;padding:.2rem}
-.doors .pill{border:1px solid var(--line);border-radius:99px;padding:.55rem 1.1rem;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;min-height:44px;width:100%;display:inline-flex;align-items:center;justify-content:center;transition:border-color .2s}
-.doors a:hover .pill{border-color:var(--verde)}
-.doors .sub{font-size:.85rem;line-height:1.3;color:var(--tinta-suave)}
-@media (max-width:520px){.doors{flex-direction:column;align-items:center;gap:1rem}}
-.cue{display:inline-flex;flex-direction:column;align-items:center;min-height:44px;margin-top:2.4rem;padding:.2rem .6rem;text-decoration:none;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--tinta-suave)}
-.cue:hover{color:var(--tinta)}
+/* Tres entradas: grabado circular + nombre + texto de apoyo, todo dentro del mismo enlace (una sola parada de teclado) */
+.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(.5rem,3vw,3rem);max-width:58rem;margin:0 auto;padding:0;list-style:none}
+.doors a{text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;gap:.3rem;border-radius:14px;padding:.3rem}
+.doors .orb{display:block;width:min(100%,200px);aspect-ratio:1;transition:transform .6s ease,filter .6s ease}
+.doors .orb svg{width:100%;height:100%;display:block;overflow:visible}
+.doors a:hover .orb,.doors a:focus-visible .orb{transform:scale(1.04);filter:drop-shadow(0 0 22px rgba(201,176,113,.35))}
+.doors .pill{font-family:var(--serif);font-weight:500;font-size:clamp(1rem,2.4vw,1.5rem);letter-spacing:.14em;text-transform:uppercase;margin-top:.8rem;transition:color .3s}
+.doors a:hover .pill{color:var(--oro-claro)}
+.doors .sub{font-family:var(--serif);font-size:clamp(.95rem,1.8vw,1.15rem);line-height:1.3;color:var(--noche-sub)}
+@media (max-width:420px){.doors .pill{font-size:.92rem;letter-spacing:.06em}.doors .sub{font-size:.85rem}}
+.art{animation:float 9s ease-in-out infinite}
+.doors li:nth-child(2) .art{animation-delay:-3s}.doors li:nth-child(3) .art{animation-delay:-6s}
+@keyframes float{50%{transform:translateY(-3px)}}
+.dust{animation:twinkle 4s ease-in-out infinite}
+@keyframes twinkle{50%{opacity:.15}}
+.cue{display:inline-flex;flex-direction:column;align-items:center;min-height:44px;margin-top:clamp(2rem,6vh,3.6rem);padding:.2rem .6rem;text-decoration:none;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--noche-sub)}
+.cue:hover{color:var(--noche-tx)}
+.cue b{width:1px;height:46px;margin-top:.9rem;background:currentColor;position:relative;font-size:0}
+.cue b::after{content:"";position:absolute;bottom:0;left:-4px;width:8px;height:8px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg)}
 .cue b{display:block;font-weight:400;font-size:1.2rem;animation:bob 2.4s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(6px)}}
 
@@ -215,34 +229,36 @@ footer .in{max-width:62rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 2
 /* Acceso: pantalla animada con botón Entrar (antes de la landing) */
 html.gated,html.gated body{overflow:hidden}
 #umbral h1:focus{outline:none}
-.gate{position:fixed;inset:0;z-index:20;background:var(--crema);display:grid;place-items:center;text-align:center;overflow:hidden;transition:opacity 1s ease,transform 1s ease}
+.gate{position:fixed;inset:0;z-index:20;background:var(--noche);color:var(--noche-tx);display:grid;place-items:center;text-align:center;overflow:hidden;transition:opacity 1s ease,transform 1s ease}
 .gate.out{opacity:0;transform:scale(1.05);pointer-events:none}
 .gate .in{position:relative;z-index:2;padding:2rem max(20px,env(safe-area-inset-left,0px))}
 .gate .seed{position:relative;display:inline-block}
 .gate svg.myc{position:absolute;left:50%;top:50%;width:1600px;height:1600px;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;overflow:visible}
-.gate .myc path{fill:none;stroke:var(--oro);stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:grow 2.6s ease-out forwards}
+.gate .myc path{fill:none;stroke:var(--oro);stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:grow 3.2s ease-out forwards}
 @keyframes grow{to{stroke-dashoffset:0}}
 .gate .myc g{animation:pulse 7s 3s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.55}}
-.gate img{display:block;width:min(46vw,190px);margin:0 auto;opacity:0;transform:scale(.9);animation:gIn 1.6s .3s ease forwards}
-.gate img.l{display:var(--logo-light)}.gate img.d{display:var(--logo-dark)}
-.gate .tag{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(1.25rem,3.2vw,1.6rem);color:var(--tinta-suave);margin:1.4rem 0 2.2rem;opacity:0;animation:gIn 1.4s 1s ease forwards}
-.gate .enter{min-height:48px;padding:.85rem 2.6rem;border-radius:99px;border:1px solid var(--tinta);background:var(--tinta);color:var(--crema);font:600 .82rem/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;cursor:pointer;opacity:0;animation:gIn 1.2s 1.3s ease forwards;transition:transform .3s,box-shadow .3s}
-.gate .enter:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(47,42,39,.18)}
-.gate .mute{display:block;margin:.6rem auto 0;min-height:44px;padding:0 .8rem;background:none;border:0;color:var(--tinta-suave);font:500 .7rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;cursor:pointer;opacity:0;animation:gIn 1.2s 1.5s ease forwards}
+.gate img{display:block;width:min(52vw,210px);margin:0 auto;opacity:0;transform:scale(.9);animation:gIn 1.6s .3s ease forwards}
+.gate :focus-visible{outline-color:var(--oro);outline-offset:5px}
+.gate .rule{display:block;width:1px;height:38px;margin:1.5rem auto;background:var(--oro);opacity:0;animation:gIn 1.2s .9s ease forwards}
+.gate .tag{font-family:var(--serif);font-weight:500;font-size:clamp(1.35rem,3.6vw,1.75rem);line-height:1.35;color:var(--noche-tx);max-width:21ch;margin:0 auto 2.4rem;opacity:0;animation:gIn 1.4s 1s ease forwards}
+.gate .enter{min-height:48px;padding:.85rem 2.6rem;border-radius:99px;border:1px solid var(--noche-tx);background:transparent;color:var(--noche-tx);font:600 .8rem/1 var(--sans);letter-spacing:.26em;min-width:min(15rem,70vw);text-transform:uppercase;cursor:pointer;opacity:0;animation:gIn 1.2s 1.3s ease forwards;transition:transform .3s,box-shadow .3s}
+.gate .enter:hover{transform:translateY(-2px);background:rgba(237,230,214,.08);box-shadow:0 0 24px rgba(201,176,113,.25)}
+.gate .mute{display:block;margin:1rem auto 0;min-height:44px;padding:0 .8rem;background:none;border:0;color:var(--tinta-suave);font:500 .7rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;cursor:pointer;opacity:0;animation:gIn 1.2s 1.5s ease forwards;color:var(--noche-sub)}
 @keyframes gIn{to{opacity:1;transform:none}}
 .gate svg.burst{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
 .gate .burst path{fill:none;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:grow .55s ease-out forwards}
 .gate.go .in{opacity:.25;transition:opacity 1s ease}
-@media (prefers-reduced-motion: reduce){.gate img,.gate .tag,.gate .enter,.gate .mute{animation:none;opacity:1;transform:none}.gate .myc path{animation:none;stroke-dashoffset:0}.gate .myc g{animation:none}.gate{transition:opacity .3s}.gate.out{transform:none}}
+@media (prefers-reduced-motion: reduce){.art,.dust{animation:none}.gate .rule,.gate img,.gate .tag,.gate .enter,.gate .mute{animation:none;opacity:1;transform:none}.gate .myc path{animation:none;stroke-dashoffset:0}.gate .myc g{animation:none}.gate{transition:opacity .3s}.gate.out{transform:none}}
 </style>
 
 </head>
 <body>
 <div class="gate" id="gate">
   <div class="in">
-    <div class="seed"><svg class="myc" id="myc" viewBox="-800 -800 1600 1600" aria-hidden="true"></svg><img class="l" src="assets/tekia-logo-transparente-web.png" alt="TEKIA"><img class="d" src="assets/tekia-logo-negativo-web.png" alt="TEKIA"></div>
-    <p class="tag">Todo empieza bajo la tierra.</p>
+    <div class="seed"><svg class="myc" id="myc" viewBox="-800 -800 1600 1600" aria-hidden="true"></svg><img src="assets/tekia-logo-negativo-web.png" alt="TEKIA"></div>
+    <span class="rule" aria-hidden="true"></span>
+    <p class="tag">Llegaste hasta aquí porque quieres probar hongos funcionales o adaptógenos.</p>
     <button class="enter" type="button" id="enter">Entrar</button>
     <button class="mute" type="button" id="enter-mute">Entrar sin sonido</button>
   </div>
@@ -260,17 +276,16 @@ html.gated,html.gated body{overflow:hidden}
 </nav>
 
 <main>
-<section class="umbral gut" id="umbral" data-top="dark">
+<section class="umbral gut" id="umbral" data-top="light">
   <div>
-    <img class="l" src="assets/tekia-logo-transparente-web.png" alt="TEKIA"><img class="d" src="assets/tekia-logo-negativo-web.png" alt="TEKIA">
     <h1><span>Tres caminos.</span> <span>Una misma raíz.</span></h1>
-    <p>Llegaste hasta aquí para conocer y probar los hongos funcionales. No hay una sola forma de acercarse a ellos: puedes entenderlos a fondo, conocerlos desde su origen sin tecnicismos o vivirlos como un ritual, una pausa que es solo tuya. Elige por dónde empezar.</p>
+    <p>Puedes acercarte a ellos desde la ciencia, la naturaleza o el ritual. Elige por dónde empezar.</p>
     <ul class="doors" aria-label="Elige por dónde empezar">
-      <li><a href="#mente"><span class="pill">Aprender</span><span class="sub">Desde la ciencia</span></a></li>
-      <li><a href="#cuerpo"><span class="pill">Sentir</span><span class="sub">Desde la naturaleza</span></a></li>
-      <li><a href="#espiritu"><span class="pill">Conectar</span><span class="sub">Desde el ritual</span></a></li>
+      <li><a href="#mente"><span class="orb"><svg class="engr" data-kind="cap" viewBox="0 0 200 200" aria-hidden="true"></svg></span><span class="pill">Aprender</span><span class="sub">Desde la ciencia</span></a></li>
+      <li><a href="#cuerpo"><span class="orb"><svg class="engr" data-kind="ruffle" viewBox="0 0 200 200" aria-hidden="true"></svg></span><span class="pill">Sentir</span><span class="sub">Desde la naturaleza</span></a></li>
+      <li><a href="#espiritu"><span class="orb"><svg class="engr" data-kind="smoke" viewBox="0 0 200 200" aria-hidden="true"></svg></span><span class="pill">Conectar</span><span class="sub">Desde el ritual</span></a></li>
     </ul>
-    <a class="cue" href="#mente">O sigue explorando<b aria-hidden="true">↓</b></a>
+    <a class="cue" href="#mente">O sigue explorando<b aria-hidden="true"></b></a>
   </div>
 </section>
 
@@ -478,7 +493,8 @@ html.gated,html.gated body{overflow:hidden}
   function depth(){var vh=window.innerHeight,cur=null;secs.forEach(function(s){var b=s.getBoundingClientRect();if(b.top<vh*.5&&b.bottom>vh*.5)cur=s.id});
     links.forEach(function(a){a.setAttribute('aria-current',String(a.dataset.sec===cur))});
     document.querySelector('.depth').classList.toggle('off',!cur);
-    var light=cur==='cuerpo';document.documentElement.style.setProperty('--depth-fg',light?'#F8F5EB':'');
+    var ub=document.getElementById('umbral').getBoundingClientRect(),top=ub.bottom>60;document.documentElement.classList.toggle('at-top',top);
+    var light=cur==='cuerpo'||top;document.documentElement.style.setProperty('--depth-fg',light?'#F8F5EB':'');
     }
 
   function frame(t){drawPlate();placeLens(t);if(isVisible(cv)){landProgress();drawLand(t)}poem();depth();if(!reduce)requestAnimationFrame(frame)}
@@ -547,6 +563,42 @@ html.gated,html.gated body{overflow:hidden}
   window.addEventListener('scroll',function(){scene()},{passive:true});
   document.addEventListener('visibilitychange',function(){if(!AC)return;if(document.hidden)AC.suspend();else if(snd.getAttribute('aria-pressed')==='true')AC.resume()});
 
+  // ---------- Grabados dorados de la bienvenida (generados) ----------
+  var es=23;function er(){es=(es*16807)%2147483647;return es/2147483647}
+  function P(g,d,w,op){var e=document.createElementNS(NS,'path');e.setAttribute('d',d);e.setAttribute('fill','none');e.setAttribute('stroke','var(--oro-claro)');e.setAttribute('stroke-width',w);e.setAttribute('stroke-linecap','round');if(op!=null)e.setAttribute('opacity',op);g.appendChild(e);return e}
+  function f(n){return n.toFixed(1)}
+  function bez(t,a,b,c,d){var u=1-t;return u*u*u*a+3*u*u*t*b+3*u*t*t*c+t*t*t*d}
+  var smokes=[];
+  [].slice.call(document.querySelectorAll('svg.engr')).forEach(function(sv,idx){
+    var kind=sv.getAttribute('data-kind'),gid='gl'+idx;
+    sv.innerHTML='<defs><radialGradient id="'+gid+'"><stop offset="0" stop-color="#C9B071" stop-opacity=".16"/><stop offset="1" stop-color="#C9B071" stop-opacity="0"/></radialGradient></defs>';
+    var bg=document.createElementNS(NS,'circle');bg.setAttribute('cx',100);bg.setAttribute('cy',100);bg.setAttribute('r',96);bg.setAttribute('fill','url(#'+gid+')');bg.setAttribute('stroke','var(--oro)');bg.setAttribute('stroke-opacity','.35');bg.setAttribute('stroke-width','.7');sv.appendChild(bg);
+    for(var i=0;i<34;i++){var a=er()*6.283,r=Math.sqrt(er())*90,c=document.createElementNS(NS,'circle');c.setAttribute('cx',f(100+Math.cos(a)*r));c.setAttribute('cy',f(100+Math.sin(a)*r));c.setAttribute('r',f(.35+er()*1));c.setAttribute('fill','#EDE6D6');c.setAttribute('opacity',f(.25+er()*.6));c.setAttribute('class','dust');c.style.animationDelay=f(-er()*4)+'s';sv.appendChild(c)}
+    var g=document.createElementNS(NS,'g');g.setAttribute('class','art');sv.appendChild(g);
+    if(kind==='cap'){ // sombrero visto de lado, con laminillas y pie
+      P(g,'M30,94 C38,38 162,38 170,94',1.1);P(g,'M30,94 Q100,124 170,94',.9);P(g,'M30,94 Q100,82 170,94',.5,.6);
+      for(var j=1;j<7;j++)P(g,'M'+f(30+j*7)+','+f(94-j*1.5)+' C'+f(40+j*6)+','+f(40+j*5)+' '+f(160-j*6)+','+f(40+j*5)+' '+f(170-j*7)+','+f(94-j*1.5),.4,.35);
+      for(var i=0;i<=46;i++){var t=i/46,u=1-t,x=u*u*30+2*u*t*100+t*t*170,y=u*u*94+2*u*t*124+t*t*94;P(g,'M100,103 Q'+f((100+x)/2)+','+f((103+y)/2+3)+' '+f(x)+','+f(y),.4,.8)}
+      for(var i=0;i<=34;i++){var t=i/34,x=bez(t,30,38,162,170),y=bez(t,94,38,38,94);P(g,'M'+f(x)+','+f(y)+' l'+f((100-x)*.05)+','+f(5+er()*9),.35,.45)}
+      P(g,'M93,110 C91,134 88,152 85,174',.9);P(g,'M107,110 C109,134 112,152 115,174',.9);P(g,'M85,174 Q100,181 115,174',.7);
+      for(var i=0;i<6;i++){var x0=95+i*2.2;P(g,'M'+f(x0)+',114 C'+f(x0-1)+',140 '+f(x0-3)+',158 '+f(x0-5+i*.6)+',172',.3,.5)}
+    }else if(kind==='ruffle'){ // hongos en embudo, con pliegues
+      function funnel(cx,ty,w,sb,ph){var rx=w/2,ry=w*.17,pts=[];for(var i=0;i<=60;i++){var a=i/60*6.283,k=1+.09*Math.sin(a*6+ph)+.04*Math.sin(a*13+ph*2);pts.push([cx+Math.cos(a)*rx*k,ty+Math.sin(a)*ry*k])}
+        P(g,'M'+pts.map(function(p){return f(p[0])+','+f(p[1])}).join(' L')+' Z',.9);
+        var st=ty+(sb-ty)*.62;for(var i=2;i<=28;i++){var p=pts[i];P(g,'M'+f(p[0])+','+f(p[1])+' Q'+f((p[0]+cx)/2)+','+f(p[1]+(st-p[1])*.75)+' '+f(cx+(p[0]-cx)*.12)+','+f(st),.38,.75)}
+        P(g,'M'+f(cx-w*.07)+','+f(st)+' C'+f(cx-w*.06)+','+f(st+12)+' '+f(cx-w*.04)+','+f(sb-8)+' '+f(cx-3)+','+f(sb),.7);
+        P(g,'M'+f(cx+w*.07)+','+f(st)+' C'+f(cx+w*.06)+','+f(st+12)+' '+f(cx+w*.04)+','+f(sb-8)+' '+f(cx+3)+','+f(sb),.7)}
+      funnel(86,74,112,170,.4);funnel(130,104,70,172,2.1);
+    }else{ // humo que sube en hebras
+      var lg=document.createElementNS(NS,'linearGradient');lg.setAttribute('id','sm'+idx);lg.setAttribute('x1',0);lg.setAttribute('y1',1);lg.setAttribute('x2',0);lg.setAttribute('y2',0);
+      lg.innerHTML='<stop offset="0" stop-color="#D9C38A" stop-opacity=".95"/><stop offset=".7" stop-color="#D9C38A" stop-opacity=".5"/><stop offset="1" stop-color="#D9C38A" stop-opacity="0"/>';sv.querySelector('defs').appendChild(lg);
+      for(var i=0;i<9;i++){var e=P(g,'',.55+(i%3)*.15);e.setAttribute('stroke','url(#sm'+idx+')');smokes.push({e:e,ph:i*.55,ph2:er()*6,sp:.8+er()*.4})}
+      P(g,'M90,178 Q100,172 110,178',.6,.7);
+    }
+  });
+  function smoke(t){smokes.forEach(function(s){var d='';for(var y=178;y>=22;y-=4){var a=6+(178-y)*.17,x=100+Math.sin(y*.045+s.ph+t*.0006*s.sp)*a*.55+Math.sin(y*.11+s.ph2+t*.0009)*a*.18;d+=(d?' L':'M')+f(x)+','+y}s.e.setAttribute('d',d)})}
+  smoke(0);(function sm(t){var u=document.getElementById('umbral').getBoundingClientRect();if(!reduce&&u.bottom>0)smoke(t);if(!reduce)requestAnimationFrame(sm)})(0);
+
   // ---------- Acceso: micelio que crece y botón Entrar ----------
   // Sale cada vez que se abre la página; se omite solo si se llega con un enlace directo (#...).
   var gate=document.getElementById('gate'),seen=false;
@@ -558,14 +610,14 @@ html.gated,html.gated body{overflow:hidden}
       var x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len,mx=(x+x2)/2+(mr()-.5)*len*.4,my=(y+y2)/2+(mr()-.5)*len*.4,k=7-d;
       if(!layers[k]){layers[k]=document.createElementNS(NS,'g');myc.appendChild(layers[k])}
       var pth=document.createElementNS(NS,'path');pth.setAttribute('d','M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1));
-      pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.opacity=(.85-k*.08).toFixed(2);pth.style.animationDelay=(.15+k*.32).toFixed(2)+'s';layers[k].appendChild(pth);
-      var n=mr()<.6?2:1;for(var j=0;j<n;j++)grow(x2,y2,ang+(mr()-.5)*1.2,len*(.7+mr()*.2),d-1,Math.max(.5,w*.75))}
-    for(var a=0;a<14;a++){var an=a/14*6.283+mr()*.3;grow(Math.cos(an)*78,Math.sin(an)*78,an,85+mr()*40,7,1.4)}
+      pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.opacity=(.6-k*.05).toFixed(2);pth.style.animationDelay=(.1+k*.3).toFixed(2)+'s';layers[k].appendChild(pth);
+      var n=mr()<.6?2:1;for(var j=0;j<n;j++)grow(x2,y2,ang+(mr()-.5)*1.1,len*(.78+mr()*.14),d-1,Math.max(.35,w*.78))}
+    for(var a=0;a<22;a++){var an=a/22*6.283+mr()*.25;grow(Math.cos(an)*95,Math.sin(an)*95,an,110+mr()*60,7,1.1)}
     var enterBtn=document.getElementById('enter'),muteBtn=document.getElementById('enter-mute');
     // Al pulsar Entrar, el micelio brota desde el botón hasta cubrir la pantalla y da paso a la landing.
     function burst(){var W=innerWidth,H=innerHeight,r=enterBtn.getBoundingClientRect(),ox=r.left+r.width/2,oy=r.top+r.height/2,R=Math.hypot(W,H);
       var sv=document.createElementNS(NS,'svg');sv.setAttribute('class','burst');sv.setAttribute('viewBox','0 0 '+W+' '+H);sv.setAttribute('aria-hidden','true');gate.appendChild(sv);
-      var cols=['var(--oro)','var(--verde)','var(--ambar)'];
+      var cols=['var(--oro)','var(--noche-tx)','var(--ambar)'];
       function br(x,y,ang,len,d,w){if(d<=0||len<6)return;var x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len,mx=(x+x2)/2+(mr()-.5)*len*.45,my=(y+y2)/2+(mr()-.5)*len*.45,k=9-d;
         var pth=document.createElementNS(NS,'path');pth.setAttribute('d','M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1));
         pth.setAttribute('pathLength',1);pth.setAttribute('stroke-width',w.toFixed(2));pth.style.stroke=cols[mr()<.6?0:(mr()<.7?1:2)];pth.style.animationDelay=(k*.12+mr()*.06).toFixed(2)+'s';sv.appendChild(pth);
