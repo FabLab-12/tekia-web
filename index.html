@@ -213,6 +213,12 @@ html.at-top .snd,html.at-top .snd[aria-pressed="true"]{background:transparent;co
 :root[data-theme="dark"] .espiritu .halo{--humo:#EBD9B0;--humo2:#D9C38A}:root[data-theme="dark"] .espiritu .halo .orb-label{background:rgba(255,248,232,.14);color:#F3EAD6;border-color:rgba(217,195,138,.6)}
 @media (max-width:760px){.espiritu .halo svg.engr{inset:4% 10% 10%;width:80%;height:86%}.espiritu .halo .orb-label{margin-bottom:-2%}}
 @media (max-width:760px){.espiritu .halo{position:relative;right:auto;top:auto;margin:0 0 4rem auto;width:62vw;order:2;justify-self:end}}
+/* Respiración leve de los grabados: el hongo crece desde el pie; los embudos abren el sombrero */
+@keyframes breatheUp{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.035)}}
+@keyframes breatheTop{0%,100%{transform:scale(1,1)}50%{transform:scale(1.04,1.015)}}
+svg.engr .breathe-up{animation:breatheUp 7s ease-in-out infinite}
+svg.engr .breathe-top{animation:breatheTop 6.5s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){svg.engr .breathe-up,svg.engr .breathe-top{animation:none}}
 @keyframes breathe{50%{transform:scale(1.12);opacity:.25}}
 .espiritu .copy{position:relative;z-index:2;padding-block:6rem;max-width:44rem}
 @media (min-width:761px){.espiritu .copy{max-width:min(44rem,52vw)}}
@@ -606,6 +612,7 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
       fills=true;sv.style.setProperty('--oro-claro','#5C4430')}
     var g=document.createElementNS(NS,'g');g.setAttribute('class','art');sv.appendChild(g);
     if(kind==='cap'){ // sombrero visto de lado, con laminillas y pie
+      var bu=document.createElementNS(NS,'g');bu.setAttribute('class','breathe-up');bu.style.transformOrigin='100px 178px';g.appendChild(bu);g=bu;
       P(g,'M30,94 C38,38 162,38 170,94',1.1);P(g,'M30,94 Q100,124 170,94',.9);P(g,'M30,94 Q100,82 170,94',.5,.6);
       for(var j=1;j<7;j++)P(g,'M'+f(30+j*7)+','+f(94-j*1.5)+' C'+f(40+j*6)+','+f(40+j*5)+' '+f(160-j*6)+','+f(40+j*5)+' '+f(170-j*7)+','+f(94-j*1.5),.4,.35);
       for(var i=0;i<=46;i++){var t=i/46,u=1-t,x=u*u*30+2*u*t*100+t*t*170,y=u*u*94+2*u*t*124+t*t*94;P(g,'M100,103 Q'+f((100+x)/2)+','+f((103+y)/2+3)+' '+f(x)+','+f(y),.4,.8)}
@@ -622,7 +629,8 @@ html.arriving #umbral>div{animation:arrive 1.8s .2s ease both}
         P(g,'M'+pts.map(function(p){return f(p[0])+','+f(p[1])}).join(' L')+' Z',.9);for(var i=2;i<=28;i++){var p=pts[i];P(g,'M'+f(p[0])+','+f(p[1])+' Q'+f((p[0]+cx)/2)+','+f(p[1]+(st-p[1])*.75)+' '+f(cx+(p[0]-cx)*.12)+','+f(st),.38,.75)}
         P(g,'M'+f(cx-w*.07)+','+f(st)+' C'+f(cx-w*.06)+','+f(st+12)+' '+f(cx-w*.04)+','+f(sb-8)+' '+f(cx-3)+','+f(sb),.7);
         P(g,'M'+f(cx+w*.07)+','+f(st)+' C'+f(cx+w*.06)+','+f(st+12)+' '+f(cx+w*.04)+','+f(sb-8)+' '+f(cx+3)+','+f(sb),.7)}
-      funnel(86,74,112,170,.4);funnel(130,104,70,172,2.1);
+      // cada embudo en su grupo, para que respire desde el sombrero
+      var root=g;[[86,74,112,170,.4,'0s'],[130,104,70,172,2.1,'-3.1s']].forEach(function(a){g=document.createElementNS(NS,'g');g.setAttribute('class','breathe-top');g.style.transformOrigin=a[0]+'px '+a[3]+'px';g.style.animationDelay=a[5];root.appendChild(g);funnel(a[0],a[1],a[2],a[3],a[4])});g=root;
     }else if(kind==='mount'){ // montaña grabada con sendero
       P(g,'M24,150 L72,84 L88,100 L116,52 L176,150',1);P(g,'M104,72 L116,52 L128,72 L121,68 L116,75 L110,68 Z',.6,.85);
       for(var i=0;i<22;i++){var t=i/21,x=116+t*56,y=52+t*98;P(g,'M'+f(x)+','+f(y)+' l'+f(-10-er()*16)+','+f(4+er()*4),.35,.55)}
