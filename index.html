@@ -396,75 +396,77 @@ p,li,dd,dt,.opt span,.r-box,.f-panel p{text-wrap:pretty}
 .ph,.snd,.basis,.links a,.f-panel li a{white-space:nowrap}
 @media (max-width:480px){.study dl{grid-template-columns:1fr;gap:.1rem}.study dd{margin-bottom:.5rem}}
 @media (max-width:400px){.r-btn{letter-spacing:.1em;padding-inline:1rem}}
-/* Entrada · cuerpo y micelio (v0.41, propuesta) */
-.cuerpo-in{display:block;text-align:left;padding-block:5.6rem 2.4rem;min-height:100vh;position:relative}
-.ci{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:clamp(1.5rem,4vw,4rem);align-items:center;max-width:78rem;margin:0 auto}
-.cuerpo-in .ci-eye{font:600 .66rem/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--oro-claro);margin:0 0 1rem}
+/* Entrada · cuerpo y micelio (v0.42, propuesta) */
+.cuerpo-in{display:block;text-align:left;padding-block:5.6rem 2.4rem;min-height:100vh;position:relative;overflow:hidden;background:radial-gradient(ellipse 60% 70% at 50% 45%,#221E19 0%,var(--noche) 70%)}
+#ci-net{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
+.ci{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:clamp(1.5rem,4vw,4rem);align-items:center;max-width:78rem;margin:0 auto}
+.ci-copy{transition:opacity .9s ease,transform .9s ease}
+html.ci-zoom .ci-copy{opacity:0;transform:translateX(-24px);pointer-events:none}
+.cuerpo-in .ci-eye{font:600 .66rem/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--oro-claro);margin:0 0 1rem;max-width:none}
 .cuerpo-in h1{font-size:clamp(2.4rem,4.6vw,3.9rem);margin:0 0 1.2rem;text-align:left}
 .cuerpo-in .ci-lines{margin:0;max-width:30ch;text-align:left;font-size:clamp(1.08rem,1.6vw,1.3rem)}
 .ci-lines .ln{display:block}.ci-lines .ln+.ln{margin-top:.5rem}
 .ci-lines .ci-do{margin-top:1.4rem!important;font:600 .7rem/1.5 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--oro-claro)}
 .ci-fig{position:relative;height:min(78vh,720px);aspect-ratio:200/450;max-width:100%;justify-self:center}
-.ci-body,#ci-net{position:absolute;inset:0;width:100%;height:100%;display:block}
-.ci-body path,.ci-body circle,.ci-body ellipse{fill:none;stroke:var(--noche-tx);stroke-width:.55;vector-effect:non-scaling-stroke}
-.ci-body .faint{stroke-opacity:.28}.ci-body .out{stroke-opacity:.7}
 .ci-zones{position:absolute;inset:0}
-.ci-z{position:absolute;transform:translate(-22px,-50%);display:flex;align-items:center;gap:.55rem;min-height:44px;padding:0 .6rem 0 0;background:none;border:0;color:var(--noche-tx);cursor:pointer;font:600 .64rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase}
+.ci-z{position:absolute;left:0;top:0;transform:translate(-22px,-50%);display:flex;align-items:center;gap:.55rem;min-height:44px;padding:0 .6rem 0 0;background:none;border:0;color:var(--noche-tx);cursor:pointer;font:600 .64rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;transition:opacity .6s}
+html.ci-zoom .ci-z{opacity:0;pointer-events:none}
 .ci-z i{position:relative;width:44px;height:44px;display:grid;place-items:center;flex:none}
-.ci-z i::before{content:"";width:13px;height:13px;border-radius:50%;border:1px solid var(--oro);background:rgba(26,23,20,.6);box-shadow:inset 0 0 0 3.5px rgba(26,23,20,.6),inset 0 0 0 10px var(--oro);transition:transform .4s}
+.ci-z i::before{content:"";width:13px;height:13px;border-radius:50%;border:1px solid var(--oro);background:rgba(26,23,20,.6);box-shadow:inset 0 0 0 3.5px rgba(26,23,20,.6),inset 0 0 0 10px var(--oro),0 0 14px rgba(217,195,138,.55);transition:transform .4s}
 .ci-z i::after{content:"";position:absolute;width:13px;height:13px;border-radius:50%;border:1px solid var(--oro);animation:ciBreath 3.8s ease-in-out infinite}
 .ci-z span{position:relative;padding:.3rem .55rem;border-radius:99px;background:rgba(26,23,20,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:1px solid transparent;transition:border-color .3s,color .3s}
 .ci-z span::before{content:"";position:absolute;right:100%;top:50%;width:.55rem;height:1px;background:var(--oro);opacity:.7}
-.ci-z:hover span,.ci-z[aria-pressed="true"] span{border-color:rgba(201,176,113,.6);color:var(--oro-claro)}
-.ci-z[aria-pressed="true"] i::before{transform:scale(1.25)}
+.ci-z:hover span{border-color:rgba(201,176,113,.6);color:var(--oro-claro)}
+.ci-z:hover i::before{transform:scale(1.25)}
 .ci-z:focus-visible{outline:1px solid var(--oro);outline-offset:2px;border-radius:99px}
 @keyframes ciBreath{0%,100%{transform:scale(1);opacity:.6}55%{transform:scale(2.3);opacity:0}}
-.cuerpo-in .ci-cap{position:absolute;left:50%;bottom:-2.8rem;transform:translateX(-50%);width:max-content;max-width:90vw;margin:0;font:500 .6rem/1.4 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--noche-sub);text-align:center}
-.ci-panel{align-self:center;min-width:0;max-width:24rem;justify-self:start}
+.cuerpo-in .ci-cap{position:relative;z-index:1;margin:2.2rem auto 0;max-width:none;font:500 .6rem/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--noche-sub);text-align:center;transition:opacity .6s}
+html.ci-zoom .cuerpo-in .ci-cap,html.ci-zoom .cuerpo-in .cue{opacity:0}
+.ci-panel{align-self:center;min-width:0;max-width:25rem;justify-self:start}
 .ci-ph{font:500 clamp(1.4rem,2vw,1.7rem)/1.2 var(--serif);margin:0 0 .9rem;color:var(--noche-tx)}
-.cuerpo-in .ci-empty p,.cuerpo-in .ci-card p{margin:0;max-width:none;text-align:left;font-family:var(--serif);font-size:1.02rem;line-height:1.5;color:var(--noche-sub);text-wrap:pretty}
-.cuerpo-in .ci-empty p+p{margin-top:.6rem}
-.ci-legend{margin:1.6rem 0 0;padding-top:1.1rem;border-top:1px solid rgba(237,230,214,.14);display:grid;gap:.45rem}
-.ci-legend dt,.ci-card dt{font:600 .6rem/1.4 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--oro-claro);margin:0 0 .25rem}
-.ci-legend dd{margin:0;display:flex;align-items:center;gap:.7rem;font-size:.8rem;color:var(--noche-sub)}
-.meter{display:inline-flex;gap:3px}.meter i{width:18px;height:3px;border-radius:2px;background:rgba(237,230,214,.16)}
-.meter.m1 i:nth-child(-n+1),.meter.m2 i:nth-child(-n+2),.meter.m3 i:nth-child(-n+3),.meter.m4 i{background:var(--oro)}
-.ci-card{display:grid;gap:.9rem;animation:ciIn .6s ease both}
-@keyframes ciIn{from{opacity:0;transform:translateY(8px)}}
-.ci-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1rem;align-items:center}
-.ci-lens{width:96px;height:96px;border-radius:50%;border:1px solid var(--oro);overflow:hidden;background:#13110F}
-.ci-lens canvas{width:100%;height:100%;display:block}
-.cuerpo-in .ci-card p.ci-moment{font:600 .6rem/1.4 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--oro-claro);margin:0 0 .3rem}
-.ci-name{font:500 clamp(1.6rem,2.4vw,2rem)/1.1 var(--serif);margin:0;color:var(--noche-tx)}
-.cuerpo-in .ci-sci{font-style:italic;margin-top:.15rem!important}
-.ci-tag{justify-self:start;font:600 .58rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(201,176,113,.6);color:var(--oro-claro);border-radius:99px;padding:.4rem .7rem}
-.ci-tag.warn{border-color:rgba(191,122,63,.8);color:#E3A46C}
-.ci-card dl{margin:0;display:grid;gap:.8rem;padding-top:.9rem;border-top:1px solid rgba(237,230,214,.14)}
-.ci-card dd{margin:0}.ci-card dd p+p{margin-top:.3rem}
+.cuerpo-in .ci-empty p,.cuerpo-in .ci-card p{margin:0;max-width:none;text-align:left;font-family:var(--serif);font-size:1.04rem;line-height:1.5;color:var(--noche-sub);text-wrap:pretty}
+.cuerpo-in .ci-empty p+p{margin-top:.5rem}
+.cuerpo-in .ci-empty p.ci-hint{margin-top:1.4rem;font:600 .6rem/1.5 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--oro-claro)}
+.ci-card{display:grid;gap:1rem;animation:ciIn .9s .5s ease both}
+@keyframes ciIn{from{opacity:0;transform:translateY(10px)}}
+.cuerpo-in .ci-card p.ci-moment{font:600 .62rem/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--oro-claro);margin:0}
+.ci-name{font:500 clamp(2rem,3.2vw,2.8rem)/1.05 var(--serif);margin:0;color:var(--noche-tx)}
+.cuerpo-in .ci-card p.ci-sci{font-style:italic;margin-top:-.5rem}
+.cuerpo-in .ci-card p.ci-lead{font-size:1.2rem;color:var(--noche-tx)}
+.ci-card dl{margin:0;display:grid;gap:.9rem;padding-top:1rem;border-top:1px solid rgba(201,176,113,.25)}
+.ci-card dt{font:600 .6rem/1.4 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--oro-claro);margin:0 0 .25rem}
+.ci-card dd{margin:0}
 .ci-card .ln{display:block}
-.ci-meter{display:flex;align-items:center;gap:.7rem;font-size:.8rem;color:var(--noche-sub)}
-.ci-acts{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:center;padding-top:.3rem}
-.ci-go{min-height:44px;display:inline-flex;align-items:center;padding:0 1.2rem;border-radius:99px;border:1px solid var(--noche-tx);color:var(--noche-tx);text-decoration:none;font:600 .64rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase}
-.ci-go:hover{background:rgba(237,230,214,.08)}
-.ci-off{font:600 .6rem/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--noche-sub)}
-.ci-close{min-height:44px;background:none;border:0;color:var(--noche-sub);font:600 .62rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;cursor:pointer;padding:0}
-.cuerpo-in .ci-fine{font-family:var(--sans)!important;font-size:.72rem!important;opacity:.85}
-.cuerpo-in .cue{display:flex;width:max-content;margin:3.4rem auto 0;color:var(--noche-sub)}
+.cuerpo-in .ci-card .ph{color:var(--oro-claro);opacity:.8;font-style:italic}
+.ci-acts{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:center;padding-top:.2rem}
+.ci-go{min-height:44px;display:inline-flex;align-items:center;padding:0 1.2rem;border-radius:99px;border:1px solid var(--oro);background:rgba(201,176,113,.1);color:var(--noche-tx);text-decoration:none;font:600 .64rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.ci-go:hover{background:rgba(201,176,113,.2)}
+.ci-link{min-height:44px;background:none;border:0;color:var(--noche-sub);font:600 .62rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;cursor:pointer;padding:0}
+.ci-link:hover{color:var(--noche-tx)}
+.ci-studies[hidden]{display:none}
+.ci-studies{border-top:1px solid rgba(237,230,214,.12);padding-top:.9rem;display:grid;gap:.4rem}
+.cuerpo-in .ci-studies p{font-size:.95rem}
+.cuerpo-in .ci-card p.ci-fine{font-family:var(--sans);font-size:.72rem;opacity:.8}
+.cuerpo-in .cue{position:relative;z-index:1;display:flex;width:max-content;margin:1.6rem auto 0;color:var(--noche-sub);transition:opacity .6s}
 .ci-grab{display:none}
+html.ci-zoom .ci-panel{background:radial-gradient(ellipse at 40% 50%,rgba(26,23,20,.7),rgba(26,23,20,0) 75%)}
 @media (max-width:980px){
   .cuerpo-in{padding-block:5rem 2rem}
-  .ci{grid-template-columns:minmax(0,1fr);gap:1.6rem;justify-items:center}
+  .ci{grid-template-columns:minmax(0,1fr);gap:1.4rem;justify-items:center}
   .ci-copy{text-align:center;max-width:30rem}
+  html.ci-zoom .ci-copy{transform:translateY(-16px)}
   .cuerpo-in h1,.cuerpo-in .ci-lines{text-align:center;margin-inline:auto}
-  .ci-fig{height:min(64vh,560px)}
-  .ci-panel{position:fixed;left:0;right:0;bottom:0;z-index:12;max-width:none;max-height:78vh;overflow:auto;background:#1F1C18;border-top:1px solid rgba(201,176,113,.45);border-radius:18px 18px 0 0;padding:.6rem max(20px,env(safe-area-inset-right,0px)) calc(1.4rem + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));transform:translateY(105%);transition:transform .5s cubic-bezier(.2,.8,.2,1);box-shadow:0 -12px 40px rgba(0,0,0,.4)}
+  .ci-fig{height:min(62vh,540px)}
+  .ci-panel{position:fixed;left:0;right:0;bottom:0;z-index:12;max-width:none;max-height:64vh;overflow:auto;background:rgba(26,23,20,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(201,176,113,.45);border-radius:18px 18px 0 0;padding:.6rem max(20px,env(safe-area-inset-right,0px)) calc(1.4rem + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));transform:translateY(105%);transition:transform .7s .4s cubic-bezier(.2,.8,.2,1);box-shadow:0 -12px 40px rgba(0,0,0,.4)}
   .ci-panel.open{transform:none}
+  html.ci-zoom .ci-panel{background:rgba(26,23,20,.86)}
   .ci-panel .ci-empty{display:none}
-  .ci-grab{display:block;width:38px;height:3px;border-radius:2px;background:rgba(237,230,214,.25);margin:0 auto .9rem}
-  .ci-legend-m{display:block}
+  .ci-card{animation-delay:.7s}
+  .ci-grab{display:block;width:38px;height:3px;border-radius:2px;background:rgba(237,230,214,.25);margin:0 auto .5rem}
+  .ci-name{font-size:2rem}
 }
-@media (max-width:420px){.ci-fig{height:min(60vh,500px)}.ci-z{font-size:.58rem;letter-spacing:.14em}}
-@media (prefers-reduced-motion:reduce){.ci-z i::after,.ci-card{animation:none}.ci-panel{transition:none}}
+@media (max-width:420px){.ci-fig{height:min(58vh,480px)}.ci-z{font-size:.58rem;letter-spacing:.14em}}
+@media (prefers-reduced-motion:reduce){.ci-z i::after,.ci-card{animation:none}.ci-panel,.ci-copy{transition:none}}
 </style>
 
 </head>
@@ -492,37 +494,31 @@ p,li,dd,dt,.opt span,.r-box,.f-panel p{text-wrap:pretty}
 
 <main>
 <section class="umbral cuerpo-in gut" id="umbral" data-top="light" aria-labelledby="u-h">
+  <canvas id="ci-net" aria-hidden="true"></canvas>
   <div class="ci">
     <div class="ci-copy">
       <p class="ci-eye">Lámina&nbsp;1 · Tejido conectivo&nbsp;laxo</p>
       <h1 id="u-h"><span>Una red fina</span> <span>te&nbsp;recubre.</span></h1>
-      <p class="ci-lines"><span class="ln">Bajo la piel, un tejido suave rodea órganos, vasos y&nbsp;nervios.</span> <span class="ln">En el bosque, el micelio hace algo&nbsp;parecido.</span> <span class="ln ci-do">Toca una zona para ver qué se ha&nbsp;estudiado.</span></p>
+      <p class="ci-lines"><span class="ln">Bajo la piel, un tejido suave rodea órganos, vasos y&nbsp;nervios.</span> <span class="ln">En el bosque, el micelio teje algo&nbsp;parecido.</span> <span class="ln ci-do">Toca una zona y&nbsp;acércate.</span></p>
     </div>
     <div class="ci-fig" id="ci-fig">
-      <svg class="ci-body" viewBox="0 0 200 450" aria-hidden="true"><g id="ci-lines"></g></svg>
-      <canvas id="ci-net" aria-hidden="true"></canvas>
       <div class="ci-zones" role="group" aria-label="Zonas del cuerpo">
-        <button type="button" class="ci-z" data-k="hericium" style="left:50%;top:7.6%" aria-pressed="false"><i></i><span>Pensar</span></button>
-        <button type="button" class="ci-z" data-k="reishi" style="left:50%;top:28.4%" aria-pressed="false"><i></i><span>Descansar</span></button>
-        <button type="button" class="ci-z" data-k="care" style="left:50%;top:42.6%" aria-pressed="false"><i></i><span>Cuidarte</span></button>
-        <button type="button" class="ci-z" data-k="cordyceps" style="left:59%;top:68%" aria-pressed="false"><i></i><span>Moverse</span></button>
+        <button type="button" class="ci-z" data-k="hericium" aria-pressed="false"><i></i><span>Pensar</span></button>
+        <button type="button" class="ci-z" data-k="reishi" aria-pressed="false"><i></i><span>Descansar</span></button>
+        <button type="button" class="ci-z" data-k="cordyceps" aria-pressed="false"><i></i><span>Moverse</span></button>
       </div>
-      <p class="ci-cap">Fig.&nbsp;1 · La red dorada es una imagen, no un&nbsp;hongo.</p>
     </div>
     <aside class="ci-panel" id="ci-panel" aria-live="polite" aria-labelledby="ci-ph">
       <div class="ci-empty" id="ci-empty">
-        <h2 id="ci-ph" class="ci-ph">Cómo leer esta&nbsp;lámina</h2>
-        <p class="ln">Cada punto abre lo que la investigación ha visto, en quién y qué tan&nbsp;sólido&nbsp;es.</p>
-        <p class="ln">No es una evaluación personal ni una recomendación de&nbsp;consumo.</p>
-        <dl class="ci-legend"><dt>Solidez de la evidencia</dt>
-          <dd><span class="meter m1" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Muy&nbsp;preliminar</dd>
-          <dd><span class="meter m2" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Preliminar</dd>
-          <dd><span class="meter m3" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Moderada</dd>
-          <dd><span class="meter m4" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Sólida</dd></dl>
+        <h2 id="ci-ph" class="ci-ph">Tres hongos, tres&nbsp;momentos</h2>
+        <p class="ln">Cada punto te lleva dentro de la red y te presenta un&nbsp;hongo.</p>
+        <p class="ln">Su origen, su tradición y lo que hoy investiga la&nbsp;ciencia.</p>
+        <p class="ci-hint ln">Mueve el cursor para girar la&nbsp;lámina.</p>
       </div>
       <div class="ci-card" id="ci-card" hidden></div>
     </aside>
   </div>
+  <p class="ci-cap">Fig.&nbsp;1 · Tejido conectivo laxo, visto como&nbsp;micelio</p>
   <a class="cue" href="#mente">O sigue explorando<b aria-hidden="true"></b></a>
 </section>
 
@@ -1160,99 +1156,130 @@ p,li,dd,dt,.opt span,.r-box,.f-panel p{text-wrap:pretty}
 })();
 </script>
 <script>
-/* Entrada · cuerpo y micelio (v0.41, propuesta). Textos de ficha: Teka_CANDIDATOS.md v0.3 y Teka_EVIDENCIA.csv. */
+/* Entrada · cuerpo y micelio (v0.42, propuesta). Red 3D en canvas; textos: Teka_CANDIDATOS.md v0.3 (fortalezas en primera capa, estudios en "Ver estudios"). */
 (function(){
   var D={
-    hericium:{moment:'Pensar · Trabajo con la mente',name:'Melena de león',sci:'Hericium erinaceus',status:'Ingrediente en exploración',level:2,lvl:'Preliminar',ruta:'ciencia',
-      studied:['Se ha estudiado en atención, memoria y tiempo de reacción.'],
-      found:['En personas mayores con deterioro cognitivo leve, dos estudios pequeños vieron mejoras frente a placebo.','En adultos sanos, los resultados fueron pequeños o nulos.','En un estudio de 2025, la atención salió peor que con placebo.'],
-      unknown:['Qué preparación y qué cantidad corresponden a lo estudiado.','Si hay un efecto que se note en personas sanas.']},
-    reishi:{moment:'Descansar · Cierro el día',name:'Reishi',sci:'Ganoderma lucidum',status:'En replanteamiento',level:1,lvl:'Muy preliminar',
-      studied:['Se ha estudiado en el cansancio de personas con un diagnóstico médico.'],
-      found:['No encontramos estudios de sueño en adultos sanos.','Lo pensamos como una bebida de ritual por la tarde, sin promesa de dormir mejor.'],
-      unknown:['Si aporta algo medible en personas sanas.','La calidad del extracto disponible.']},
-    cordyceps:{moment:'Moverse · Me muevo',name:'Cordyceps',sci:'Cordyceps militaris',status:'En investigación',level:1,lvl:'Muy preliminar',
-      studied:['Se ha estudiado en esfuerzo físico, tiempo de reacción y algunos marcadores en sangre.'],
-      found:['En un estudio de 12 personas no cambió la capacidad aeróbica.','En un estudio de sueño, al placebo le fue mejor.'],
-      unknown:['Si mejora algo que una persona note en su día.','Cómo verificar la especie en el material disponible.']},
-    care:{moment:'Cuidarte · Antes de considerarlo',name:'Precauciones',sci:'Lo que también se ha reportado',status:'Transparencia',warn:true,
-      studied:['Aquí mostramos por qué algunos hongos no están en TEKIA.'],
-      found:['Con el polvo de reishi hay reportes de daño en el hígado. No está probado que el hongo fuera la causa.','Con la chaga hay reportes de daño en el riñón. Por eso no la ofrecemos.','Si tienes alergia a los hongos, ninguno es para ti.'],
-      unknown:['Cómo interactúan con medicamentos. Si tomas alguno, consúltalo antes con tu médico.']}
+    hericium:{moment:'Pensar · Trabajo con la mente',name:'Melena de león',sci:'Hericium erinaceus',ruta:'ciencia',
+      lead:'Un hongo blanco que cae en cascada, como una melena.',
+      rows:[['Origen','Crece en troncos de árboles de hoja ancha en Asia, Europa y América del Norte.'],
+            ['Tradición','En la cocina de China y Japón se aprecia por su textura suave, parecida a la de los mariscos.'],
+            ['Lo que investiga la ciencia','Se estudia sobre todo en atención y memoria, con ensayos en personas desde 2009.'],
+            ['Calidad TEKIA','Cuerpo fructífero, con la especie y cada lote verificados por un laboratorio independiente.',1]],
+      studies:['Dos ensayos en personas mayores con deterioro cognitivo leve vieron mejoras frente a placebo (2009 y 2019).','En adultos sanos, los resultados han sido modestos y variables (2023 a 2026).']},
+    reishi:{moment:'Descansar · Cierro el día',name:'Reishi',sci:'Ganoderma lucidum',
+      lead:'El hongo de brillo rojizo que en China llaman lingzhi.',
+      rows:[['Origen','Crece en la base de los árboles. Hoy se cultiva sobre madera.'],
+            ['Tradición','Aparece desde hace siglos en el arte y los textos clásicos de China.'],
+            ['El momento','Lo pensamos como un ritual para cerrar el día: una bebida de sabor profundo y amargo.'],
+            ['Calidad TEKIA','Solo extracto, con certificado de cada lote.',1]],
+      studies:['Un ensayo en personas con neurastenia vio menos cansancio frente a placebo (2005).','Todavía no hay ensayos en adultos sanos.']},
+    cordyceps:{moment:'Moverse · Me muevo',name:'Cordyceps',sci:'Cordyceps militaris',
+      lead:'Un hongo de color naranja intenso, cultivado con cuidado.',
+      rows:[['Origen','Se cultiva en sustratos controlados, así que no se recolecta en la naturaleza.'],
+            ['Tradición','En el sur de China se agrega a sopas y caldos.'],
+            ['Lo que investiga la ciencia','Se estudia en ejercicio, esfuerzo físico y tiempo de reacción.'],
+            ['Calidad TEKIA','Especie verificada por sus compuestos propios, como la cordicepina.',1]],
+      studies:['Hay ensayos pequeños en ejercicio, con resultados variables (2004 a 2026).','Seguimos revisando la literatura completa.']}
   };
-  var fig=document.getElementById('ci-fig');if(!fig)return;
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // ---- silueta (mitad derecha, se refleja) ----
+  var sec=document.getElementById('umbral'),fig=document.getElementById('ci-fig'),cv=document.getElementById('ci-net');if(!fig||!cv)return;
+  var ctx=cv.getContext('2d'),root=document.documentElement,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // ---- silueta ----
   var R=[[106,60],[108,71],[122,76],[138,81],[146,93],[150,124],[155,168],[160,212],[164,244],[162,261],[155,258],[151,238],[146,198],[141,158],[136,126],[134,166],[132,200],[136,232],[137,290],[134,350],[131,406],[133,423],[115,426],[112,412],[110,350],[108,286],[100,240]];
   var pts=R.concat(R.slice().reverse().slice(1).map(function(q){return [200-q[0],q[1]]}));
   function smooth(p){var n=p.length,d='M'+p[0][0]+','+p[0][1];for(var i=0;i<n;i++){var a=p[(i-1+n)%n],b=p[i],c=p[(i+1)%n],e=p[(i+2)%n];
     d+='C'+(b[0]+(c[0]-a[0])/6).toFixed(1)+','+(b[1]+(c[1]-a[1])/6).toFixed(1)+' '+(c[0]-(e[0]-b[0])/6).toFixed(1)+','+(c[1]-(e[1]-b[1])/6).toFixed(1)+' '+c[0]+','+c[1]}return d+'Z'}
-  var BODY=smooth(pts);
-  document.getElementById('ci-lines').innerHTML=
-    '<ellipse class="out" cx="100" cy="33" rx="19" ry="23"/><path class="out" d="'+BODY+'"/>'+
-    '<path class="faint" d="M76,84 Q90,90 100,87 Q110,90 124,84"/><path class="faint" d="M100,92 L100,150" stroke-dasharray="1 3"/>'+
-    '<path class="faint" d="M84,112 Q92,118 98,114 M116,112 Q108,118 102,114"/><circle class="faint" cx="100" cy="198" r="1.2"/>'+
-    '<path class="faint" d="M114,326 q6,4 12,0 M86,326 q-6,4 -12,0"/><path class="faint" d="M80,226 Q100,238 120,226"/>';
-  // ---- red micelial ----
-  var cv=document.getElementById('ci-net'),ctx=cv.getContext('2d'),P=new Path2D(BODY),segs=[],shown=0,focus=null,fr=0,tint=0;
+  var OUT=(function(){var o2=[],n=pts.length;for(var i=0;i<n;i++){var a=pts[(i-1+n)%n],b=pts[i],c=pts[(i+1)%n],e=pts[(i+2)%n];for(var t=0;t<1;t+=.25){var t2=t*t,t3=t2*t;o2.push([.5*((2*b[0])+(-a[0]+c[0])*t+(2*a[0]-5*b[0]+4*c[0]-e[0])*t2+(-a[0]+3*b[0]-3*c[0]+e[0])*t3),.5*((2*b[1])+(-a[1]+c[1])*t+(2*a[1]-5*b[1]+4*c[1]-e[1])*t2+(-a[1]+3*b[1]-3*c[1]+e[1])*t3)])}}return o2})();
+  var off=document.createElement('canvas').getContext('2d'),BP=new Path2D(smooth(pts));
+  function in2(x,y){return off.isPointInPath(BP,x,y)||((x-100)*(x-100)/361+(y-33)*(y-33)/529)<1}
+  // media profundidad por celda (2 u): distancia al borde en la fila, como sección elíptica
+  var GW=100,GH=225,HD=new Float32Array(GW*GH);
+  for(var gy=0;gy<GH;gy++){var row=[];for(var gx=0;gx<GW;gx++)row.push(in2(gx*2+1,gy*2+1));
+    for(gx=0;gx<GW;gx++){if(!row[gx])continue;var l=0,r=0;while(gx-l-1>=0&&row[gx-l-1])l++;while(gx+r+1<GW&&row[gx+r+1])r++;
+      var w=(l+r+1)*2,c=(gx-l+gx+r)/2,u=Math.abs(gx-c)*2/(w/2);HD[gy*GW+gx]=(w*.36)*Math.sqrt(Math.max(0,1-u*u))+1}}
+  function hd(x,y){var gx=x/2|0,gy=y/2|0;if(gx<0||gy<0||gx>=GW||gy>=GH)return 0;return HD[gy*GW+gx]}
   function rnd(s){return function(){s=(s*16807)%2147483647;return (s-1)/2147483646}}
-  function inside(x,y){return ctx.isPointInPath(P,x,y)||((x-100)*(x-100)/361+(y-33)*(y-33)/529)<1}
-  (function gen(){ctx.setTransform(1,0,0,1,0,0);var r=rnd(4211),tips=[];
-    for(var i=0;i<130;i++){var x,y,t=0;do{x=50+r()*100;y=(i<14?12+r()*42:58+r()*370)}while(!inside(x,y)&&t++<60);tips.push({x:x,y:y,a:r()*6.283,life:30+r()*70,w:1})}
-    var g=0;while(tips.length&&g++<4000){var nt=[];tips.forEach(function(t){var a=t.a+(r()-.5)*.55,nx=t.x+Math.cos(a)*2,ny=t.y+Math.sin(a)*2;
-      if(!inside(nx,ny)||t.life--<0)return;segs.push([t.x,t.y,nx,ny,t.w]);t.x=nx;t.y=ny;t.a=a;nt.push(t);
-      if(r()<.04&&nt.length<700)nt.push({x:nx,y:ny,a:a+(r()<.5?1:-1)*(.5+r()*.7),life:t.life*.7,w:t.w*.7})});tips=nt}
-    // nudos: puntos donde se ramifica (como fibroblastos / septos)
+  // ---- hifas 3D ----
+  var PX=[],PY=[],PZ=[],SA=[],SB=[],SW=[],NODES=[];
+  (function(){var r=rnd(90731),tips=[];
+    for(var i=0;i<340;i++){var x,y,z,t=0;do{x=30+r()*140;y=(i<30?12+r()*42:58+r()*370);z=(r()-.5)*40}while((hd(x,y)<=1||Math.abs(z)>hd(x,y))&&t++<80);
+      var a=r()*6.283,b=(r()-.5)*2;PX.push(x);PY.push(y);PZ.push(z);tips.push({i:PX.length-1,dx:Math.cos(a),dy:Math.sin(a),dz:b*.6,life:40+r()*80,w:1})}
+    var g=0;while(tips.length&&g++<3000){var nt=[];tips.forEach(function(t){
+      var dx=t.dx+(r()-.5)*.5,dy=t.dy+(r()-.5)*.5,dz=t.dz+(r()-.5)*.5,m=Math.hypot(dx,dy,dz);dx/=m;dy/=m;dz/=m;
+      var x=PX[t.i]+dx*2.2,y=PY[t.i]+dy*2.2,z=PZ[t.i]+dz*2.2,h=hd(x,y);
+      if(h<=0||Math.abs(z)>h){if(h>0&&t.life>0){t.dz=-t.dz;nt.push(t)}return}
+      if(t.life--<0)return;
+      PX.push(x);PY.push(y);PZ.push(z);var j=PX.length-1;SA.push(t.i);SB.push(j);SW.push(t.w);t.i=j;t.dx=dx;t.dy=dy;t.dz=dz;nt.push(t);
+      if(r()<.045&&nt.length<1400){var s=r()<.5?1:-1;nt.push({i:j,dx:dx+dy*s*.9,dy:dy-dx*s*.9,dz:dz+(r()-.5),life:t.life*.75,w:t.w*.72});NODES.push(j)}});tips=nt}
   })();
-  function size(){var b=fig.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(b.width*dpr);cv.height=Math.round(b.height*dpr);draw()}
-  function draw(){var s=cv.width/200;ctx.setTransform(s,0,0,s,0,0);ctx.clearRect(0,0,200,450);ctx.lineCap='round';
-    for(var i=0;i<shown;i++){var g=segs[i],n=0;
-      if(focus){var d=Math.hypot(g[0]-focus[0],g[1]-focus[1]);n=Math.max(0,1-Math.abs(d-fr*0.0)/(40+fr))}
-      ctx.strokeStyle=n>0?'rgba(217,195,138,'+(.22+n*.68)+')':'rgba(201,176,113,.22)';
-      ctx.lineWidth=(.32+g[4]*.18+n*.35);ctx.beginPath();ctx.moveTo(g[0],g[1]);ctx.lineTo(g[2],g[3]);ctx.stroke()}
-    ctx.setTransform(1,0,0,1,0,0)}
-  function grow(){shown=Math.min(segs.length,shown+Math.ceil(segs.length/150));draw();if(shown<segs.length)requestAnimationFrame(grow)}
-  var started=false;function start(){if(started)return;started=true;if(reduce){shown=segs.length;draw()}else grow()}
-  size();window.addEventListener('resize',size);
-  var root=document.documentElement;
-  if(!root.classList.contains('gated'))start();else new MutationObserver(function(m,o){if(!root.classList.contains('gated')){o.disconnect();setTimeout(start,600)}}).observe(root,{attributes:true,attributeFilter:['class']});
-  function pulse(x,y){focus=[x,y];shown=segs.length;if(reduce){fr=60;draw();return}var t0=performance.now();
-    (function f(now){fr=Math.min(90,(now-t0)/14);draw();if(fr<90)requestAnimationFrame(f)})(t0)}
-  // ---- lupa: fibras del tejido que se vuelven hifas ----
-  var lensRAF=null;
-  function lens(c,k){var x=c.getContext('2d'),r=rnd(k.length*977+3),fib=[],cells=[];c.width=240;c.height=240;
-    for(var i=0;i<14;i++)fib.push({y:r()*240,a:(r()-.5)*.9,w:3+r()*8,ph:r()*6,el:r()<.4});
-    for(i=0;i<7;i++)cells.push([20+r()*200,20+r()*200,r()*6]);
-    var t0=performance.now();if(lensRAF)cancelAnimationFrame(lensRAF);
-    (function f(now){var t=reduce?1:Math.min(1,(now-t0)/3000);x.clearRect(0,0,240,240);
-      fib.forEach(function(q){x.beginPath();for(var px=-10;px<=250;px+=5){var y=q.y+Math.tan(q.a)*(px-120)+Math.sin(px/(22-t*8)+q.ph)*q.w*(1-t*.5)+t*Math.sin(px/8+q.ph*2)*2.5;px===-10?x.moveTo(px,y):x.lineTo(px,y)}
-        x.strokeStyle=q.el?'rgba(237,230,214,'+(.4*(1-t)+.08)+')':'rgba(201,176,113,'+(.3+t*.5)+')';x.lineWidth=q.el?.7:(2-t*1.3);x.stroke()});
-      cells.forEach(function(q){x.beginPath();x.ellipse(q[0],q[1],6*(1-t)+1.5,2.6*(1-t)+1.5,q[2],0,6.283);x.strokeStyle='rgba(237,230,214,.5)';x.lineWidth=.7;x.stroke();
-        if(t>.4)for(var j=0;j<3;j++){var a=q[2]+j*2.1,l=40*(t-.4)/.6;x.beginPath();x.moveTo(q[0],q[1]);x.quadraticCurveTo(q[0]+Math.cos(a+.5)*l*.6,q[1]+Math.sin(a+.5)*l*.6,q[0]+Math.cos(a)*l,q[1]+Math.sin(a)*l);x.strokeStyle='rgba(217,195,138,.75)';x.lineWidth=.6;x.stroke()}});
-      if(t<1)lensRAF=requestAnimationFrame(f)})(t0)}
+  var NP=PX.length,NS=SA.length,SX=new Float32Array(NP),SY=new Float32Array(NP),SZ=new Float32Array(NP);
+  // esporas (fondo con parallax)
+  var SPN=320,SPX=[],SPY=[],SPZ=[],SPV=[];(function(){var r=rnd(17);for(var i=0;i<SPN;i++){SPX.push(-500+r()*1200);SPY.push(-300+r()*1050);SPZ.push(-700+r()*1400);SPV.push(.05+r()*.2)}})();
+  // ---- cámara ----
+  var W=0,H=0,dpr=1,F=900,cam={cx:100,cy:225,dist:900,yaw:0,pitch:0},tgt={cx:100,cy:225,dist:900},anchor={x:0,y:0},anchorT={x:0,y:0},k=1,mouse={x:0,y:0},shown=reduce?NS:0,t0=performance.now(),zoomK=null;
+  function layout(){var b=sec.getBoundingClientRect(),f=fig.getBoundingClientRect();dpr=Math.min(window.innerWidth<700?1.5:2,window.devicePixelRatio||1);
+    W=b.width;H=b.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);k=f.height/450;
+    var ax=f.left-b.left+f.width/2,ay=f.top-b.top+f.height/2;anchor.base={x:ax,y:ay};
+    if(!zoomK){anchor.x=anchorT.x=ax;anchor.y=anchorT.y=ay}else setZoomAnchor()}
+  function setZoomAnchor(){var f=fig.getBoundingClientRect(),b=sec.getBoundingClientRect(),mob=window.innerWidth<=980;
+    anchorT.x=mob?W/2:f.left-b.left+f.width/2;anchorT.y=mob?(-b.top)+(64+window.innerHeight*.36)/2:f.top-b.top+f.height/2}
+  function proj(x,y,z,o){x-=cam.cx;y-=cam.cy;var cy=Math.cos(cam.yaw),sy=Math.sin(cam.yaw),cp=Math.cos(cam.pitch),sp=Math.sin(cam.pitch);
+    var x1=x*cy+z*sy,z1=-x*sy+z*cy,y1=y*cp-z1*sp,z2=y*sp+z1*cp,zc=z2+cam.dist;if(zc<12){o.v=0;return}var s=F/zc;o.x=anchor.x+x1*s*k;o.y=anchor.y+y1*s*k;o.s=s;o.zc=zc;o.v=1}
+  var o={},B=8,paths=[];
+  function frame(now){
+    var t=(now-t0)/1000,e=reduce?1:.06;
+    cam.cx+=(tgt.cx-cam.cx)*e;cam.cy+=(tgt.cy-cam.cy)*e;cam.dist+=(tgt.dist-cam.dist)*e;anchor.x+=(anchorT.x-anchor.x)*e;anchor.y+=(anchorT.y-anchor.y)*e;
+    var sway=reduce?0:Math.sin(t*.22)*.32+Math.sin(t*.09)*.12;cam.yaw+=((sway+mouse.x*.5)-cam.yaw)*(reduce?1:.04);cam.pitch+=((reduce?0:Math.sin(t*.15)*.05)+mouse.y*.18-cam.pitch)*(reduce?1:.04);
+    if(shown<NS)shown=Math.min(NS,shown+Math.ceil(NS/170));
+    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+    // esporas
+    for(var i=0;i<SPN;i++){if(!reduce){SPY[i]-=SPV[i];if(SPY[i]<-300)SPY[i]=750}proj(SPX[i],SPY[i],SPZ[i],o);if(!o.v)continue;var a=Math.min(.55,o.s*.5);
+      ctx.fillStyle='rgba(217,195,138,'+a.toFixed(3)+')';var rr=Math.max(.4,Math.min(3,o.s*1.1));ctx.beginPath();ctx.arc(o.x,o.y,rr,0,6.283);ctx.fill()}
+    // proyectar puntos
+    for(i=0;i<NP;i++){proj(PX[i],PY[i],PZ[i],o);SX[i]=o.v?o.x:NaN;SY[i]=o.y;SZ[i]=o.v?o.s:0}
+    for(var b=0;b<B;b++)paths[b]=new Path2D();
+    var zoom=900/cam.dist;
+    for(i=0;i<shown;i++){var p=SA[i],q=SB[i];if(SX[p]!==SX[p]||SX[q]!==SX[q])continue;var s=SZ[q];
+      var bi=Math.max(0,Math.min(B-1,((s/zoom)-.94)/.12*B|0));paths[bi].moveTo(SX[p],SY[p]);paths[bi].lineTo(SX[q],SY[q])}
+    for(b=0;b<B;b++){var f=b/(B-1);ctx.strokeStyle='rgba('+(190+f*40|0)+','+(160+f*45|0)+','+(95+f*60|0)+','+(.10+f*.42).toFixed(3)+')';ctx.lineWidth=(.35+f*.75)*Math.min(3,Math.sqrt(zoom));ctx.stroke(paths[b])}
+    // nudos brillantes
+    for(i=0;i<NODES.length;i++){var n=NODES[i];if(n>=SB[shown-1]||SX[n]!==SX[n])continue;var s2=SZ[n]/zoom;if(s2<.98)continue;var rad=Math.min(6,1.1*SZ[n]);
+      var g=ctx.createRadialGradient(SX[n],SY[n],0,SX[n],SY[n],rad*2.4);g.addColorStop(0,'rgba(244,226,180,.55)');g.addColorStop(1,'rgba(244,226,180,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(SX[n],SY[n],rad*2.4,0,6.283);ctx.fill()}
+    // contorno tenue
+    var oa=Math.max(0,.16-(zoom-1)*.08);if(oa>0){ctx.strokeStyle='rgba(217,195,138,'+oa.toFixed(3)+')';ctx.lineWidth=1;ctx.beginPath();OUT.forEach(function(q,j){proj(q[0],q[1],0,o);j?ctx.lineTo(o.x,o.y):ctx.moveTo(o.x,o.y)});ctx.closePath();ctx.stroke();ctx.beginPath();for(var a2=0;a2<=6.3;a2+=.2){proj(100+19*Math.cos(a2),33+23*Math.sin(a2),0,o);a2?ctx.lineTo(o.x,o.y):ctx.moveTo(o.x,o.y)}ctx.stroke()}
+    ctx.globalCompositeOperation='source-over';
+    // posición de las zonas
+    var fr=fig.getBoundingClientRect(),sr=sec.getBoundingClientRect();
+    ZP.forEach(function(z){proj(z.x,z.y,0,o);z.el.style.transform='translate('+(o.x-(fr.left-sr.left)-22).toFixed(1)+'px,'+(o.y-(fr.top-sr.top)).toFixed(1)+'px) translateY(-50%)'});
+    if(running)raf=requestAnimationFrame(frame)}
+  var ZP=[{k:'hericium',x:100,y:34},{k:'reishi',x:100,y:128},{k:'cordyceps',x:118,y:300}].map(function(z){z.el=fig.querySelector('.ci-z[data-k="'+z.k+'"]');return z});
+  var running=false,raf=0,visible=true,started=false;
+  function run(on){if(on&&!running){running=true;raf=requestAnimationFrame(frame)}else if(!on){running=false;cancelAnimationFrame(raf)}}
+  layout();window.addEventListener('resize',layout);
+  new IntersectionObserver(function(en){visible=en[0].isIntersecting;run(visible&&started&&!document.hidden)}).observe(sec);
+  document.addEventListener('visibilitychange',function(){run(visible&&started&&!document.hidden)});
+  function start(){if(started)return;started=true;t0=performance.now();layout();run(visible)}
+  if(!root.classList.contains('gated'))start();else{frame(performance.now());new MutationObserver(function(m,ob){if(!root.classList.contains('gated')){ob.disconnect();setTimeout(start,500)}}).observe(root,{attributes:true,attributeFilter:['class']})}
+  if(matchMedia('(hover:hover)').matches)sec.addEventListener('pointermove',function(e){var b=sec.getBoundingClientRect();mouse.x=((e.clientX-b.left)/b.width-.5);mouse.y=((e.clientY-b.top)/b.height-.5)});
   // ---- ficha ----
   function nb(s){return s.replace(/ (\S+)$/,'&nbsp;$1')}
-  function ps(a){return a.map(function(s){return '<p class="ln">'+nb(s)+'</p>'}).join('')}
-  var panel=document.getElementById('ci-panel'),card=document.getElementById('ci-card'),empty=document.getElementById('ci-empty'),zs=[].slice.call(fig.querySelectorAll('.ci-z')),last=null;
-  function show(z){var k=z.getAttribute('data-k'),d=D[k];last=z;
-    zs.forEach(function(o){o.setAttribute('aria-pressed',o===z?'true':'false')});
-    var m=d.level?'<div><dt>Solidez de la evidencia</dt><dd class="ci-meter"><span class="meter m'+d.level+'" aria-hidden="true"><i></i><i></i><i></i><i></i></span>'+d.lvl+'</dd></div>':'';
-    card.innerHTML='<div class="ci-grab" aria-hidden="true"></div><div class="ci-head"><div class="ci-lens"><canvas aria-label="Fibras del tejido conectivo que se transforman en hifas" role="img"></canvas></div><div><p class="ci-moment">'+d.moment+'</p><h2 class="ci-name" id="ci-ph2" tabindex="-1">'+d.name+'</h2><p class="ci-sci">'+d.sci+'</p></div></div>'+
-      '<span class="ci-tag'+(d.warn?' warn':'')+'">'+d.status+'</span>'+
-      '<dl>'+m+'<div><dt>Lo que se ha estudiado</dt><dd>'+ps(d.studied)+'</dd></div><div><dt>'+(d.warn?'Lo que se ha reportado':'Lo que se encontró')+'</dt><dd>'+ps(d.found)+'</dd></div><div><dt>Lo que aún no sabemos</dt><dd>'+ps(d.unknown)+'</dd></div></dl>'+
-      '<div class="ci-acts">'+(d.ruta?'<a class="ci-go" href="#ruta" data-ruta2="'+d.ruta+'">Ver la ficha completa</a>':(d.warn?'<a class="ci-go" href="#f-precauciones">Leer precauciones</a>':'<span class="ci-off">Ficha no disponible por ahora</span>'))+'<button type="button" class="ci-close">Cerrar</button></div>'+
-      '<p class="ci-fine ln">No es una evaluación personal ni una recomendación de&nbsp;consumo.</p>';
-    empty.hidden=true;card.hidden=false;panel.setAttribute('aria-labelledby','ci-ph2');panel.classList.add('open');
-    lens(card.querySelector('canvas'),k);
-    var b=z.getBoundingClientRect(),f=fig.getBoundingClientRect();pulse((b.left+22-f.left)/f.width*200,(b.top+b.height/2-f.top)/f.height*450);
-    var go=card.querySelector('[data-ruta2]');if(go)go.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector('[data-ruta="'+d.ruta+'"]');close(false);if(t)t.click()});
-    card.querySelector('.ci-close').addEventListener('click',function(){close(true)});
-    if(matchMedia('(max-width:980px)').matches)card.querySelector('#ci-ph2').focus({preventScroll:true})}
-  function close(ret){panel.classList.remove('open');zs.forEach(function(o){o.setAttribute('aria-pressed','false')});focus=null;draw();
-    if(!matchMedia('(max-width:980px)').matches){card.hidden=true;empty.hidden=false;panel.setAttribute('aria-labelledby','ci-ph')}
-    if(ret&&last)last.focus()}
-  zs.forEach(function(z){z.addEventListener('click',function(){z.getAttribute('aria-pressed')==='true'?close(true):show(z)})});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&panel.classList.contains('open'))close(true)});
+  var panel=document.getElementById('ci-panel'),card=document.getElementById('ci-card'),empty=document.getElementById('ci-empty'),last=null;
+  function show(z){var key=z.k,d=D[key];last=z.el;zoomK=key;root.classList.add('ci-zoom');
+    tgt.cx=z.x;tgt.cy=z.y;tgt.dist=key==='cordyceps'?400:360;setZoomAnchor();
+    var rows=d.rows.map(function(r){return '<div><dt>'+r[0]+'</dt><dd><p class="ln">'+nb(r[1])+(r[2]?' <span class="ph">[en&nbsp;preparación]</span>':'')+'</p></dd></div>'}).join('');
+    card.innerHTML='<div class="ci-grab" aria-hidden="true"></div><p class="ci-moment">'+d.moment+'</p><h2 class="ci-name" id="ci-ph2" tabindex="-1">'+d.name+'</h2><p class="ci-sci">'+d.sci+'</p>'+
+      '<p class="ci-lead ln">'+nb(d.lead)+'</p><dl>'+rows+'</dl>'+
+      '<div class="ci-studies" id="ci-st" hidden>'+d.studies.map(function(s){return '<p class="ln">'+nb(s)+'</p>'}).join('')+'</div>'+
+      '<div class="ci-acts">'+(d.ruta?'<a class="ci-go" href="#ruta" data-ruta2="'+d.ruta+'">Conocer más</a>':'')+'<button type="button" class="ci-link" aria-expanded="false" aria-controls="ci-st" data-st>Ver estudios</button><button type="button" class="ci-link" data-x>Volver al cuerpo</button></div>'+
+      '<p class="ci-fine ln">Información general. No es una evaluación personal ni una recomendación de&nbsp;consumo.</p>';
+    empty.hidden=true;card.hidden=false;panel.scrollTop=0;panel.setAttribute('aria-labelledby','ci-ph2');panel.classList.add('open');
+    var st=card.querySelector('[data-st]');st.addEventListener('click',function(){var box=card.querySelector('#ci-st'),op=box.hidden;box.hidden=!op;st.setAttribute('aria-expanded',op?'true':'false');st.textContent=op?'Ocultar estudios':'Ver estudios'});
+    var go=card.querySelector('[data-ruta2]');if(go)go.addEventListener('click',function(e){e.preventDefault();close(false);var t=document.querySelector('[data-ruta="'+d.ruta+'"]');if(t)t.click()});
+    card.querySelector('[data-x]').addEventListener('click',function(){close(true)});
+    setTimeout(function(){var h=card.querySelector('#ci-ph2');if(h)h.focus({preventScroll:true})},reduce?0:900)}
+  function close(ret){zoomK=null;root.classList.remove('ci-zoom');panel.classList.remove('open');tgt.cx=100;tgt.cy=225;tgt.dist=900;anchorT.x=anchor.base.x;anchorT.y=anchor.base.y;
+    card.hidden=true;empty.hidden=false;panel.setAttribute('aria-labelledby','ci-ph');if(ret&&last)last.focus({preventScroll:true})}
+  ZP.forEach(function(z){z.el.addEventListener('click',function(){show(z)})});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&zoomK)close(true)});
 })();
 </script>
 </body>
