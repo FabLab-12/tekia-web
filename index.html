@@ -562,10 +562,10 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
       <div class="ci-drag" id="ci-drag" tabindex="0" role="slider" aria-roledescription="Atlas interior" aria-label="Atlas interior. Flechas para girar; más y menos para acercarte; Escape para volver." aria-valuemin="0" aria-valuemax="360" aria-valuenow="0"></div>
       <p class="ci-hintg" id="ci-hintg" aria-hidden="true">Acerca dos dedos para explorar</p>
       <div class="ci-zones" role="group" aria-label="Zonas del cuerpo">
-        <button type="button" class="ci-z" data-k="hericium" aria-pressed="false"><i></i><span>Pensar</span></button>
-        <button type="button" class="ci-z" data-k="reishi" aria-pressed="false"><i></i><span>Descansar</span></button>
-        <button type="button" class="ci-z" data-k="care" aria-pressed="false"><i></i><span>Cuidar</span></button>
-        <button type="button" class="ci-z" data-k="cordyceps" aria-pressed="false"><i></i><span>Moverse</span></button>
+        <button type="button" class="ci-z" data-k="hericium" aria-pressed="false"><i></i><span>Pensamiento</span></button>
+        <button type="button" class="ci-z" data-k="reishi" aria-pressed="false"><i></i><span>Descanso</span></button>
+        <button type="button" class="ci-z" data-k="care" aria-pressed="false"><i></i><span>Cuidado</span></button>
+        <button type="button" class="ci-z" data-k="cordyceps" aria-pressed="false"><i></i><span>Movilidad</span></button>
       </div>
     </div>
     <aside class="ci-panel" id="ci-panel" aria-live="polite" aria-labelledby="ci-ph">
@@ -1053,28 +1053,28 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
    Textos de fichas: Teka_CANDIDATOS.md v0.3. Referencia de histología: OUHSC, Connective Tissue. */
 (function(){
   var D={
-    hericium:{moment:'Pensar',name:'Melena de león',sci:'Hericium erinaceus',ruta:'ciencia',illo:'melena',
+    hericium:{moment:'Pensamiento',name:'Melena de león',sci:'Hericium erinaceus',ruta:'ciencia',illo:'melena',
       lead:'Cientos de espinas blancas caen en cascada y le dan su nombre.',
       rows:[['Origen','Crece en troncos de árboles de hoja ancha en Asia, Europa y América del Norte.'],
             ['Tradición','En la cocina de China y Japón se aprecia por su textura suave, parecida a la de los mariscos.'],
             ['Lo que investiga la ciencia','Se estudia sobre todo en atención y memoria, con ensayos en personas desde 2009.'],
             ['Calidad TEKIA','Cuerpo fructífero, con la especie y cada lote verificados por un laboratorio independiente.',1]],
       studies:['Dos ensayos en personas mayores con deterioro cognitivo leve vieron mejoras frente a placebo (2009 y 2019).','En adultos sanos, los resultados han sido modestos y variables (2023 a 2026).']},
-    reishi:{moment:'Descansar',name:'Reishi',sci:'Ganoderma lucidum',illo:'reishi',
+    reishi:{moment:'Descanso',name:'Reishi',sci:'Ganoderma lucidum',illo:'reishi',
       lead:'Un hongo de brillo rojizo, como laqueado, que en China llaman lingzhi.',
       rows:[['Origen','Crece en la base de los árboles. Hoy se cultiva sobre madera.'],
             ['Tradición','Aparece desde hace siglos en el arte y los textos clásicos de China.'],
             ['El momento','Lo pensamos como un ritual para cerrar el día: una bebida de sabor profundo y amargo.'],
             ['Calidad TEKIA','Solo extracto, con certificado de cada lote.',1]],
       studies:['Un ensayo en personas con neurastenia vio menos cansancio frente a placebo (2005).','Todavía no hay ensayos en adultos sanos.']},
-    cordyceps:{moment:'Moverse',name:'Cordyceps',sci:'Cordyceps militaris',illo:'cordyceps',
+    cordyceps:{moment:'Movilidad',name:'Cordyceps',sci:'Cordyceps militaris',illo:'cordyceps',
       lead:'Pequeños tallos de color naranja intenso que crecen juntos, como llamas.',
       rows:[['Origen','Se cultiva en sustratos controlados, así que no se recolecta en la naturaleza.'],
             ['Tradición','En el sur de China se agrega a sopas y caldos.'],
             ['Lo que investiga la ciencia','Se estudia en ejercicio, esfuerzo físico y tiempo de reacción.'],
             ['Calidad TEKIA','Especie verificada por sus compuestos propios, como la cordicepina.',1]],
       studies:['Hay ensayos pequeños en ejercicio, con resultados variables (2004 a 2026).','Seguimos revisando la literatura completa.']},
-    care:{moment:'Cuidar',kicker:'Cómo te cuidamos',name:'Calidad y cuidado',sci:'Lo que revisamos antes de ofrecer un hongo',illo:'care',link:['Leer precauciones','#f-precauciones'],
+    care:{moment:'Cuidado',kicker:'Cómo te cuidamos',name:'Calidad y cuidado',sci:'Lo que revisamos antes de ofrecer un hongo',illo:'care',link:['Leer precauciones','#f-precauciones'],
       lead:'Elegimos pocos hongos y los revisamos con calma.',
       rows:[['Cómo elegimos','Solo hongos con ensayos publicados en personas.'],
             ['Qué revisamos','Que la especie sea la correcta y que no haya metales pesados ni contaminantes.',1],
@@ -1486,11 +1486,19 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     var dt=lastRing?Math.min(.05,(now-lastRing)/1000):0;lastRing=now;var t=now/1000,N=RN.length;
     var cx=(RB.x0+RB.x1)/2,cy0=(RB.y0+RB.y1)/2,bw=RB.x1-RB.x0,bh=RB.y1-RB.y0,cmp=W<640,rx=cmp?W/2-24:Math.min(Math.max(bw*1.35,340),W/2-150),ry=Math.max(60,Math.min(bh*.5,cy0-80,H-cy0-50));ringEl.classList.toggle('compact',cmp);
     // anclas en el anillo y simulación de fuerzas suave
-    RN.forEach(function(n){var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry;if(!n.init){n.x=n.ax;n.y=n.ay;n.init=true}});
+    RN.forEach(function(n){var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry;});
+    // nunca encima de Pensamiento, Descanso, Cuidado o Movilidad: si el nodo o su nombre tocan una etiqueta, se corre arriba o abajo
+    var sr=sec.getBoundingClientRect(),ZR=[];ZP.forEach(function(z){if(+z.el.style.opacity<.3)return;var r=z.el.getBoundingClientRect(),r2=z.el.querySelector('span').getBoundingClientRect();if(!r.width)return;ZR.push([r.left-sr.left-6,r2.top-sr.top-6,r2.right-sr.left+8,r2.bottom-sr.top+6])});
+    RN.forEach(function(n){var tw=cmp?0:(n.el.offsetWidth||80)-14,lft=cmp?n.ax>cx:n.ax<cx;
+      var hr=cmp?12:12;for(var pass=0;pass<4;pass++){var bx0=lft?n.ax-tw-hr:n.ax-hr,bx1=lft?n.ax+hr:n.ax+tw+hr,hit=false;
+        for(var q=0;q<ZR.length;q++){var z=ZR[q];if(bx1>z[0]&&bx0<z[2]&&n.ay+hr>z[1]&&n.ay-hr<z[3]){n.ay=n.ay<(z[1]+z[3])/2?z[1]-hr-1:z[3]+hr+1;hit=true}}if(!hit)break}
+      if(!n.init){n.x=n.ax;n.y=n.ay;n.init=true}});
     if(!reduce||true){for(var it=0;it<2;it++){RN.forEach(function(n){if(n.drag)return;var fx=(n.ax-n.x)*.012,fy=(n.ay-n.y)*.012;
         [-1,1].forEach(function(s2){var m=RN[(n.i+s2+N)%N],dx=m.x-n.x,dy=m.y-n.y,d=Math.hypot(dx,dy)||1,rest=Math.hypot(m.ax-n.ax,m.ay-n.ay);fx+=dx/d*(d-rest)*.006;fy+=dy/d*(d-rest)*.006});
         RN.forEach(function(m){if(m===n)return;var dx=n.x-m.x,dy=n.y-m.y,d2=dx*dx+dy*dy;if(d2<6400&&d2>1){var f=60/d2;fx+=dx*f;fy+=dy*f}});
         n.vx=(n.vx+fx)*.86;n.vy=(n.vy+fy)*.86;n.x+=n.vx;n.y+=n.vy})}}
+    RN.forEach(function(n){if(n.drag)return;var hr=12,tw=cmp?0:(n.el.offsetWidth||80)-14,lft=cmp?n.x>cx:n.x<cx,bx0=lft?n.x-tw-hr:n.x-hr,bx1=lft?n.x+hr:n.x+tw+hr;
+      for(var q=0;q<ZR.length;q++){var z=ZR[q];if(bx1>z[0]&&bx0<z[2]&&n.y+hr>z[1]&&n.y-hr<z[3]){n.y=n.y<(z[1]+z[3])/2?z[1]-hr-1:z[3]+hr+1;n.vy=0}}});
     // hilos de micelio entre vecinos y algunos atajos; tenues en reposo
     fctx.save();fctx.lineCap='round';
     function thread(a,b,base,bow,lit){var mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=mx-cx,dy=my-cy0,dl=Math.hypot(dx,dy)||1,w=reduce?0:Math.sin(t*.4+a.i)*3,qx=mx+dx/dl*(bow+w),qy=my+dy/dl*(bow+w);
