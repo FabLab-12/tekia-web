@@ -1375,6 +1375,19 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
       for(var n=0;n<N;n++){var an=rr()*6.283,ds=Math.pow(rr(),.7)*spread,tw=.5+.5*Math.sin(t*(3+rr()*4)+n),al=ca*tw*(1-ds/(spread+1)*.6)*gA*.8;if(al<.02)continue;var sz=(.5+rr()*1.1)*Math.min(1.5,wz);fctx.globalAlpha=al;fctx.beginPath();fctx.arc(x+Math.cos(an)*ds,y+Math.sin(an)*ds*.85,sz,0,6.283);fctx.fill()}
       fctx.globalAlpha=1}
     fctx.globalCompositeOperation='source-over'}
+  // partículas luminosas que recorren las fibras de la piel, despacio
+  var FST=[];(function(){for(var fi=0;fi<FBR.length;){FST.push(fi);fi+=FBR[fi]+1}})();
+  var RUN=[];(function(){var n=LOW?8:16;for(var i=0;i<n;i++)RUN.push({f:-1,u:0,v:0,d:i*.35})})();
+  function pickRun(R){for(var tr=0;tr<30;tr++){var f=FST[Math.floor(Math.random()*FST.length)],L=FBR[f];if(L<8)continue;var a=FBR[f+1],b=FBR[f+L];if(MV[a]&&MV[b]&&(SB[a]>.1||SB[b]>.1)){R.f=f;R.u=0;R.v=(.2+Math.random()*.15)*10/L;R.dir=Math.random()<.5?1:-1;return}}R.f=-1}
+  function drawRunners(t,dt,gA,wz){if(Z.m>6)return;fctx.globalCompositeOperation='lighter';
+    for(var i=0;i<RUN.length;i++){var R=RUN[i];if(R.d>0){R.d-=dt;continue}if(R.f<0){pickRun(R);if(R.f<0)continue}
+      R.u+=R.v*dt;if(R.u>=1){R.f=-1;R.d=.4+Math.random()*1.6;continue}
+      var L=FBR[R.f],env=Math.sin(Math.PI*R.u),pos=(R.dir>0?R.u:1-R.u)*(L-1),k0=Math.floor(pos),fr=pos-k0;
+      for(var tl=0;tl<5;tl++){var pp=pos-tl*.35*R.dir;if(pp<0||pp>L-1)break;var j0=Math.floor(pp),f2=pp-j0,a=FBR[R.f+1+j0],b=FBR[R.f+1+Math.min(L-1,j0+1)];if(!MV[a]||!MV[b])break;
+        var x=MX[a]+(MX[b]-MX[a])*f2,y=MY[a]+(MY[b]-MY[a])*f2,al=env*gA*(tl===0?.85:.4*(1-tl/5)),rr=(tl===0?1.1:.7)*Math.min(1.5,wz);
+        fctx.fillStyle='rgba(231,214,180,'+al.toFixed(3)+')';fctx.beginPath();fctx.arc(x,y,rr,0,6.283);fctx.fill();
+        if(tl===0){var gr=4.5*Math.min(1.5,wz),g=fctx.createRadialGradient(x,y,0,x,y,gr);g.addColorStop(0,'rgba(193,161,92,'+(.28*env*gA).toFixed(3)+')');g.addColorStop(1,'rgba(193,161,92,0)');fctx.fillStyle=g;fctx.fillRect(x-gr,y-gr,2*gr,2*gr)}}}
+    fctx.globalCompositeOperation='source-over'}
   function drawGlints(t,gA,wz){if(!GLN.length)return;fctx.globalCompositeOperation='lighter';for(var i=0;i<GLN.length;i++){var G2=GLN[i],c=G2[0];if(!MV[c])continue;var a=Math.max(0,Math.sin(t*.5*G2[2]+G2[1]));a=a*a*a;if(a<.03)continue;var r=(2+3*a)*Math.min(1.6,wz),g=fctx.createRadialGradient(MX[c],MY[c],0,MX[c],MY[c],r);g.addColorStop(0,'rgba(216,200,183,'+(.4*a*gA).toFixed(3)+')');g.addColorStop(1,'rgba(168,150,128,0)');fctx.fillStyle=g;fctx.fillRect(MX[c]-r,MY[c]-r,2*r,2*r)}fctx.globalCompositeOperation='source-over'}
   function lvOf(b){return b<.1?-1:b<.22?0:b<.36?1:b<.52?2:b<.7?3:b<.86?4:5}
   // estela: pocas hebras que se desprenden del brazo y del costado, se arquean y se disuelven
@@ -1411,7 +1424,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
         var tgt=(fn%5===0?FH:FP)[lv3];if(last!==lv3){tgt.moveTo(MX[p1],MY[p1])}tgt.lineTo(MX[p2],MY[p2]);last=lv3}}
     fctx.lineWidth=Math.max(.3,.33*wz);for(l=0;l<6;l++){var c2=MAT[l];fctx.strokeStyle='rgba('+c2[0]+','+c2[1]+','+c2[2]+','+(.7*gA).toFixed(3)+')';fctx.stroke(FP[l])}
     fctx.lineWidth=Math.max(.7,.8*wz);for(l=0;l<6;l++){var c3=MAT[l];fctx.strokeStyle='rgba('+c3[0]+','+c3[1]+','+c3[2]+','+(.55*gA).toFixed(3)+')';fctx.stroke(FH[l])}
-    blooms(t,gA,wz);drawBlooms(t,gA,wz);if(!reduce)drawGlints(t,gA,wz);
+    if(!reduce){drawRunners(t,dt,gA,wz);drawGlints(t,gA,wz)}
     // capas interiores: oro antiguo apagado
     fctx.fillStyle='rgba(119,96,62,'+(.35*gA).toFixed(3)+')';fctx.beginPath();var isz=Math.min(1.4,.7*wz);for(i=NSURF;i<NSK;i+=2){if(!MV[i])continue;fctx.rect(MX[i]-isz/2,MY[i]-isz/2,isz,isz)}fctx.fill();
     // nodos: solo donde la luz los toca, pequeños
