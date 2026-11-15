@@ -513,6 +513,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(251,24
 }
 
 /* Atlas interior (v0.44) */
+#ci-gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
 #ci-fx{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
 .ci-ring{position:absolute;inset:0;z-index:3;pointer-events:none;transition:opacity .6s}
 .hm{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:calc(var(--top-h,76px) + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:rgba(10,7,6,.16);opacity:0;transition:opacity .5s}
@@ -831,6 +832,7 @@ html.claro .vista-nos{background:#F6F1E4}
 <main>
 <section class="umbral cuerpo-in gut" id="umbral" data-top="dark" aria-labelledby="u-h">
   <canvas id="ci-net" aria-hidden="true"></canvas>
+  <canvas id="ci-gl" aria-hidden="true"></canvas>
   <canvas id="ci-fx" aria-hidden="true"></canvas>
   <div class="ci-ring" id="ci-ring" role="group" aria-label="Diez hongos"></div>
   <div class="hm" id="hm" hidden><div class="hm-box" id="hm-box" role="dialog" aria-modal="true" aria-labelledby="hm-h"><button type="button" class="hm-bk" id="hm-bk" aria-label="Ficha anterior" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" class="hm-x" id="hm-x" aria-label="Cerrar ficha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button><div id="hm-c"></div></div></div>
@@ -1331,6 +1333,7 @@ html.claro .vista-nos{background:#F6F1E4}
     if(t.closest('.f-panel')){var pid=t.closest('.f-panel').id;return '#'+pid+' [data-open="'+t.dataset.open+'"]'}return null}
 })();
 </script>
+<script src="atlas-gl.js"></script>
 <script src="atlas-datos.js"></script>
 <script>
 /* Atlas interior (v0.44, propuesta): figura hecha de hebras en 3D, acercamiento continuo y esquema del tejido conectivo laxo en el antebrazo.
@@ -1371,6 +1374,15 @@ html.claro .vista-nos{background:#F6F1E4}
   var LOW=((navigator.hardwareConcurrency||4)<=4)||Math.min(screen.width,screen.height)<520;
   // en celular hay menos fibras: se compensan con más luz y trazo un poco más firme (micelio luminoso, no oscuro)
   var BST=LOW?1.6:1,LWM=LOW?1.35:1;
+  // motor del cuerpo (prototipo): WebGL si el navegador lo permite; palanquita para comparar con 2D
+  var GLX=window.TEKIA_GL,GLOK=!!(GLX&&GLX.init(document.getElementById('ci-gl'))),useGL=GLOK,glDrawn=false;
+  try{if(/[?&]motor=2d\b/.test(location.search)||localStorage.getItem('tekia-motor')==='2d')useGL=false}catch(e){}
+  (function(){var top=document.querySelector('.top');if(!top)return;var b=document.createElement('button');b.type='button';b.id='motor-sw';b.className='tm-sw tm-motor';b.setAttribute('role','switch');
+    b.innerHTML='<span class="tm-t" aria-hidden="true"><i></i></span><span class="tm-l" aria-hidden="true"></span>';
+    function show(){b.setAttribute('aria-checked',useGL?'true':'false');b.setAttribute('aria-label','Motor WebGL');b.querySelector('.tm-l').textContent=GLOK?(useGL?'WebGL':'2D'):'2D (sin WebGL)';b.disabled=!GLOK}
+    b.addEventListener('click',function(){if(!GLOK)return;useGL=!useGL;try{localStorage.setItem('tekia-motor',useGL?'webgl':'2d')}catch(e){}show();dirty=true});show();top.appendChild(b)})();
+  var CLRP=(function(){function h2r(h,s,l){function f(n){var k=(n+h/30)%12,a=s*Math.min(l,1-l);return l-a*Math.max(-1,Math.min(k-3,9-k,1))}return [f(0),f(8),f(4)]}
+    return [].concat(h2r(38,.62,.74),h2r(39,.66,.77),h2r(40,.7,.8),h2r(41,.72,.84),h2r(42,.75,.88),h2r(44,.8,.95))})(),CLRK=[1.4,1.6,1.6,1.4,1.4,1.2];
   function rnd(s){return function(){s=(s*16807)%2147483647;return (s-1)/2147483646}}
   function clamp(v,a,b){return v<a?a:v>b?b:v}
   function smooth(a,b,v){var t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t)}
@@ -1729,6 +1741,18 @@ html.claro .vista-nos{background:#F6F1E4}
       SB[i]=Math.min(1,b)}
     if(m<1.05){var x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(i=0;i<NSURF;i+=3){if(!MV[i])continue;if(MX[i]<x0)x0=MX[i];if(MX[i]>x1)x1=MX[i];if(MY[i]<y0)y0=MY[i];if(MY[i]>y1)y1=MY[i]}if(x1>x0){RB.x0=x0;RB.x1=x1;RB.y0=y0;RB.y1=y1;RB.ok=true}}
     fctx.globalCompositeOperation='source-over';fctx.lineCap='round';
+    if(useGL&&GLOK&&GLX.ok){
+      // WebGL: volumen por densidad (silueta limpia), red con antialias y brillo pequeño
+      var CL=root.classList.contains('claro'),np=0,PB=GLX.pts(NSURF);for(i=0;i<NSURF;i++){if(!MV[i])continue;PB[np*2]=MX[i];PB[np*2+1]=MY[i];np++}
+      var SG2=GLX.segs(LK.length/2+FBR.length),ns=0;
+      for(var k=0;k<LK.length;k+=2){var p=LK[k],q=LK[k+1];if(!MV[p]||!MV[q])continue;var lv2=lvOf(Math.min(SB[p],SB[q])*.6+Math.max(SB[p],SB[q])*.4);if(lv2<1)continue;var j6=ns*6;SG2[j6]=MX[p];SG2[j6+1]=MY[p];SG2[j6+2]=MX[q];SG2[j6+3]=MY[q];SG2[j6+4]=lv2;SG2[j6+5]=0;ns++}
+      for(var fi=0,fn=0;fi<FBR.length;fn++){var L3=FBR[fi],st=fi+1;fi=st+L3;if(!MV[FBR[st]])continue;var kd=fn%5===0?2:1;
+        for(var q3=st+1;q3<fi;q3++){var p1=FBR[q3-1],p2=FBR[q3];if(!MV[p1]||!MV[p2])continue;var lv3=lvOf((SB[p1]+SB[p2])*.5);if(lv3<0)continue;var j7=ns*6;SG2[j7]=MX[p1];SG2[j7+1]=MY[p1];SG2[j7+2]=MX[p2];SG2[j7+3]=MY[p2];SG2[j7+4]=lv3;SG2[j7+5]=kd;ns++}}
+      var cols=[],al=[];for(var l=0;l<6;l++){var c0=MAT[l];if(CL){cols.push(CLRP[l*3],CLRP[l*3+1],CLRP[l*3+2])}else cols.push(c0[0]/255,c0[1]/255,c0[2]/255)}
+      var KA=[[0,.22,.3,.36,.4,.42],[.7,.7,.7,.7,.7,.7],[.55,.55,.55,.55,.55,.55]],KM=[.85,1,1];
+      for(var kk=0;kk<3;kk++)for(l=0;l<6;l++)al.push(Math.min(1,Math.min(KM[kk],KA[kk][l]*gA*BST)*(CL?CLRK[l]:1)));
+      GLX.draw({W:W,H:H,dpr:dpr,claro:CL,gA:gA,t:t,np:np,vr:Math.max(5.5,5.5*wz),ns:ns,cols:cols,al:al,wd:[Math.max(.35,.42*wz)*LWM,Math.max(.3,.33*wz)*LWM,Math.max(.7,.8*wz)*LWM]});glDrawn=true}
+    else{
     // volumen: sombra cálida del cuerpo, distinta del fondo
     if(root.classList.contains('claro')){
       // tema claro: capa verde interna recortada por la silueta, debajo de la red; sin halo
@@ -1749,6 +1773,7 @@ html.claro .vista-nos{background:#F6F1E4}
         var tgt=(fn%5===0?FH:FP)[lv3];if(last!==lv3){tgt.moveTo(MX[p1],MY[p1])}tgt.lineTo(MX[p2],MY[p2]);last=lv3}}
     fctx.lineWidth=Math.max(.3,.33*wz)*LWM;for(l=0;l<6;l++){var c2=MAT[l];fctx.strokeStyle='rgba('+c2[0]+','+c2[1]+','+c2[2]+','+Math.min(1,.7*gA*BST).toFixed(3)+')';fctx.stroke(FP[l])}
     fctx.lineWidth=Math.max(.7,.8*wz)*LWM;for(l=0;l<6;l++){var c3=MAT[l];fctx.strokeStyle='rgba('+c3[0]+','+c3[1]+','+c3[2]+','+Math.min(1,.55*gA*BST).toFixed(3)+')';fctx.stroke(FH[l])}
+    }
     drawRegions(t,gA,wz);
     drawOrgans(t,gA,wz);
     if(!reduce){drawRunners(t,dt,gA,wz);drawGlints(t,gA,wz)}
@@ -1983,7 +2008,7 @@ html.claro .vista-nos{background:#F6F1E4}
   // tocar fuera de las intenciones y del anillo apaga la ruta: nunca se queda encendida
   var tapAt=null;sec.addEventListener('pointerdown',function(e){tapAt=(e.target.closest&&e.target.closest('.ci-z,.ci-m,.ci-go,.hm,.bt,a,button'))?null:[e.clientX,e.clientY]},true);
   sec.addEventListener('click',function(e){if(!RUTA||!tapAt||Math.hypot(e.clientX-tapAt[0],e.clientY-tapAt[1])>8)return;if(e.target.closest&&e.target.closest('.ci-z,.ci-m,.ci-go,.hm,.bt,a,button'))return;clearRoute()});
-  function drawFx(now){fctx.setTransform(dpr,0,0,dpr,0,0);fctx.clearRect(0,0,W,H);drawSkin(now);fctx.lineCap='round';fctx.lineJoin='round';var fd=fade(),wz=Math.min(3.4,Math.sqrt(Z.m));
+  function drawFx(now){fctx.setTransform(dpr,0,0,dpr,0,0);fctx.clearRect(0,0,W,H);var hadGL=glDrawn;glDrawn=false;drawSkin(now);if(hadGL&&!glDrawn&&GLOK)GLX.clear();fctx.lineCap='round';fctx.lineJoin='round';var fd=fade(),wz=Math.min(3.4,Math.sqrt(Z.m));
     // hebra elegida: se reconoce en todas las escalas
     // la hebra elegida no se resalta: conserva el mismo tono que las demás
     if(glow){var gr=fctx.createRadialGradient(glow.x,glow.y,0,glow.x,glow.y,18);gr.addColorStop(0,'rgba(191,122,63,.45)');gr.addColorStop(1,'rgba(191,122,63,0)');fctx.fillStyle=gr;fctx.fillRect(glow.x-18,glow.y-18,36,36)}

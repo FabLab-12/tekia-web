@@ -65,7 +65,7 @@
    '.tm-t i{position:absolute;top:2px;left:2px;width:9px;height:9px;border-radius:50%;background:#D9C38A;transition:transform 1.2s ease,background 1.2s ease}'+
    '.tm-sw[aria-checked="true"]{color:#6B6156}.tm-sw[aria-checked="true"] .tm-t{border-color:rgba(193,161,92,.7);background:rgba(255,253,246,.6)}.tm-sw[aria-checked="true"] .tm-t i{transform:translateX(12px);background:#C1A15C}'+
    '.tm-sw:focus-visible{outline:1px solid #C1A15C;outline-offset:3px;border-radius:6px}'+
-   '.pd-open{margin-top:34px}'+
+   '.pd-open{margin-top:68px}.tm-sw.tm-motor{top:calc(100% + 44px)}'+
    '@media (max-width:640px){.tm-sw{top:calc(100% + 6px)}.tm-l{display:none}}'+
    'html.tm-velo #umbral,html.tm-velo .vista-nos,html.tm-velo main.nos{opacity:0!important}'+
    '#umbral,.vista-nos,main.nos{transition:opacity .9s ease}'+
