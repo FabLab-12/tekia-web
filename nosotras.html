@@ -68,6 +68,8 @@ a{color:inherit}
   .ct span{flex-basis:100%;text-align:center;margin:0 0 .1rem}
   .mic{width:min(600px,calc(133.333% - 32px));top:calc(64px + env(safe-area-inset-top,0px) + 4.2rem)}
 }
+.halo{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
+.med{position:relative}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 </head>
@@ -79,6 +81,7 @@ a{color:inherit}
 </header>
 <main class="nos" id="nosotras">
   <img class="mic" src="assets/nosotras/micelio.svg" width="1200" height="720" alt="" aria-hidden="true">
+  <canvas class="halo" id="halo" aria-hidden="true"></canvas>
   <h1>Nosotras</h1>
   <div class="fichas">
     <article class="ficha" aria-labelledby="n-chio">
@@ -107,5 +110,38 @@ a{color:inherit}
   <symbol id="i-ig" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><path d="M16.9 7.1v.1"/></g></symbol>
   <symbol id="i-sp" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M7.6 9.6c3-.9 6.3-.6 9 .9M8.1 12.6c2.4-.7 5-.4 7.2.8M8.6 15.4c1.9-.5 3.8-.3 5.5.6"/></g></symbol>
 </svg>
+<script>
+// anillos y partículas: capa decorativa aparte; los retratos no se tocan
+(function(){var cv=document.getElementById('halo'),nos=document.getElementById('nosotras'),cx=cv.getContext('2d'),dpr=1,W=0,H=0,M=[],P=[],O=[],
+  still=matchMedia('(prefers-reduced-motion: reduce)'),t0=performance.now(),raf=0;
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  function layout(){var n=nos.getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);W=n.width;H=n.height;cv.width=W*dpr;cv.height=H*dpr;
+    M=[].map.call(nos.querySelectorAll('.med img'),function(m){var r=m.getBoundingClientRect();return {x:r.left-n.left+r.width/2,y:r.top-n.top+r.height/2,r:r.width/2}});
+    if(!P.length){for(var k=0;k<46;k++)P.push({u:Math.random(),v:rnd(.012,.035)*(Math.random()<.5?-1:1),o:rnd(-1,1),s:rnd(.6,1.6),a:rnd(.35,.9),ph:rnd(0,6.3)})}
+    if(!O.length){M.forEach(function(m,i){for(var k=0;k<5;k++)O.push({m:i,a:rnd(0,6.3),w:rnd(.08,.22)*(k%2?-1:1),rr:rnd(1.03,1.13),s:rnd(.7,1.5),ph:rnd(0,6.3)})})}
+    draw(performance.now())}
+  // hebra que une los dos retratos y sale a los bordes, con una ondulación suave
+  function strand(u,t){if(M.length<2)return [0,0];var a=M[0],b=M[1],y0=(a.y+b.y)/2,x=u*W,
+    w=Math.sin(u*9+t*.00035)*a.r*.07+Math.sin(u*23-t*.0005)*a.r*.025,
+    lift=-Math.exp(-Math.pow((x-(a.x+b.x)/2)/(a.r*1.4),2))*a.r*.08;return [x,y0+w+lift]}
+  function draw(t){cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);if(M.length<2)return;var dt=(t-t0)/1000,mv=!still.matches;
+    // anillos
+    M.forEach(function(m,i){var br=mv?.5+.5*Math.sin(dt*.6+i*1.7):.6;
+      cx.lineWidth=.7;cx.strokeStyle='rgba(217,195,138,'+(.32+.16*br)+')';cx.beginPath();cx.arc(m.x,m.y,m.r*1.06,0,6.2832);cx.stroke();
+      cx.lineWidth=.5;cx.strokeStyle='rgba(201,176,113,.24)';cx.beginPath();cx.arc(m.x,m.y,m.r*1.15,0,6.2832);cx.stroke();
+      var rot=mv?dt*(i?-.05:.05):0;cx.lineWidth=.9;cx.strokeStyle='rgba(240,222,170,'+(.5+.3*br)+')';cx.beginPath();cx.arc(m.x,m.y,m.r*1.06,rot+i*2,rot+i*2+1.1);cx.stroke();
+      cx.beginPath();cx.arc(m.x,m.y,m.r*1.15,-rot*1.4+3+i,-rot*1.4+3.6+i);cx.strokeStyle='rgba(217,195,138,.38)';cx.stroke()});
+    // partículas que orbitan
+    O.forEach(function(o){var m=M[o.m],a=o.a+(mv?dt*o.w:0),x=m.x+Math.cos(a)*m.r*o.rr,y=m.y+Math.sin(a)*m.r*o.rr,al=.45+.35*Math.sin(dt*1.3+o.ph);dot(x,y,o.s,mv?al:.6)});
+    // partículas que viajan por la hebra
+    P.forEach(function(p){var u=((p.u+(mv?dt*p.v:0))%1+1)%1,q=strand(u,mv?t:0),edge=Math.min(1,u*6,(1-u)*6),y=q[1]+p.o*M[0].r*.05;
+      dot(q[0],y,p.s,p.a*edge*(mv?.6+.4*Math.sin(dt*2+p.ph):.7))})}
+  function dot(x,y,s,a){var g=cx.createRadialGradient(x,y,0,x,y,s*4);g.addColorStop(0,'rgba(255,240,200,'+a+')');g.addColorStop(.3,'rgba(232,212,158,'+a*.5+')');g.addColorStop(1,'rgba(201,176,113,0)');cx.fillStyle=g;cx.beginPath();cx.arc(x,y,s*4,0,6.2832);cx.fill()}
+  function loop(t){draw(t);raf=still.matches||document.hidden?0:requestAnimationFrame(loop)}
+  function go(){if(!raf&&!still.matches&&!document.hidden)raf=requestAnimationFrame(loop);else draw(performance.now())}
+  addEventListener('resize',layout);document.addEventListener('visibilitychange',go);still.addEventListener&&still.addEventListener('change',go);
+  [].forEach.call(nos.querySelectorAll('.med img'),function(i){if(!i.complete)i.addEventListener('load',layout)});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);layout();go()})();
+</script>
 </body>
 </html>
