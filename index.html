@@ -726,6 +726,10 @@ html.claro .gate .enter{border-color:var(--cl-gold);color:var(--cl-ink)}
 html.claro .gate .enter:hover{background:rgba(193,161,92,.1);box-shadow:0 0 28px rgba(193,161,92,.28)}
 html.claro .gate .mute{color:var(--cl-sub)}
 html.claro .gate .myc path{stroke:#B8955A}
+/* velo para volver al acceso desde el logo: mismo fondo que la pantalla de entrada, aparece despacio */
+.tk-velo{position:fixed;inset:0;z-index:2147483000;background:var(--noche);opacity:0;transition:opacity 1.6s ease;pointer-events:auto}
+.tk-velo.on{opacity:1}
+html.claro .tk-velo{background-color:#F6F1E4;background-image:radial-gradient(ellipse 50% 45% at 50% 46%,rgba(255,253,246,.95),rgba(255,253,246,0) 70%),radial-gradient(ellipse 70% 55% at 0% 0%,rgba(255,244,214,.75),rgba(255,244,214,0) 65%),radial-gradient(ellipse 120% 90% at 50% 50%,#F6F1E4 40%,#E9E5D3 100%)}
 /* barra superior */
 html.claro .top,html.claro.at-top .top{background:rgba(248,245,235,.58);border-bottom-color:rgba(193,161,92,.18)}
 html.claro .top .brand,html.claro.at-top .top .brand{color:var(--cl-ink)}
@@ -1108,6 +1112,18 @@ html.claro .vista-nos{background:#F6F4EA}
     gate.addEventListener('keydown',function(e){if(e.key==='Escape')enter()});
     enterBtn.focus({preventScroll:true});
   }
+  // El logo regresa a la pantalla de entrada: la música se apaga suave, un velo del color del acceso aparece despacio
+  // y la página vuelve a abrir con el acceso (Entrar / Entrar sin sonido), en el tema que esté puesto.
+  var brand=document.querySelector('.top .brand');
+  if(brand)brand.addEventListener('click',function(e){e.preventDefault();if(document.getElementById('tk-velo'))return;
+    try{sessionStorage.removeItem('tekia-dentro');sessionStorage.removeItem('tekia-sonido')}catch(er){}
+    if(AC&&master){var t=AC.currentTime;master.gain.cancelScheduledValues(t);master.gain.setTargetAtTime(0,t,.5);clearInterval(bellT)}
+    var u=location.pathname+location.search.replace(/([?&]tema=)(claro|oscuro)/,'$1'+(window.TEKIA_claro&&TEKIA_claro()?'claro':'oscuro'));
+    function ir(){location.replace(u)}
+    if(reduce){ir();return}
+    var v=document.createElement('div');v.id='tk-velo';v.className='tk-velo';v.setAttribute('aria-hidden','true');document.body.appendChild(v);
+    v.addEventListener('transitionend',ir);setTimeout(ir,3200); // se navega al terminar el fundido (con respaldo)
+    void v.offsetWidth;v.classList.add('on')});
 
   // ---------- Aparición de textos ----------
   var rv=document.querySelectorAll('[data-rv]');
