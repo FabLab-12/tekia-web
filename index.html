@@ -871,6 +871,10 @@ html.pc-open,html.pc-open body{overflow:hidden}
 .pc-src a .pc-ic{width:16px;height:16px;margin-top:.12rem}.pc-src a:hover span{text-decoration:underline;text-decoration-color:rgba(217,195,138,.5);text-underline-offset:3px}
 .pc-gen{color:#CFC6B4;font-size:.86rem!important;padding:1rem 0;border-top:1px solid rgba(217,195,138,.16)}
 .pc-ingsec{margin-top:1.8rem}
+.pc-ct{list-style:none;margin:1.4rem 0 0;padding:0}
+.pc-ct li{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;padding:.85rem 0;border-top:1px solid rgba(217,195,138,.16)}.pc-ct li:last-child{border-bottom:1px solid rgba(217,195,138,.16)}
+.pc-ct span{font:600 .62rem/1.4 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#D9C38A}.pc-ct b{font:400 .86rem/1.4 var(--sans);color:#B4AA97;font-style:italic}
+html.claro .pc-ct span{color:#7D5F27}html.claro .pc-ct b{color:#6B6156}html.claro .pc-ct li{border-color:rgba(193,161,92,.3)}
 .bt-sg[hidden]{display:none}.bt-sg{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem .9rem}
 .bt-sg button{display:inline-flex;align-items:center;gap:.4rem;min-height:32px;padding:.2rem .1rem;background:none;border:0;color:#E7D2A5;font:400 .7rem/1.35 var(--sans);cursor:pointer;text-align:left}
 .bt-sg button b{font-weight:600}.bt-sg button span{border-bottom:1px solid rgba(217,195,138,.35)}
@@ -905,7 +909,7 @@ html.claro .pc-more:focus-visible,html.claro .pc-ings button:focus-visible,html.
 </div>
 <header class="top">
   <a class="brand" href="#umbral" aria-label="TEKIA, volver al inicio"><img src="assets/tekia-emblema-oro-web.png" alt=""><span aria-hidden="true">TEKIA</span></a>
-  <nav aria-label="Navegación general"><a class="atlas" href="./" aria-current="page">Explorar el atlas</a><a class="pre" href="#precauciones" aria-haspopup="dialog">Precauciones</a><a href="#f-acomp">Escríbenos</a><a class="nos" href="nosotras.html">Acerca de</a></nav>
+  <nav aria-label="Navegación general"><a class="atlas" href="./" aria-current="page">Explorar el atlas</a><a class="pre" href="#precauciones" aria-haspopup="dialog">Precauciones</a><a class="esc" href="#escribenos" aria-haspopup="dialog">Escríbenos</a><a class="nos" href="nosotras.html">Acerca de</a></nav>
   <button class="snd" type="button" aria-pressed="true" aria-label="Sonido ambiental"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg><span class="lbl">Sonido</span><span class="hint">Toca para escuchar</span><span class="hint-s">Escuchar</span><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
 </header>
 
@@ -955,19 +959,6 @@ html.claro .pc-more:focus-visible,html.claro .pc-ings button:focus-visible,html.
   <p class="ci-live" id="ci-live" aria-live="polite"></p>
 </section>
 
-<section class="datos gut" id="datos" data-top="dark" aria-label="Escríbenos">
-  <div class="cell acomp" id="f-acomp" tabindex="-1" data-rv>
-    <h3>Acompañamiento</h3>
-    <p class="acomp-intro"><span class="ln">¿Tienes dudas antes de&nbsp;elegir?</span> <span class="ln">Escríbenos. Te ayudamos a entender tus&nbsp;opciones.</span></p>
-    <ul class="acomp-row">
-      <li><span>Correo</span><b class="ph">[pendiente]</b></li>
-      <li><span>WhatsApp</span><b class="ph">[pendiente]</b></li>
-      <li><span>Redes</span><b class="ph">[pendiente]</b></li>
-      <li><span>Horario de atención</span><b class="ph">[pendiente]</b></li>
-    </ul>
-    <p class="acomp-note">Este acompañamiento no sustituye la consulta con un profesional de la salud.</p>
-  </div>
-</section>
 </main>
 
 <section class="ruta gut" id="ruta" data-mode="ciencia" aria-label="Ruta de exploración" hidden>

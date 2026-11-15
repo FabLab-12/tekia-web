@@ -30,7 +30,7 @@
   var pc=document.createElement('div');pc.className='hm pc';pc.id='pc';pc.hidden=true;
   pc.innerHTML='<div class="hm-box pc-box" role="dialog" aria-modal="true" aria-labelledby="pc-h">'+
     '<button type="button" class="hm-bk" id="pc-bk" aria-label="Volver" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+
-    '<button type="button" class="hm-x" id="pc-x" aria-label="Cerrar precauciones"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>'+
+    '<button type="button" class="hm-x" id="pc-x" aria-label="Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>'+
     '<div class="pc-c" id="pc-c"></div></div>';
   document.body.appendChild(pc);
   var box=pc.querySelector('.pc-box'),C=pc.querySelector('#pc-c'),X=pc.querySelector('#pc-x'),BK=pc.querySelector('#pc-bk'),STK=[],back=null,inertos=[],hideT=0,SEL=[];
@@ -60,6 +60,9 @@
       (ids.length?ids.map(function(id){var x=ING[id];return '<section class="pc-ingsec"><h3 class="pc-st">'+esc(x.comun)+' <em>'+esc(x.latin)+'</em></h3>'+bloqueIng(id)+'</section>'}).join(''):'<p class="pc-gen">Tu blend está vacío.</p>')+
       '<button type="button" class="pc-more" data-v="main">'+ic('shield-check')+'<span>Precauciones generales</span>'+ic('chev','pc-ch')+'</button>'+reaccion()+fino()}
   };
+  V.contacto=function(){return '<header class="pc-hd"><p class="pc-k">TEKIA · <span class="nw">Acompañamiento</span></p><h2 id="pc-h" tabindex="-1">¿Tienes dudas antes de&nbsp;elegir?</h2><p class="pc-in">Escríbenos. Te ayudamos a entender tus&nbsp;opciones.</p></header>'+
+    '<ul class="pc-ct">'+[['Correo'],['WhatsApp'],['Redes'],['Horario de atención']].map(function(r){return '<li><span>'+r[0]+'</span><b>Muy pronto</b></li>'}).join('')+'</ul>'+
+    '<p class="pc-fine">Este acompañamiento no sustituye la consulta con un profesional de la&nbsp;salud.</p>'};
   function pintar(foco,rec){var v=STK[STK.length-1],k=v.split(':');C.innerHTML=V[k[0]](k[1]);C.scrollTop=0;BK.hidden=STK.length<2;
     if(rec){var el=C.querySelector('#rec-'+rec);if(el){el.classList.add('on');setTimeout(function(){C.scrollTo({top:Math.max(0,el.offsetTop-24),behavior:reduce.matches?'auto':'smooth'})},reduce.matches?0:120)}}
     if(foco!==false)setTimeout(function(){var h=C.querySelector('#pc-h');h&&h.focus({preventScroll:true})},foco==='x'?0:30)}
@@ -88,7 +91,8 @@
   if(sg)sg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.rec)abrir('ing:'+b.dataset.ing,b,b.dataset.rec);else abrir('sel',b)});
 
   // ---- accesos: menú, enlaces antiguos a #f-precauciones y #precauciones ----
-  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href$="#precauciones"],a[href$="#f-precauciones"]');if(!a)return;e.preventDefault();e.stopImmediatePropagation();abrir('main',a)},true);
-  if(/^#(f-)?precauciones$/.test(location.hash)){history.replaceState(history.state,'',location.pathname+location.search);setTimeout(function(){abrir('main',document.querySelector('.top nav a.pre'))},400)}
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href$="#precauciones"],a[href$="#f-precauciones"],a[href$="#escribenos"],a[href$="#f-acomp"]');if(!a)return;e.preventDefault();e.stopImmediatePropagation();abrir(/acomp|escribenos/.test(a.getAttribute('href'))?'contacto':'main',a)},true);
+  var hz=/^#(f-)?(precauciones|acomp|escribenos)$/.exec(location.hash);
+  if(hz){history.replaceState(history.state,'',location.pathname+location.search);setTimeout(function(){abrir(hz[2]==='precauciones'?'main':'contacto',document.querySelector(hz[2]==='precauciones'?'.top nav a.pre':'.top nav a.esc'))},400)}
   window.TEKIA_PC={abrir:abrir,cerrar:cerrar,blend:blend};
 })();
