@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es" class="at-top">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Nosotras · TEKIA</title>
+<link rel="icon" href="assets/tekia-emblema-oro-web.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap">
+<style>
+:root{
+  --noche:#120F0D; --tx:#EDE6D6; --sub:#B4AA97; --oro:#D9C38A; --oro-tenue:#C9B071; --marfil:rgba(237,230,214,.14);
+  --serif:"Cormorant Garamond","EB Garamond",Garamond,Georgia,serif;
+  --sans:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--noche)}
+body{margin:0;min-height:100vh;min-height:100dvh;background:var(--noche);color:var(--tx);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+a{color:inherit}
+
+/* Barra superior: la misma del atlas */
+.top{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:9;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding:.6rem max(20px,env(safe-area-inset-right,0px)) .6rem max(20px,env(safe-area-inset-left,0px));
+  background:rgba(26,23,20,.55);-webkit-backdrop-filter:blur(12px) saturate(1.2);backdrop-filter:blur(12px) saturate(1.2);border-bottom:1px solid var(--marfil)}
+.top .brand{justify-self:start;display:inline-flex;align-items:center;gap:.7rem;text-decoration:none;color:var(--tx)}
+.top .brand img{width:38px;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.25))}
+.top .brand span{font:500 1.15rem/1 var(--serif);letter-spacing:.14em}
+.top nav{display:flex;justify-content:center;gap:2rem;font:400 .82rem/1 var(--sans);letter-spacing:.01em}
+.top nav a{text-decoration:none;color:var(--tx);padding:.55rem 0;position:relative;white-space:nowrap;display:inline-flex;align-items:center;min-height:32px}
+.top nav a::after{content:"";position:absolute;left:0;right:0;bottom:.1rem;height:1px;background:var(--oro);transform:scaleX(0);transition:transform .3s}
+.top nav a:hover{color:var(--oro)}.top nav a:hover::after{transform:scaleX(1)}
+.top nav a[aria-current]{color:var(--oro);cursor:default}.top nav a[aria-current]::after{transform:scaleX(1)}
+.top nav a:focus-visible{outline:1px solid var(--oro);outline-offset:4px}
+.top .end{justify-self:end}
+@media (max-width:860px){.top nav{gap:1.1rem;font-size:.76rem}}
+@media (max-width:640px){.top{grid-template-columns:auto 1fr auto}.top .brand span{display:none}.top nav{gap:1rem}.top nav a{display:none}.top nav a.m{display:inline-flex}}
+
+/* Nosotras */
+.nos{position:relative;isolation:isolate;padding:calc(76px + env(safe-area-inset-top,0px) + 2.2rem) max(20px,env(safe-area-inset-right,0px)) 4.5rem max(20px,env(safe-area-inset-left,0px))}
+.nos h1{margin:0 0 2.4rem;text-align:center;font:500 clamp(2.4rem,5vw,3.4rem)/1.05 var(--serif);letter-spacing:.01em;color:var(--tx)}
+.nos{overflow:hidden}
+.mic{position:absolute;z-index:-1;left:50%;transform:translateX(-50%);top:calc(76px + env(safe-area-inset-top,0px));width:max(100%,1200px);max-width:none;height:auto;pointer-events:none}
+/* cuatro niveles alineados por la cuadrícula: medallón, nombre y oficio, semblanza, contacto */
+.fichas{max-width:60rem;margin:0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto 1fr auto;column-gap:clamp(2rem,6vw,5rem)}
+.ficha{display:grid;grid-row:span 4;grid-template-rows:subgrid;justify-items:center;text-align:center}
+.med{width:min(280px,100%);aspect-ratio:1/1;margin:0 0 1.4rem}
+.med img{display:block;width:100%;height:100%;object-fit:contain;border-radius:50%}
+.quien h2{margin:0;font:500 clamp(1.7rem,3vw,2.1rem)/1.15 var(--serif);color:var(--tx)}
+.quien p{margin:.35rem 0 0;font:400 .82rem/1.4 var(--sans);color:var(--oro)}
+.bio{margin:1.2rem 0 0;max-width:23rem;font:400 .86rem/1.75 var(--sans);color:var(--tx);text-wrap:pretty}
+.ct{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1.4rem}
+.ct span{font:500 .58rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--oro-tenue);margin-right:.6rem}
+.ct a{width:44px;height:44px;display:grid;place-items:center;border-radius:99px;color:var(--oro);transition:color .3s,background .3s}
+.ct a:hover{color:#EFE0B4;background:rgba(217,195,138,.08)}
+.ct a:focus-visible{outline:1px solid var(--oro);outline-offset:2px}
+.ct svg{width:21px;height:21px}
+@media (max-width:640px){
+  .nos{padding:calc(64px + env(safe-area-inset-top,0px) + 1.4rem) 12px 3rem}
+  .nos h1{margin-bottom:1.5rem}
+  .fichas{column-gap:10px;max-width:440px}
+  .med{width:100%;margin-bottom:.8rem}
+  .quien h2{font-size:clamp(1.45rem,6.65vw,2.1rem)}
+  .quien p{font-size:.74rem}
+  .bio{margin-top:.7rem;font-size:.78rem;line-height:1.55}
+  .ct{flex-wrap:wrap;gap:0;margin-top:.9rem}
+  .ct span{flex-basis:100%;text-align:center;margin:0 0 .1rem}
+  .mic{width:min(600px,calc(133.333% - 32px));top:calc(64px + env(safe-area-inset-top,0px) + 4.2rem)}
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="./" aria-label="TEKIA, volver al atlas"><img src="assets/tekia-emblema-oro-web.png" alt=""><span aria-hidden="true">TEKIA</span></a>
+  <nav aria-label="Navegación general"><a href="./">Explorar el atlas</a><a class="m" aria-current="page">Nosotras</a><a class="m" href="./#f-precauciones">Precauciones</a><a href="./#f-acomp">Escríbenos</a></nav>
+  <span class="end" aria-hidden="true"></span>
+</header>
+<main class="nos" id="nosotras">
+  <img class="mic" src="assets/nosotras/micelio.svg" width="1200" height="720" alt="" aria-hidden="true">
+  <h1>Nosotras</h1>
+  <div class="fichas">
+    <article class="ficha" aria-labelledby="n-chio">
+      <div class="med"><img src="assets/nosotras/chio-medina.svg" width="1080" height="1080" alt="Retrato dibujado de Chío Medina"></div>
+      <div class="quien"><h2 id="n-chio">Chío Medina</h2><p>Psicóloga y docente</p></div>
+      <p class="bio">Me gustan la ciencia, la cultura y las sobremesas que se alargan con una cumbia. De Sayula, mi pueblo en Jalisco, siempre me queda algo por contar.</p>
+      <div class="ct"><span>Contacto</span>
+        <a href="https://www.linkedin.com/in/roc%C3%ADomedina/" target="_blank" rel="noopener" aria-label="LinkedIn de Chío Medina (se abre en otra pestaña)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-in"/></svg></a>
+        <a href="https://www.instagram.com/chiomedinar/" target="_blank" rel="noopener" aria-label="Instagram de Chío Medina (se abre en otra pestaña)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ig"/></svg></a>
+      </div>
+    </article>
+    <article class="ficha" aria-labelledby="n-faby">
+      <div class="med"><img src="assets/nosotras/faby-martinez.svg" width="1080" height="1080" alt="Retrato dibujado de Faby Martínez"></div>
+      <div class="quien"><h2 id="n-faby">Faby Martínez</h2><p>Psicóloga y terapeuta de reiki</p></div>
+      <p class="bio">Vivo entre libros, canciones y sueños. En las fiestas, búscame con la gente rara. A veces basta una buena pregunta para que se nos haga de día.</p>
+      <div class="ct"><span>Contacto</span>
+        <a href="https://www.linkedin.com/in/fabiola-mart%C3%ADnez-1661a428b" target="_blank" rel="noopener" aria-label="LinkedIn de Faby Martínez (se abre en otra pestaña)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-in"/></svg></a>
+        <a href="https://www.instagram.com/fabmar.12/" target="_blank" rel="noopener" aria-label="Instagram de Faby Martínez (se abre en otra pestaña)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ig"/></svg></a>
+        <a href="https://open.spotify.com/user/metzeri.27" target="_blank" rel="noopener" aria-label="Spotify de Faby Martínez (se abre en otra pestaña)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sp"/></svg></a>
+      </div>
+    </article>
+  </div>
+</main>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-in" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M8 10.5v6M8 7.6v.1M11.5 16.5v-6M11.5 13c0-1.6 1-2.6 2.4-2.6 1.4 0 2.1.9 2.1 2.6v3.5"/></g></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><path d="M16.9 7.1v.1"/></g></symbol>
+  <symbol id="i-sp" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M7.6 9.6c3-.9 6.3-.6 9 .9M8.1 12.6c2.4-.7 5-.4 7.2.8M8.6 15.4c1.9-.5 3.8-.3 5.5.6"/></g></symbol>
+</svg>
+</body>
+</html>
