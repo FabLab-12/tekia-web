@@ -670,6 +670,14 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
 .ci-legend .k-fib{background:radial-gradient(ellipse at center,#7A5C3E 0 28%,rgba(205,190,165,.55) 32%)}
 .cuerpo-in p.ci-hintg{color:#D6955C}
 .ruta .miradas{display:none!important}
+.vista-nos{position:fixed;inset:0;z-index:8;overflow-y:auto;overscroll-behavior:contain;background:#120F0D;opacity:0;transition:opacity .5s}
+.vista-nos.on{opacity:1}.vista-nos[hidden]{display:none}
+html.en-nos,html.en-nos body{overflow:hidden}
+html.en-nos .top nav a.atlas{color:#EDE6D6;cursor:pointer}html.en-nos .top nav a.atlas:hover{color:#D9C38A}html.en-nos .top nav a.atlas::after{transform:scaleX(0)}html.en-nos .top nav a.atlas:hover::after{transform:scaleX(1)}
+html.en-nos .top nav a.nos{color:#D9C38A}html.en-nos .top nav a.nos::after{transform:scaleX(1)}
+html.en-nos .pd-open,html.en-nos .bt{display:none}
+@media (prefers-reduced-motion:reduce){.vista-nos{transition:none}}
+@media (max-width:640px){html.en-nos .top nav a.atlas{display:inline-flex}html.en-nos .top nav a.nos{display:none}}
 </style>
 
 </head>
@@ -685,7 +693,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
 </div>
 <header class="top">
   <a class="brand" href="#umbral" aria-label="TEKIA, volver al inicio"><img src="assets/tekia-emblema-oro-web.png" alt=""><span aria-hidden="true">TEKIA</span></a>
-  <nav aria-label="Navegación general"><a class="atlas" aria-current="page">Explorar el atlas</a><a class="nos" href="nosotras.html">Nosotras</a><a class="pre" href="#f-precauciones">Precauciones</a><a href="#f-acomp">Escríbenos</a></nav>
+  <nav aria-label="Navegación general"><a class="atlas" href="./" aria-current="page">Explorar el atlas</a><a class="nos" href="nosotras.html">Nosotras</a><a class="pre" href="#f-precauciones">Precauciones</a><a href="#f-acomp">Escríbenos</a></nav>
   <button class="snd" type="button" aria-pressed="true" aria-label="Sonido ambiental"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg><span class="lbl">Sonido</span><span class="hint">Toca para escuchar</span><span class="hint-s">Escuchar</span><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
 </header>
 
@@ -841,7 +849,8 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   var penta=[587.33,659.25,739.99,880,987.77,1174.66];
   function bell(){if(!AC||curScene!=='mente')return;var f=penta[Math.floor(Math.random()*penta.length)],o=AC.createOscillator(),v=AC.createGain(),t=AC.currentTime;
     o.type='sine';o.frequency.value=f;v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(.035,t+.02);v.gain.exponentialRampToValueAtTime(.0001,t+4);o.connect(v);v.connect(buses.mente);o.start(t);o.stop(t+4.2)}
-  function scene(){var vh=window.innerHeight,cur='umbral';scenes.forEach(function(e){var b=e.getBoundingClientRect();if(b.top<vh*.55&&b.bottom>vh*.45)cur=e.id});
+  // la música del atlas no cambia al moverse por la página ni al usar el menú (Precauciones, Escríbenos, Nosotras)
+  function scene(){var cur='umbral';
     if(rutaScene)cur=rutaScene; // con el recorrido abierto suena el paisaje de su mirada
     if(cur===curScene||!AC)return;curScene=cur;var t=AC.currentTime;
     Object.keys(buses).forEach(function(k){var g=buses[k].gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.setTargetAtTime(k===cur?1:0,t,k===cur?1.4:1.1)})}
@@ -924,10 +933,10 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   smoke(0,true);(function sm(t){if(!reduce){smoke(t);requestAnimationFrame(sm)}})(0);
 
   // ---------- Acceso: micelio que crece y botón Entrar ----------
-  // Sale cada vez que se abre la página; se omite solo si se llega con un enlace directo (#...).
-  var gate=document.getElementById('gate'),seen=false;
+  // Sale solo la primera vez en la visita; al volver (p. ej. desde Nosotras con «Explorar el atlas») se entra directo al cuerpo.
+  var gate=document.getElementById('gate'),seen=false;try{seen=sessionStorage.getItem('tekia-dentro')==='1'}catch(e){}
   var behind=[document.querySelector('header.top'),document.querySelector('main'),document.querySelector('.depth')].filter(Boolean);
-  if(seen||location.hash){gate.parentNode.removeChild(gate)}else{
+  if(seen||location.hash){gate.parentNode.removeChild(gate);try{if(sessionStorage.getItem('tekia-sonido')==='no'){snd.setAttribute('aria-pressed','false');snd.classList.remove('pending')}}catch(e){}}else{
     // Después del acceso siempre se empieza arriba: no se recupera dónde se quedó la última vez.
     if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);
     document.documentElement.classList.add('gated');behind.forEach(function(e){e.inert=true});
@@ -960,10 +969,10 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
       var g=gate,de=document.documentElement;gate=null;if(!reduce){de.classList.add('arriving');setTimeout(function(){de.classList.remove('arriving')},2200)}
       setTimeout(function(){g.parentNode&&g.parentNode.removeChild(g)},reduce?300:3400);scrollTo(0,0);
       var h=document.querySelector('#umbral h1');h.setAttribute('tabindex','-1');h.focus({preventScroll:true});orbsOn()}
-    function enter(){if(!gate||gate.classList.contains('go'))return;gate.classList.add('go');scrollTo(0,0);if(reduce){reveal();return}extend();setTimeout(reveal,600)}
+    function enter(){if(!gate||gate.classList.contains('go'))return;try{sessionStorage.setItem('tekia-dentro','1')}catch(e){}gate.classList.add('go');scrollTo(0,0);if(reduce){reveal();return}extend();setTimeout(reveal,600)}
     // Entrar cuenta como primer toque: el sonido arranca ahí. "Entrar sin sonido" lo deja apagado.
     enterBtn.addEventListener('click',enter);
-    muteBtn.addEventListener('click',function(){snd.setAttribute('aria-pressed','false');snd.classList.remove('pending');enter()});
+    muteBtn.addEventListener('click',function(){try{sessionStorage.setItem('tekia-sonido','no')}catch(e){}snd.setAttribute('aria-pressed','false');snd.classList.remove('pending');enter()});
     gate.addEventListener('keydown',function(e){if(e.key==='Escape')enter()});
     enterBtn.focus({preventScroll:true});
   }
@@ -1481,7 +1490,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
       z.el.style.transform='translate('+(o.x-(fr2.left-sr.left)-22).toFixed(1)+'px,'+(o.y-(fr2.top-sr.top)).toFixed(1)+'px) translateY(-50%)'});
     // capas de interfaz según escala
     root.classList.toggle('ci-deep',m>1.2);leg.style.opacity=smooth(.55,.85,fd.tis).toFixed(2);leg.setAttribute('aria-hidden',fd.tis>.7?'false':'true');
-    back.hidden=!(m>1.3);
+    back.hidden=!(m>1.3||cy<.94||cp<.94);
     var lvl=fd.tis>.7?'t':(m>2.5?'n':'g');if(lvl!==lastLvl){lastLvl=lvl;live.textContent=lvl==='t'?'Tejido conectivo laxo, dermis papilar. Esquema con colágeno, fibras elásticas y fibroblastos.':lvl==='n'?'Vista cercana de las hebras.':'Cuerpo entero.'}
     dg.setAttribute('aria-valuenow',String(Math.round(((yaw*180/Math.PI)%360+360)%360)));
     dirty=false}
@@ -1900,7 +1909,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     if(K==='-'||K==='_'){e.preventDefault();zoomTo(Z.mt/1.7);return}
     if(K==='Escape'||K==='0'){if(Z.m>1.01){e.preventDefault();zoomTo(1)}return}
     if(K==='Enter'||K===' '){e.preventDefault();if(HINT&&!LIT){var q2=HINT.a+2;light(q2,q2)}}});
-  back.addEventListener('click',function(){zoomTo(1);dg.focus({preventScroll:true})});
+  back.addEventListener('click',function(){zoomTo(1);yawV=0;pitchV=0;yawT=Math.round(yaw/(2*Math.PI))*2*Math.PI;pitchT=0;dirty=true;dg.focus({preventScroll:true})});
   var coarse=matchMedia('(pointer:coarse)').matches;hintEl.textContent=coarse?'Acerca dos dedos para explorar':'Usa la rueda o doble clic para explorar';
   // ---- diagramas de los hongos (trazo fino, paleta TEKIA) ----
   function illo(kind){var r=rnd(kind.length*733+11),s='<svg viewBox="0 0 300 200" role="img" aria-label="Ilustración: '+(kind==='care'?'lupa sobre una red de micelio':D[{melena:'hericium',reishi:'reishi',cordyceps:'cordyceps'}[kind]].name)+'">';
@@ -1961,5 +1970,24 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
 })();
 </script>
 
+<script>
+// «Nosotras» se abre dentro del atlas para que la música siga sonando; nosotras.html sigue funcionando sola
+(function(){var link=document.querySelector('.top nav a.nos'),atlas=document.querySelector('.top nav a.atlas'),V=null,cargando=null,de=document.documentElement;
+  function cargar(){if(cargando)return cargando;cargando=fetch('nosotras.html').then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){
+    var d=new DOMParser().parseFromString(t,'text/html'),st=d.getElementById('nos-css'),m=d.querySelector('main.nos'),js=d.getElementById('nos-js');
+    V=document.createElement('div');V.className='vista-nos';V.id='vista-nos';V.hidden=true;V.setAttribute('role','region');V.setAttribute('aria-label','Nosotras');
+    var s1=document.createElement('style');s1.textContent=st.textContent;document.head.appendChild(s1);V.appendChild(document.importNode(m,true));[].forEach.call(d.querySelectorAll('body>svg'),function(x){V.appendChild(document.importNode(x,true))});document.body.appendChild(V);
+    var s2=document.createElement('script');s2.textContent=js.textContent;document.body.appendChild(s2);return V}).catch(function(){cargando=null;throw 0});return cargando}
+  function abrir(push){cargar().then(function(){if(!V.hidden)return;V.hidden=false;de.classList.add('en-nos');link.setAttribute('aria-current','page');atlas.removeAttribute('aria-current');
+    [].forEach.call(document.querySelectorAll('main,.depth'),function(e){e.inert=true});V.scrollTop=0;requestAnimationFrame(function(){V.classList.add('on');window.TEKIA_nosHalo&&window.TEKIA_nosHalo()});
+    if(push)history.pushState({nos:1},'','#nosotras');var h=V.querySelector('h1');h&&(h.setAttribute('tabindex','-1'),h.focus({preventScroll:true}))}).catch(function(){location.href='nosotras.html'})}
+  function cerrar(){if(!V||V.hidden)return;V.classList.remove('on');de.classList.remove('en-nos');link.removeAttribute('aria-current');atlas.setAttribute('aria-current','page');
+    [].forEach.call(document.querySelectorAll('main,.depth'),function(e){e.inert=false});V.hidden=true}
+  link.addEventListener('click',function(e){e.preventDefault();abrir(true)});
+  atlas.addEventListener('click',function(e){e.preventDefault();if(V&&!V.hidden){if(history.state&&history.state.nos)history.back();else cerrar()}});
+  [].forEach.call(document.querySelectorAll('.top nav a[href^="#f-"],.top .brand'),function(a){a.addEventListener('click',function(){if(V&&!V.hidden){cerrar();if(history.state&&history.state.nos)history.replaceState(null,'',location.pathname)}})});
+  addEventListener('popstate',function(){if(location.hash==='#nosotras')abrir(false);else cerrar()});
+  if(location.hash==='#nosotras')abrir(false)})();
+</script>
 </body>
 </html>
