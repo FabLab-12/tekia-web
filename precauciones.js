@@ -44,26 +44,26 @@
     (r.sourceIds.length?'<ul class="pc-src" aria-label="Fuentes">'+r.sourceIds.map(fuente).join('')+'</ul>':'')+'</article>'}
   function bloqueIng(id,h){var x=ING[id],rs=recsDe(id),hh=h||'h2';
     return (x.prep?'<p class="pc-note">'+ic('info')+'<span>'+nb(x.prep)+'</span></p>':'')+
-      (rs.length?rs.map(registro).join(''):'<p class="pc-gen">En nuestras fuentes revisadas no encontramos advertencias específicas para esta especie más allá de las precauciones generales. Esto no significa que su seguridad esté demostrada para cualquier preparación.</p>')}
+      (rs.length?'<div class="pc-recs">'+rs.map(registro).join('')+'</div>':'<p class="pc-gen">En nuestras fuentes revisadas no encontramos advertencias específicas para esta especie más allá de las precauciones generales. Esto no significa que su seguridad esté demostrada para cualquier preparación.</p>')}
 
   var V={
     main:function(){return '<header class="pc-hd"><p class="pc-k">'+esc(G.kicker).replace(/ · (.*)$/,' · <span class="nw">$1</span>')+'</p><h2 id="pc-h" tabindex="-1">'+esc(G.titulo)+'</h2><p class="pc-in">'+nb(G.intro)+'</p></header>'+
-      '<ul class="pc-pr">'+G.principios.map(function(p){return '<li>'+ic(p.icono)+'<div><h3>'+esc(p.titulo)+'</h3><p>'+nb(p.texto)+'</p></div></li>'}).join('')+'</ul>'+
+      '<div class="pc-cols"><div class="pc-col">'+'<ul class="pc-pr">'+G.principios.map(function(p){return '<li>'+ic(p.icono)+'<div><h3>'+esc(p.titulo)+'</h3><p>'+nb(p.texto)+'</p></div></li>'}).join('')+'</ul>'+
       '<div class="pc-nota">'+ic('info')+'<p>'+nb(G.nota)+'</p></div>'+
-      '<button type="button" class="pc-more" data-v="lista">'+ic('leaf')+'<span>Precauciones por ingrediente</span>'+ic('chev','pc-ch')+'</button>'+
-      '<section class="pc-antes" aria-labelledby="pc-an-h"><h3 class="pc-st" id="pc-an-h">'+esc(G.antes.titulo)+'</h3><p class="pc-in2">'+nb(G.antes.intro)+'</p><ul class="pc-gr">'+
-      G.antes.grupos.map(function(g){return '<li>'+ic(g.icono)+'<div><h4>'+esc(g.titulo)+'</h4><p>'+nb(g.texto)+'</p></div></li>'}).join('')+'</ul><p class="pc-cl">'+nb(G.antes.cierre)+'</p></section>'+reaccion()+fino()},
+      '<button type="button" class="pc-more" data-v="lista">'+ic('leaf')+'<span>Precauciones por ingrediente</span>'+ic('chev','pc-ch')+'</button></div>'+
+      '<div class="pc-col"><section class="pc-antes" aria-labelledby="pc-an-h"><h3 class="pc-st" id="pc-an-h">'+esc(G.antes.titulo)+'</h3><p class="pc-in2">'+nb(G.antes.intro)+'</p><ul class="pc-gr">'+
+      G.antes.grupos.map(function(g){return '<li>'+ic(g.icono)+'<div><h4>'+esc(g.titulo)+'</h4><p>'+nb(g.texto)+'</p></div></li>'}).join('')+'</ul><p class="pc-cl">'+nb(G.antes.cierre)+'</p></section>'+reaccion()+'</div></div>'+fino()},
     lista:function(){return '<header class="pc-hd"><p class="pc-k">'+esc(G.kicker).replace(/ · (.*)$/,' · <span class="nw">$1</span>')+'</p><h2 id="pc-h" tabindex="-1">Precauciones por ingrediente</h2><p class="pc-in">Cada especie y cada preparación tiene su propio perfil. Lo observado con un extracto, un polvo, el micelio o el hongo entero no se traslada por sí solo a&nbsp;otro.</p></header>'+
       '<ul class="pc-ings">'+S.ingredientes.map(function(x){var n=recsDe(x.id).length;return '<li><button type="button" data-v="ing:'+x.id+'"><span class="pc-in-t"><b>'+esc(x.comun)+'</b><em>'+esc(x.latin)+'</em></span>'+(n?'<small>'+n+(n===1?' nota':' notas')+'</small>':'<small>Generales</small>')+ic('chev','pc-ch')+'</button></li>'}).join('')+'</ul>'+reaccion()+fino()},
     ing:function(id){var x=ING[id];return '<header class="pc-hd"><p class="pc-k">Precauciones por ingrediente</p><h2 id="pc-h" tabindex="-1">'+esc(x.comun)+'</h2><p class="pc-sci">'+esc(x.latin)+'</p></header>'+bloqueIng(id)+reaccion()+fino()},
     sel:function(){var ids=SEL.filter(function(id){return ING[id]});return '<header class="pc-hd"><p class="pc-k"><span class="nw">Mi blend</span> · <span class="nw">Tu selección</span></p><h2 id="pc-h" tabindex="-1">Precauciones de tu selección</h2><p class="pc-in">Mostramos las precauciones de cada ingrediente por separado. Que no conozcamos una interacción publicada entre ellos no significa que la mezcla haya sido evaluada como&nbsp;conjunto.</p></header>'+
-      (ids.length?ids.map(function(id){var x=ING[id];return '<section class="pc-ingsec"><h3 class="pc-st">'+esc(x.comun)+' <em>'+esc(x.latin)+'</em></h3>'+bloqueIng(id)+'</section>'}).join(''):'<p class="pc-gen">Tu blend está vacío.</p>')+
+      (ids.length?'<div class="pc-secs">'+ids.map(function(id){var x=ING[id];return '<section class="pc-ingsec"><h3 class="pc-st">'+esc(x.comun)+' <em>'+esc(x.latin)+'</em></h3>'+bloqueIng(id)+'</section>'}).join('')+'</div>':'<p class="pc-gen">Tu blend está vacío.</p>')+
       '<button type="button" class="pc-more" data-v="main">'+ic('shield-check')+'<span>Precauciones generales</span>'+ic('chev','pc-ch')+'</button>'+reaccion()+fino()}
   };
   V.contacto=function(){return '<header class="pc-hd"><p class="pc-k">TEKIA · <span class="nw">Acompañamiento</span></p><h2 id="pc-h" tabindex="-1">¿Tienes dudas antes de&nbsp;elegir?</h2><p class="pc-in">Escríbenos. Te ayudamos a entender tus&nbsp;opciones.</p></header>'+
     '<ul class="pc-ct">'+[['Correo'],['WhatsApp'],['Redes'],['Horario de atención']].map(function(r){return '<li><span>'+r[0]+'</span><b>Muy pronto</b></li>'}).join('')+'</ul>'+
     '<p class="pc-fine">Este acompañamiento no sustituye la consulta con un profesional de la&nbsp;salud.</p>'};
-  function pintar(foco,rec){var v=STK[STK.length-1],k=v.split(':');C.innerHTML=V[k[0]](k[1]);C.scrollTop=0;BK.hidden=STK.length<2;
+  function pintar(foco,rec){var v=STK[STK.length-1],k=v.split(':');box.setAttribute('data-vista',k[0]);C.innerHTML=V[k[0]](k[1]);C.scrollTop=0;BK.hidden=STK.length<2;
     if(rec){var el=C.querySelector('#rec-'+rec);if(el){el.classList.add('on');setTimeout(function(){C.scrollTo({top:Math.max(0,el.offsetTop-24),behavior:reduce.matches?'auto':'smooth'})},reduce.matches?0:120)}}
     if(foco!==false)setTimeout(function(){var h=C.querySelector('#pc-h');h&&h.focus({preventScroll:true})},foco==='x'?0:30)}
   function abrir(v,from,rec){var was=!pc.hidden&&pc.classList.contains('on');if(!was){back=from||document.activeElement;STK=[]}

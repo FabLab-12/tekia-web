@@ -1,0 +1,48 @@
+/* Mapa de tu intención · mismo dibujo y tamaño en claro y obscuro; solo cambian los colores */
+.im{display:flex;align-items:center;gap:1rem;margin:1.3rem auto .4rem;padding:.75rem 1rem .75rem .6rem;max-width:20rem;border:1px solid var(--im-line);border-radius:16px;text-align:left;opacity:0;transition:opacity .8s ease .15s}
+.hm.on .im{opacity:1}
+.im-fig{flex:none;width:58px}
+.im-s{display:block;width:100%;height:auto;overflow:visible}
+.im-o{fill:none;stroke:var(--im-sil);stroke-width:.9;vector-effect:non-scaling-stroke}
+.im-gl{opacity:calc(var(--k)*.55);animation:imgl var(--per) ease-in-out infinite}
+.im-g0{stop-color:var(--im-luz);stop-opacity:.95}.im-g1{stop-color:var(--im-luz);stop-opacity:.35}.im-g2{stop-color:var(--im-luz);stop-opacity:0}
+.im-nr{fill:none;stroke:var(--im-nodo);stroke-width:.6;vector-effect:non-scaling-stroke;opacity:calc(var(--k)*.6)}
+.im-n{fill:var(--im-nodo);opacity:calc(.35 + var(--k)*.65)}
+.im-nd{animation:imnd var(--per) ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.im[data-p=focus] .im-gl{animation-timing-function:cubic-bezier(.5,0,.5,1)}
+.im[data-p=movement] .im-nd{animation-name:imnd2}
+@keyframes imgl{0%,100%{opacity:calc(var(--k)*.32)}50%{opacity:calc(var(--k)*.85)}}
+@keyframes imnd{0%,100%{opacity:.75}50%{opacity:1}}
+@keyframes imnd2{0%,100%{opacity:.7}40%{opacity:1}}
+.im figcaption{min-width:0}
+.im-k{display:block;font:600 .54rem/1.3 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--im-k);margin:0 0 .45rem}
+.im ul{list-style:none;margin:0;padding:0}
+.im li{font:500 .9rem/1.25 var(--serif);color:var(--im-tx);padding:.32rem 0;text-wrap:balance}
+.im li+li{border-top:1px solid var(--im-line2)}
+@media (prefers-reduced-motion:reduce){.im{transition:none}.im-gl,.im-nd{animation:none}.im-gl{opacity:calc(var(--k)*.65)}}
+:root{--im-line:rgba(217,195,138,.22);--im-line2:rgba(217,195,138,.16);--im-sil:rgba(231,214,170,.62);--im-nodo:#E2BF72;--im-luz:#F1D9A0;--im-tx:#F3EDE1;--im-k:#D9C38A}
+html.claro{--im-line:rgba(193,161,92,.38);--im-line2:rgba(193,161,92,.28);--im-sil:rgba(176,140,70,.75);--im-nodo:#C1A15C;--im-luz:#E9C98A;--im-tx:#2F2A27;--im-k:#7D5F27}
+
+/* Ficha de blend · tres columnas en horizontal: identidad y mapa | cuerpo real visible | texto y composición */
+@media (min-width:900px) and (orientation:landscape){
+  html .hm-box.hm-ruta,html.claro .hm-box.hm-ruta{width:min(76rem,100%);background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0;box-shadow:none;overflow:visible}
+  .hm-ruta #hm-c{display:grid;grid-template-columns:minmax(0,20rem) minmax(15rem,1fr) minmax(0,23rem);gap:0;padding:0;overflow:visible;align-items:center}
+  .hm-ruta .hm-l,.hm-ruta .hm-r{position:relative;top:auto;box-sizing:border-box;max-height:calc(100dvh - var(--hm-pt,100px) - var(--hm-pb,16px));overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--im-line) transparent;background:var(--rp-bg);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid var(--rp-line);border-radius:22px;box-shadow:var(--rp-sh)}
+  .hm-ruta .hm-l{grid-column:1;padding:2.2rem 1.6rem 1.8rem}
+  .hm-ruta .hm-r{grid-column:3;padding:3.4rem 1.8rem 1.8rem;text-align:left}
+  .hm-ruta .hm-l .im{margin-top:1.4rem}
+  .hm-ruta .hm-arts{margin-top:1.2rem}
+  .hm-ruta .hm-l>.hm-add{margin-top:1.2rem}
+}
+:root{--rp-bg:linear-gradient(180deg,rgba(26,19,15,.66),rgba(20,15,12,.58));--rp-line:rgba(217,195,138,.22);--rp-sh:0 24px 60px rgba(0,0,0,.35)}
+html.claro{--rp-bg:linear-gradient(180deg,rgba(252,249,241,.66),rgba(250,246,236,.56));--rp-line:rgba(193,161,92,.35);--rp-sh:0 20px 56px rgba(125,95,39,.12)}
+/* en vertical: título, mapa, galería, texto y composición, investigación, Pedir blend */
+@media not all and (min-width:900px) and (orientation:landscape){
+  .hm-ruta #hm-c .hm-l>.im{order:3;margin:.2rem auto .9rem}
+  .hm-ruta #hm-c .hm-l>.hm-arts{order:4}
+  .hm-ruta #hm-c .hm-r>.hm-vis{order:5}
+  .hm-ruta #hm-c .hm-r>.hm-cl,.hm-ruta #hm-c .hm-r>.hm-ing{order:6}
+  .hm-ruta #hm-c .hm-r>.hm-acts{order:7}
+  .hm-ruta #hm-c .hm-l>.hm-add{order:8;margin:1rem auto .6rem}
+  .hm-ruta #hm-c .hm-r>*{order:9}
+}
