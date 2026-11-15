@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex">
 <title>TEKIA</title>
 <link rel="icon" href="assets/tekia-emblema-oro-web.png">
+<script src="tema.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap">
 <style>
@@ -700,6 +701,106 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
   .ci-z span,.ci-z.tight span{position:absolute;left:22px;top:34px;transform:translateX(-50%);padding:.1rem .3rem;font-size:.5rem;letter-spacing:.18em;white-space:nowrap;color:#E7DED1;text-shadow:0 0 6px rgba(15,12,10,.9)}
   .ci-z span::before,.ci-z.tight span::before{display:none}
 }
+/* ===== Tema claro (prueba): limpio, mágico, natural. Se activa con ?tema=claro (tema.js) =====
+   Oro #C1A15C solo en trazos y adornos (2.2:1 sobre crema, no basta para texto).
+   Texto dorado = oro profundo #7D5F27 (5.2:1). Texto = tinta #2F2A27 (12:1); secundario #6B6156 (5.3:1). */
+html.claro{--cl-bg:#F4EFE2;--cl-ink:#2F2A27;--cl-sub:#6B6156;--cl-gold:#C1A15C;--cl-gold-tx:#7D5F27;--cl-amber:#9A5A26;--cl-glass:rgba(252,249,241,.66);--cl-line:rgba(193,161,92,.38);color-scheme:light}
+html.claro body{background:var(--cl-bg)}
+/* acceso */
+html.claro .gate{background-color:#F6F1E4;color:var(--cl-ink);background-image:radial-gradient(ellipse 50% 45% at 50% 46%,rgba(255,253,246,.95),rgba(255,253,246,0) 70%),radial-gradient(ellipse 70% 55% at 0% 0%,rgba(255,244,214,.75),rgba(255,244,214,0) 65%),radial-gradient(ellipse 120% 90% at 50% 50%,#F6F1E4 40%,#E9E5D3 100%)}
+html.claro .gate.out{background-color:rgba(246,241,228,0);background-image:none}
+html.claro .gate .seed img{content:url(assets/tekia-logo-transparente-web.png)}
+html.claro .gate .tag{color:var(--cl-ink)}
+html.claro .gate .enter{border-color:var(--cl-gold);color:var(--cl-ink)}
+html.claro .gate .enter:hover{background:rgba(193,161,92,.1);box-shadow:0 0 28px rgba(193,161,92,.28)}
+html.claro .gate .mute{color:var(--cl-sub)}
+html.claro .gate .myc path{stroke:#B8955A}
+/* barra superior */
+html.claro .top,html.claro.at-top .top{background:rgba(248,245,235,.58);border-bottom-color:rgba(193,161,92,.18)}
+html.claro .top .brand,html.claro.at-top .top .brand{color:var(--cl-ink)}
+html.claro .top img{filter:none}
+html.claro .top nav a,html.claro.at-top .top nav a,html.claro.en-nos .top nav a.atlas{color:var(--cl-ink)}
+html.claro .top nav a:hover,html.claro.at-top .top nav a:hover,html.claro.en-nos .top nav a.atlas:hover{color:var(--cl-gold-tx)}
+html.claro .top nav a.atlas,html.claro.at-top .top nav a.atlas,html.claro.en-nos .top nav a.nos{color:var(--cl-gold-tx)}
+html.claro.en-nos .top nav a.atlas{cursor:pointer}
+html.claro .top nav a::after{background:var(--cl-gold)}
+html.claro .top nav a:focus-visible{outline-color:var(--cl-gold-tx)}
+html.claro .snd,html.claro.at-top .snd,html.claro.at-top .snd[aria-pressed="true"]{color:var(--cl-ink)}
+/* atlas: bruma crema con luz alta a la izquierda y un resplandor tibio detrás del cuerpo */
+html.claro .cuerpo-in{--ci-ink:#2F2A27;--ci-sub:#6B6156;--ci-gold:#C1A15C;--ci-green:#7D5F27;--ci-amber:#9A5A26;--ci-paper:#FBF8EF;--ci-line:rgba(193,161,92,.38);
+  background:
+    radial-gradient(ellipse 13% 36% at 50% 50%,rgba(236,182,104,.22),rgba(236,182,104,0) 100%),
+    radial-gradient(ellipse 30% 46% at 50% 48%,rgba(255,251,238,.92),rgba(255,251,238,0) 74%),
+    radial-gradient(ellipse 50% 40% at 6% 0%,rgba(255,246,222,.7),rgba(255,246,222,0) 70%),
+    radial-gradient(ellipse 80% 78% at 50% 48%,#F5F1E4 34%,#E7E8D8 74%,#DCE1CF 100%)}
+html.claro .ci-z i::before{background:#FBF8EF;border-color:var(--cl-gold);box-shadow:inset 0 0 0 2px #FBF8EF,inset 0 0 0 4px #C1A15C,0 0 10px rgba(193,161,92,.45)}
+html.claro .ci-z.glow i::before,html.claro .ci-z[aria-pressed="true"] i::before{box-shadow:inset 0 0 0 2px #FBF8EF,inset 0 0 0 4px #B8893F,0 0 16px rgba(193,161,92,.75)}
+html.claro .ci-z span{color:var(--cl-ink)}
+html.claro .ci-z.glow span,html.claro .ci-z[aria-pressed="true"] span{color:var(--cl-gold-tx)}
+html.claro .ci-m{color:rgba(47,42,39,.78)}
+html.claro .ci-m:hover,html.claro .ci-m.lit,html.claro .ci-m:focus-visible{color:var(--cl-gold-tx)}
+html.claro .ci-ring.focus .ci-m:not(.lit){color:rgba(47,42,39,.36)}
+html.claro .ci-m:focus-visible{outline-color:rgba(125,95,39,.5)}
+html.claro .ci-ring.compact .ci-m i.med{border-color:rgba(193,161,92,.3);background:rgba(255,252,244,.4)}
+html.claro .ci-ring.compact .ci-m i.med svg{opacity:.55}
+html.claro .ci-ring.compact .ci-m.lit i.med,html.claro .ci-ring.compact .ci-m:active i.med{border-color:rgba(193,161,92,.85);background:rgba(255,252,244,.75);box-shadow:0 0 12px rgba(193,161,92,.3)}
+html.claro .ci-ring.compact .ci-m span{color:var(--cl-ink)}
+html.claro .ci-go{color:var(--cl-ink);background:var(--cl-glass);border-color:var(--cl-line)}
+html.claro .ci-go:hover{border-color:var(--cl-gold)}
+html.claro .cuerpo-in p.ci-hintg{color:var(--cl-amber)}
+html.claro .ci-legend,html.claro .ci-back,html.claro .cuerpo-in p.ci-note{background:rgba(252,249,241,.88)}
+html.claro .ci-legend .k-ela{background:#B8955A}
+html.claro .ci-illo{background:radial-gradient(ellipse 60% 70% at 50% 55%,rgba(255,253,246,.9),rgba(255,253,246,0))}
+html.claro.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(252,249,241,.92),rgba(252,249,241,0) 78%)}
+@media (max-width:980px){html.claro .ci-panel,html.claro.ci-open .ci-panel{background:rgba(252,249,241,.97)}}
+@media (max-width:640px){html.claro .ci-z span,html.claro .ci-z.tight span{color:var(--cl-ink);text-shadow:0 0 6px rgba(255,252,242,.95),0 0 2px rgba(255,252,242,.95)}}
+/* fichas: vidrio de luz */
+html.claro .hm{background:rgba(246,241,228,.28)}
+html.claro .hm-box{background:rgba(252,249,241,.7);-webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);border-color:rgba(193,161,92,.35);color:var(--cl-ink);box-shadow:0 24px 70px rgba(125,95,39,.14),0 1px 0 rgba(255,255,255,.7) inset}
+html.claro #hm-c{text-shadow:none;scrollbar-color:rgba(193,161,92,.45) transparent}
+html.claro #hm-c::-webkit-scrollbar-thumb{background:rgba(193,161,92,.45)}
+html.claro .hm h2,html.claro .hm-inv h3,html.claro .pd-in h2{color:var(--cl-ink)}
+html.claro .hm-sci,html.claro .hm-lock,html.claro .hm-sts .hm-idn{color:var(--cl-sub)}
+html.claro .hm-lead,html.claro .hm-vis,html.claro .hm-alert,html.claro .hm-st,html.claro .hm-lk,html.claro .hm-nn{color:var(--cl-ink)}
+html.claro .hm dd,html.claro .hm-sts p{color:#4A423C}
+html.claro .hm-k,html.claro .hm dt,html.claro .hm-cl,html.claro .hm-sts h4,html.claro .bt-k,html.claro .pd-f label{color:var(--cl-gold-tx)}
+html.claro .hm-fine,html.claro .hm-ev,html.claro .hm-lk small,html.claro .hm-nn small,html.claro .bt-k span,html.claro .pd-l small,html.claro .pd-av{color:var(--cl-sub)}
+html.claro .hm-fu small,html.claro .hm-nn .hm-nt{color:#7A7064}
+html.claro .hm-z{color:var(--cl-ink)}
+html.claro .hm-x,html.claro .hm-bk{background:rgba(255,253,247,.6);border-color:var(--cl-line);color:var(--cl-ink)}
+html.claro .hm-x:hover,html.claro .hm-bk:hover{border-color:var(--cl-gold)}
+html.claro .hm dl,html.claro .hm-ap{border-top-color:var(--cl-line)}
+html.claro .hm-st{border-bottom-color:var(--cl-line)}
+html.claro .hm-lk,html.claro .hm-nn{border-color:var(--cl-line);background:rgba(255,253,247,.45)}
+html.claro .hm-nn{background:none}
+html.claro .hm-lk b::after{color:var(--cl-gold-tx)}
+html.claro .hm-inv a{color:var(--cl-gold-tx)}
+html.claro .hm-alert{border-color:rgba(191,122,63,.45)!important}
+html.claro .hm-tag{color:#4A423C;background:rgba(255,253,247,.55);border-color:var(--cl-line)}
+html.claro .hm-tag:hover{border-color:var(--cl-gold)}
+html.claro .hm-add{color:var(--cl-ink);border-color:var(--cl-gold)}
+html.claro .hm-add:hover{background:rgba(193,161,92,.12)}
+html.claro .hm-add[aria-pressed="true"]{background:#C1A15C;color:#2F2A27}
+html.claro .hm-art,html.claro .hm-arts figure{filter:drop-shadow(0 0 10px rgba(255,251,238,.9))}
+html.claro .hm-arts figcaption{color:var(--cl-sub)}
+html.claro .hm-l>.hm-add{animation-name:hmglowC}
+@keyframes hmglowC{0%,100%{box-shadow:0 0 0 rgba(193,161,92,0);border-color:rgba(193,161,92,.7)}50%{box-shadow:0 0 22px rgba(193,161,92,.35),inset 0 0 10px rgba(193,161,92,.12);border-color:#B8893F}}
+/* Mi blend, Mi pedido */
+html.claro .bt,html.claro .pd-open{background:var(--cl-glass);border-color:var(--cl-line);color:var(--cl-ink);box-shadow:0 10px 30px rgba(125,95,39,.1)}
+html.claro .bt-l button{color:var(--cl-ink);background:rgba(255,253,247,.6);border-color:var(--cl-line)}
+html.claro .bt-n,html.claro .pd-vac,html.claro .pd-msg{color:var(--cl-sub)}
+html.claro .bt-go,html.claro .pd-go,html.claro .pd-open span{background:#C1A15C;border-color:#C1A15C;color:#2F2A27}
+html.claro .bt-go:hover,html.claro .pd-go:hover{background:#CDB072}
+html.claro .pd-l,html.claro .pd-l li{border-color:var(--cl-line)}
+html.claro .pd-l b{color:var(--cl-ink)}
+html.claro .pd-q,html.claro .pd-del{border-color:var(--cl-line)}
+html.claro .pd-q button,html.claro .pd-del{color:var(--cl-ink)}
+html.claro .pd-f input{color:var(--cl-ink);background:rgba(255,253,247,.7);border-color:rgba(193,161,92,.45)}
+html.claro .pd-f input:focus{border-color:#B8893F}
+/* precauciones y escríbenos */
+html.claro .datos{background:var(--cl-bg)}
+/* Nosotras dentro del atlas */
+html.claro .vista-nos{background:#F6F1E4}
 </style>
 
 </head>
@@ -1386,7 +1487,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
   var BG=[];(function(){var r=rnd(808),n=LOW?150:280;for(var i=0;i<n;i++){var l=r()<.5?0:r()<.65?1:2;BG.push({x:r(),y:r(),l:l,ph:r()*6.283,sp:.4+r()*.6,s:[.6,.9,1.4][l]*(.7+r()*.6)})}})();
   // luces que viajan dentro de las hebras
   var TRV=[];(function(){var r=rnd(919),n=reduce?0:(LOW?8:14);for(var i=0;i<n;i++){var f=Math.floor(r()*FIB.length);TRV.push({f:f,u:r(),v:.03+r()*.05})}})();
-  var BOK=[];(function(){var r=rnd(1213),n=LOW?7:12;for(var i=0;i<n;i++)BOK.push({x:r(),y:r(),r:10+r()*26,ph:r()*6.283,a:(.025+r()*.035).toFixed(3),c:r()<.6?'236,214,170':'191,122,63'})})();
+  var BOK=[];if(!root.classList.contains('claro'))(function(){var r=rnd(1213),n=LOW?7:12;for(var i=0;i<n;i++)BOK.push({x:r(),y:r(),r:10+r()*26,ph:r()*6.283,a:(.025+r()*.035).toFixed(3),c:r()<.6?'236,214,170':'191,122,63'})})();
   var TOUCH=null;
   // conexiones: cada punto con sus vecinos más cercanos
   var LK=(function(){var h=5.2,G2={},out=[];function key(x,y,z){return Math.floor(x/h)+','+Math.floor(y/h)+','+Math.floor(z/h)}
@@ -1728,7 +1829,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
   // celular: cada hongo del anillo lleva su dibujo, pequeño y translúcido (se pinta tras definir spec)
   setTimeout(function(){RN.forEach(function(n){var e=n.el.querySelector('i');e.className='med';e.innerHTML=spec(n.i).replace(/ role="img" aria-label="[^"]*"/,'')})},0);
   // dibujos espectrales: trazo fino de oro y marfil
-  function spec(i){var r=rnd(i*977+31),o=[],G='#D9C38A',V='#EDE6D6';function P(d,c,w,a){o.push('<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="'+w+'" stroke-opacity="'+a+'" stroke-linecap="round"/>')}function f(n){return n.toFixed(1)}
+  function spec(i){var r=rnd(i*977+31),o=[],CL=root.classList.contains('claro'),G=CL?'#A8843F':'#D9C38A',V=CL?'#6E5B43':'#EDE6D6';function P(d,c,w,a){o.push('<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="'+w+'" stroke-opacity="'+a+'" stroke-linecap="round"/>')}function f(n){return n.toFixed(1)}
     function fan(cx,cy,R,a0,a1,bands,rad){var d='M'+f(cx)+','+f(cy);for(var k=0;k<=24;k++){var a=a0+(a1-a0)*k/24,rr=R*(1+.05*Math.sin(k*1.7+R));d+=' L'+f(cx+Math.cos(a)*rr)+','+f(cy+Math.sin(a)*rr)}P(d+' Z',V,.9,.75);
       for(var b=1;b<=bands;b++){var rb=R*b/(bands+1),dd='';for(k=0;k<=24;k++){var a2=a0+(a1-a0)*k/24;dd+=(k?' L':'M')+f(cx+Math.cos(a2)*rb*(1+.04*Math.sin(k+b)))+','+f(cy+Math.sin(a2)*rb)}P(dd,G,.6,.55)}
       for(k=0;k<rad;k++){var a3=a0+(a1-a0)*(k+.5)/rad;P('M'+f(cx+Math.cos(a3)*R*.12)+','+f(cy+Math.sin(a3)*R*.12)+' L'+f(cx+Math.cos(a3)*R*.96)+','+f(cy+Math.sin(a3)*R*.96),G,.4,.35)}}

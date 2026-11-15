@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex">
 <title>Nosotras · TEKIA</title>
 <link rel="icon" href="assets/tekia-emblema-oro-web.png">
+<script src="tema.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap">
 <style>
@@ -37,6 +38,10 @@ a{color:inherit}
 @media (max-width:860px){.top nav{gap:1.1rem;font-size:.76rem}}
 @media (max-width:640px){.top{grid-template-columns:auto 1fr auto}.top .brand span{display:none}.top nav{gap:1rem}.top nav a{display:none}.top nav a.m{display:inline-flex}}
 
+html.claro{--noche:#F6F1E4;--tx:#2F2A27;--sub:#6B6156;--oro:#7D5F27;--oro-tenue:#7D5F27;--marfil:rgba(193,161,92,.18);color-scheme:light}
+html.claro .top{background:rgba(248,245,235,.58)}
+html.claro .top .brand img{filter:none}
+html.claro .top nav a::after{background:#C1A15C}
 </style>
 <style id="nos-css">
 /* Nosotras: estilos acotados a la sección (también se usan dentro del atlas) */
@@ -74,6 +79,11 @@ a{color:inherit}
   .ct span{flex-basis:100%;text-align:center;margin:0 0 .1rem}
   .mic{width:min(600px,calc(133.333% - 32px));top:calc(64px + env(safe-area-inset-top,0px) + 4.2rem)}
 }
+/* tema claro (prueba): crema luminosa, texto en tinta y oro profundo */
+html.claro .nos{--noche:#F6F1E4;--tx:#2F2A27;--sub:#6B6156;--oro:#7D5F27;--oro-tenue:#7D5F27;
+  background:radial-gradient(ellipse 60% 50% at 50% 38%,rgba(255,252,242,.95),rgba(255,252,242,0) 72%),radial-gradient(ellipse 55% 45% at 4% 0%,rgba(255,243,212,.85),rgba(255,243,212,0) 70%),radial-gradient(ellipse 90% 85% at 50% 50%,#F5F1E4 38%,#E7E8D8 78%,#DCE1CF 100%)}
+html.claro .ct a:hover{color:#5E4719;background:rgba(193,161,92,.12)}
+html.claro .mic{filter:sepia(.5) saturate(1.4) brightness(.78)}
 .halo{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
 /* el micelio de fondo respira: deriva de pocos px, muy lenta */
 @keyframes micVivo{0%{transform:translate(-50%,0);opacity:.86}50%{transform:translate(calc(-50% + 5px),-3px);opacity:1}100%{transform:translate(calc(-50% - 4px),2px);opacity:.92}}
