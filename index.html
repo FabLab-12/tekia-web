@@ -670,7 +670,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
 .ci-legend .k-fib{background:radial-gradient(ellipse at center,#7A5C3E 0 28%,rgba(205,190,165,.55) 32%)}
 .cuerpo-in p.ci-hintg{color:#D6955C}
 .ruta .miradas{display:none!important}
-.vista-nos{position:fixed;inset:0;z-index:8;overflow-y:auto;overscroll-behavior:contain;background:#120F0D;opacity:0;transition:opacity .5s}
+.vista-nos{position:fixed;inset:0;z-index:8;overflow-y:auto;overscroll-behavior:contain;background:#120F0D;opacity:0;transition:opacity 1.4s ease}
 .vista-nos.on{opacity:1}.vista-nos[hidden]{display:none}
 html.en-nos,html.en-nos body{overflow:hidden}
 html.en-nos .top nav a.atlas{color:#EDE6D6;cursor:pointer}html.en-nos .top nav a.atlas:hover{color:#D9C38A}html.en-nos .top nav a.atlas::after{transform:scaleX(0)}html.en-nos .top nav a.atlas:hover::after{transform:scaleX(1)}
@@ -737,7 +737,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     </aside>
   </div>
   <div class="ci-legend" id="ci-legend" aria-hidden="true"><p class="ci-leg-t"><span>Tejido conectivo laxo ·</span> <span>Dermis papilar · Esquema</span></p><ul><li><i class="k-col"></i>Colágeno</li><li><i class="k-ela"></i>Fibras elásticas</li><li><i class="k-fib"></i>Fibroblastos</li></ul></div>
-  <button type="button" class="ci-back" id="ci-back" hidden>Volver al cuerpo entero</button>
+  <button type="button" class="ci-back" id="ci-back" hidden>Centrar</button>
   <p class="ci-note" id="ci-note" aria-hidden="true"></p>
   <p class="ci-live" id="ci-live" aria-live="polite"></p>
 </section>
@@ -1410,7 +1410,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
       var rx=a[3]+(b[3]-a[3])*t,rz=a[4]+(b[4]-a[4])*t,dx=px-bx*t,dy=py-by*t,dz=(pz-bz*t)*rx/rz;if(dx*dx+dy*dy+dz*dz<rx*rx*.9)return [bx,by,bz]}return null}
 
   // ================= 4. Cámara =================
-  var W=0,H=0,dpr=1,F=900,k=1,AX=0,AY=0,PIV=[100,212,0],cy=1,sy=0,yaw=0,yawT=0,yawV=0,cp=1,sp=0,pitch=0,pitchT=0,pitchV=0,dist=900,panX=0,panY=0;
+  var calmaH=0,W=0,H=0,dpr=1,F=900,k=1,AX=0,AY=0,PIV=[100,212,0],cy=1,sy=0,yaw=0,yawT=0,yawV=0,cp=1,sp=0,pitch=0,pitchT=0,pitchV=0,dist=900,panX=0,panY=0;
   var Z={m:1,mt:1,P:null,pf:-1,pi:-1,S:null,Sn:null,tissue:false,max:10,pinch:false};
   function layout(){var b=sec.getBoundingClientRect(),f=fig.getBoundingClientRect();dpr=Math.min(LOW?1.5:2,window.devicePixelRatio||1);
     W=b.width;H=b.height;cv.width=fx.width=Math.round(W*dpr);cv.height=fx.height=Math.round(H*dpr);k=f.height/430;AX=f.left-b.left+f.width/2;AY=f.top-b.top+f.height/2;dirty=true}
@@ -1842,11 +1842,11 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
   var running=false,raf=0,visible=true,started=false;
   function frame(now){
     if(grow<1){grow=Math.min(1,(now-t0)/2200);dirty=true}
-    if(!Z.pinch){var lm=Math.log(Z.m),lt=Math.log(Z.mt);if(Math.abs(lt-lm)>.002){Z.m=Math.exp(reduce?lt:lm+(lt-lm)*.14);dirty=true}else if(Z.m!==Z.mt){Z.m=Z.mt;dirty=true}}
+    if(!Z.pinch){var lm=Math.log(Z.m),lt=Math.log(Z.mt);if(Math.abs(lt-lm)>.002){Z.m=Math.exp(reduce?lt:lm+(lt-lm)*(performance.now()<calmaH?.035:.14));dirty=true}else if(Z.m!==Z.mt){Z.m=Z.mt;dirty=true}}
     if(!drag.on&&Math.abs(yawV)>.0005){yawT+=yawV;yawV*=.92}
-    if(Math.abs(yawT-yaw)>.0005){yaw+=(yawT-yaw)*(reduce?1:.25);dirty=true}
+    if(Math.abs(yawT-yaw)>.0005){yaw+=(yawT-yaw)*(reduce?1:(performance.now()<calmaH?.04:.25));dirty=true}
     if(!drag.on&&Math.abs(pitchV)>.0005){pitchT+=pitchV;pitchV*=.92}
-    if(Math.abs(pitchT-pitch)>.0005){pitch+=(pitchT-pitch)*(reduce?1:.25);dirty=true}
+    if(Math.abs(pitchT-pitch)>.0005){pitch+=(pitchT-pitch)*(reduce?1:(performance.now()<calmaH?.04:.25));dirty=true}
     if(Z.P&&Z.mt===1&&Math.abs(Z.m-1)<.004&&!pts.size){Z.m=1;Z.P=null;Z.S=Z.Sn=null;DET=null;TIS=null;dirty=true;if(panelWas){reopen()}}
     if(bodyAnim(now))dirty=true;
     if(dirty)drawBase();drawFx(now);
@@ -1877,7 +1877,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
   function hidePanel(){if(panel.classList.contains('open')||!card.hidden){panelWas=lastZ}else if(!panelWas)panelWas=null}
   function reopen(){var z=panelWas;panelWas=null;if(z)show(z,true)}
   function dbl(x,y){setFocus(x,y);if(!Z.P)return;var m=Z.mt;if(m<3)zoomTo(8);else if(Z.tissue&&m<30)zoomTo(56);else zoomTo(1)}
-  dg.addEventListener('pointerdown',function(e){pd(e,null)});
+  dg.addEventListener('pointerdown',function(e){calmaH=0;pd(e,null)});
   function pd(e,zone){if(e.isPrimary){pts.clear();G=null;Z.pinch=false}var p=local(e);TOUCH={x:p.x,y:p.y,t:performance.now()};pts.set(e.pointerId,{x:p.x,y:p.y,x0:p.x,y0:p.y,t:performance.now()});try{dg.setPointerCapture(e.pointerId)}catch(_){}
     if(pts.size===1){var q=zone?-1:hitFiber(p.x,p.y,e.pointerType==='touch'?26:16);G={mode:'pending',q:q,pinched:false};yawV=0;pitchV=0}
     else if(pts.size===2){var a=Array.from(pts.values());var cx=(a[0].x+a[1].x)/2,cyy=(a[0].y+a[1].y)/2;setFocus(cx,cyy);G={mode:'pinch',d0:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1,m0:Z.m,pinched:true,c0:{x:cx,y:cyy},S0:Z.S?{x:Z.S.x,y:Z.S.y}:null};Z.pinch=true;glow=null;dg.style.touchAction='none'}if(G&&G.mode==='pending')G.shift=e.shiftKey||e.button===2;if(zone&&G&&G.mode==='pending'){G.q=-1;G.zone=zone;TOUCH=null}}
@@ -1900,7 +1900,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
   dg.addEventListener('pointerup',up);dg.addEventListener('pointercancel',up);dg.addEventListener('lostpointercapture',function(e){if(pts.has(e.pointerId))up(e)});
   dg.addEventListener('touchstart',function(e){if(e.touches.length>1||(G&&G.mode==='light')||Z.m>1.05)e.preventDefault()},{passive:false});
   dg.addEventListener('touchmove',function(e){if(e.touches.length>1||(G&&(G.mode==='light'||G.mode==='pinch'||G.mode==='pan'||G.mode==='rotate'))||Z.m>1.05)e.preventDefault()},{passive:false});
-  dg.addEventListener('wheel',function(e){e.preventDefault();var p=local(e);if(!Z.P||Z.m<1.01)setFocus(p.x,p.y);Z.mt=clamp(Z.mt*Math.exp(-e.deltaY*.0018),1,Z.max);if(Z.mt>=Z.max&&!Z.tissue&&e.deltaY<0)say('El tejido de cerca se explora en el antebrazo.');dirty=true},{passive:false});
+  dg.addEventListener('wheel',function(e){e.preventDefault();calmaH=0;var p=local(e);if(!Z.P||Z.m<1.01)setFocus(p.x,p.y);Z.mt=clamp(Z.mt*Math.exp(-e.deltaY*.0018),1,Z.max);if(Z.mt>=Z.max&&!Z.tissue&&e.deltaY<0)say('El tejido de cerca se explora en el antebrazo.');dirty=true},{passive:false});
   dg.addEventListener('dblclick',function(e){e.preventDefault()});dg.addEventListener('contextmenu',function(e){e.preventDefault()});
   dg.addEventListener('keydown',function(e){var K=e.key;
     if(K==='ArrowLeft'||K==='ArrowRight'){if(!(Z.tissue&&Z.m>16)){e.preventDefault();yawT+=(K==='ArrowLeft'?-1:1)*Math.PI/8;touched=true}return}
@@ -1909,7 +1909,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     if(K==='-'||K==='_'){e.preventDefault();zoomTo(Z.mt/1.7);return}
     if(K==='Escape'||K==='0'){if(Z.m>1.01){e.preventDefault();zoomTo(1)}return}
     if(K==='Enter'||K===' '){e.preventDefault();if(HINT&&!LIT){var q2=HINT.a+2;light(q2,q2)}}});
-  back.addEventListener('click',function(){zoomTo(1);yawV=0;pitchV=0;yawT=Math.round(yaw/(2*Math.PI))*2*Math.PI;pitchT=0;dirty=true;dg.focus({preventScroll:true})});
+  back.addEventListener('click',function(){calmaH=performance.now()+5000;zoomTo(1);yawV=0;pitchV=0;yawT=Math.round(yaw/(2*Math.PI))*2*Math.PI;pitchT=0;dirty=true;dg.focus({preventScroll:true})});
   var coarse=matchMedia('(pointer:coarse)').matches;hintEl.textContent=coarse?'Acerca dos dedos para explorar':'Usa la rueda o doble clic para explorar';
   // ---- diagramas de los hongos (trazo fino, paleta TEKIA) ----
   function illo(kind){var r=rnd(kind.length*733+11),s='<svg viewBox="0 0 300 200" role="img" aria-label="Ilustración: '+(kind==='care'?'lupa sobre una red de micelio':D[{melena:'hericium',reishi:'reishi',cordyceps:'cordyceps'}[kind]].name)+'">';
@@ -1971,21 +1971,32 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
 </script>
 
 <script>
+// desplazamiento lento y suave del menú (subir al atlas o bajar a Precauciones / Escríbenos)
+(function(){var red=matchMedia('(prefers-reduced-motion: reduce)'),anim=0;
+  function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+  window.lento=function(y){cancelAnimationFrame(anim);var de=document.documentElement;y=Math.max(0,Math.min(y,de.scrollHeight-innerHeight));var y0=scrollY,d=y-y0;if(red.matches||Math.abs(d)<2){de.style.scrollBehavior='auto';scrollTo(0,y);de.style.scrollBehavior='';return}
+    var dur=Math.min(2800,Math.max(1600,Math.abs(d)*1.2)),t0=performance.now();de.style.scrollBehavior='auto';
+    function paso(t){var k=Math.min(1,(t-t0)/dur);scrollTo(0,y0+d*ease(k));if(k<1)anim=requestAnimationFrame(paso);else de.style.scrollBehavior=''}anim=requestAnimationFrame(paso)};
+  ['wheel','touchstart','keydown'].forEach(function(ev){addEventListener(ev,function(){if(anim){cancelAnimationFrame(anim);anim=0;document.documentElement.style.scrollBehavior=''}},{passive:true})});
+  [].forEach.call(document.querySelectorAll('.top nav a[href^="#f-"]'),function(a){a.addEventListener('click',function(e){var el=document.getElementById(a.getAttribute('href').slice(1));if(!el)return;e.preventDefault();
+    setTimeout(function(){var mt=parseFloat(getComputedStyle(el).scrollMarginTop)||0;lento(Math.max(0,el.getBoundingClientRect().top+scrollY-mt));history.replaceState(history.state,'',a.getAttribute('href'))},0)})})})();
+</script>
+<script>
 // «Nosotras» se abre dentro del atlas para que la música siga sonando; nosotras.html sigue funcionando sola
-(function(){var link=document.querySelector('.top nav a.nos'),atlas=document.querySelector('.top nav a.atlas'),V=null,cargando=null,de=document.documentElement;
+(function(){try{history.scrollRestoration='manual'}catch(e){}var link=document.querySelector('.top nav a.nos'),atlas=document.querySelector('.top nav a.atlas'),V=null,cargando=null,de=document.documentElement;
   function cargar(){if(cargando)return cargando;cargando=fetch('nosotras.html').then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){
     var d=new DOMParser().parseFromString(t,'text/html'),st=d.getElementById('nos-css'),m=d.querySelector('main.nos'),js=d.getElementById('nos-js');
     V=document.createElement('div');V.className='vista-nos';V.id='vista-nos';V.hidden=true;V.setAttribute('role','region');V.setAttribute('aria-label','Nosotras');
     var s1=document.createElement('style');s1.textContent=st.textContent;document.head.appendChild(s1);V.appendChild(document.importNode(m,true));[].forEach.call(d.querySelectorAll('body>svg'),function(x){V.appendChild(document.importNode(x,true))});document.body.appendChild(V);
     var s2=document.createElement('script');s2.textContent=js.textContent;document.body.appendChild(s2);return V}).catch(function(){cargando=null;throw 0});return cargando}
-  function abrir(push){cargar().then(function(){if(!V.hidden)return;V.hidden=false;de.classList.add('en-nos');link.setAttribute('aria-current','page');atlas.removeAttribute('aria-current');
+  function abrir(push){cargar().then(function(){if(!V.hidden&&V.classList.contains('on'))return;clearTimeout(cT);V.hidden=false;de.classList.add('en-nos');link.setAttribute('aria-current','page');atlas.removeAttribute('aria-current');
     [].forEach.call(document.querySelectorAll('body>main,.depth'),function(e){e.inert=true});V.scrollTop=0;requestAnimationFrame(function(){V.classList.add('on');window.TEKIA_nosHalo&&window.TEKIA_nosHalo()});
     if(push)history.pushState({nos:1},'','#nosotras');var h=V.querySelector('h1');h&&(h.setAttribute('tabindex','-1'),h.focus({preventScroll:true}))}).catch(function(){location.href='nosotras.html'})}
-  function cerrar(){if(!V||V.hidden)return;V.classList.remove('on');de.classList.remove('en-nos');link.removeAttribute('aria-current');atlas.setAttribute('aria-current','page');
-    [].forEach.call(document.querySelectorAll('body>main,.depth'),function(e){e.inert=false});V.hidden=true}
+  var cT=0;function cerrar(){if(!V||V.hidden||!V.classList.contains('on'))return;V.classList.remove('on');de.classList.remove('en-nos');link.removeAttribute('aria-current');atlas.setAttribute('aria-current','page');
+    [].forEach.call(document.querySelectorAll('body>main,.depth'),function(e){e.inert=false});clearTimeout(cT);cT=setTimeout(function(){if(!V.classList.contains('on'))V.hidden=true},matchMedia('(prefers-reduced-motion: reduce)').matches?0:1400)}
   link.addEventListener('click',function(e){e.preventDefault();abrir(true)});
-  atlas.addEventListener('click',function(e){e.preventDefault();if(V&&!V.hidden){if(history.state&&history.state.nos)history.back();else cerrar()}
-    var u=document.getElementById('umbral');(u||document.body).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});if(/^#f-/.test(location.hash))history.replaceState(history.state,'',location.pathname)});
+  atlas.addEventListener('click',function(e){e.preventDefault();if(V&&!V.hidden){var hb=history.state&&history.state.nos;cerrar();if(hb)history.back()}
+    lento(0);if(/^#f-/.test(location.hash))history.replaceState(history.state,'',location.pathname)});
   [].forEach.call(document.querySelectorAll('.top nav a[href^="#f-"],.top .brand'),function(a){a.addEventListener('click',function(){if(V&&!V.hidden){cerrar();if(history.state&&history.state.nos)history.replaceState(null,'',location.pathname)}})});
   addEventListener('popstate',function(){if(location.hash==='#nosotras')abrir(false);else cerrar()});
   if(location.hash==='#nosotras')abrir(false)})();
