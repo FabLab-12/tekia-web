@@ -11,10 +11,10 @@
 (function(){
   var gl,cv,P={},V={},F={},w=0,h=0,bufs={};
   var TEMAS={
-    claro:{fib:[[.50,.38,.18],[.76,.60,.30],[.85,.66,.34],[.96,.86,.66]],aMin:.3,aMax:1,
-           volEdge:[.36,.47,.30],volCore:[.22,.33,.21],volA:.5,volE:[.64,.78],volBlur:1.2,bloom:[1,.78,.42],bloomK:.3},
-    oscuro:{fib:[[.42,.33,.18],[.76,.63,.36],[.93,.84,.66],[.96,.89,.74]],aMin:.18,aMax:1,
-           volEdge:[.20,.29,.22],volCore:[.16,.24,.18],volA:.5,volE:[.6,.78],volBlur:1.2,bloom:[.95,.8,.55],bloomK:.55}};
+    claro:{fib:[[.60,.40,.12],[.92,.66,.24],[1,.86,.52],[1,.97,.90]],aMin:.4,aMax:1,
+           volEdge:[.94,.64,.22],volCore:[.34,.36,.11],volA:.82,volE:[.66,.76],volBlur:.75,bloom:[1,.8,.48],bloomK:.45},
+    oscuro:{fib:[[.42,.30,.14],[.80,.60,.28],[.96,.80,.50],[1,.96,.87]],aMin:.18,aMax:1,
+           volEdge:[.40,.30,.13],volCore:[.09,.16,.08],volA:.75,volE:[.6,.78],volBlur:1.2,bloom:[.95,.8,.55],bloomK:.55}};
   function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,'#version 300 es\nprecision highp float;\n'+s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o}
   function prog(vs,fs){var p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,vs));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw gl.getProgramInfoLog(p);
     var u={},n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS);for(var i=0;i<n;i++){var a=gl.getActiveUniform(p,i);u[a.name.replace(/\[0\]$/,'')]=gl.getUniformLocation(p,a.name)}return {p:p,u:u}}
@@ -43,9 +43,9 @@
       P.vol=prog(FSQ,'in vec2 uv;out vec4 o;uniform sampler2D d;uniform vec3 ce,cc;uniform vec2 E;uniform float A,ga,t;'+
         'void main(){float v=texture(d,uv).r;float a0=1.-exp(-v*6.);float a=smoothstep(E.x,E.y,a0);if(a<.003){o=vec4(0);return;}'+
         'float n=sin(uv.x*23.+t*.05)*sin(uv.y*13.-uv.x*7.-t*.04)*.5+.5;float core=smoothstep(.55,1.,a0);'+
-        'vec3 c=mix(ce,cc,core)*(.96+.07*n);float al=a*A*ga*(.9+.1*n);o=vec4(c*al,al);}');
+        'vec3 c=mix(ce,cc,core)*(.96+.07*n);float al=a*A*ga*(.9+.1*n)*(.6+.4*core);o=vec4(c*al,al);}');
       P.nod=prog('in vec4 p;uniform vec2 res;uniform float dpr;out float b;void main(){vec2 c=p.xy/res*2.-1.;gl_Position=vec4(c.x,-c.y,0,1);gl_PointSize=p.w*dpr;b=p.z;}',
-        'in float b;out vec4 o;uniform vec3 col;void main(){vec2 d=gl_PointCoord*2.-1.;float r=length(d);if(r>1.)discard;float core=1.-smoothstep(.12,.24,r);float halo=exp(-r*r*7.)*.35;float a=(core+halo)*b;o=vec4(col*a,a);}');
+        'in float b;out vec4 o;uniform vec3 col;void main(){vec2 d=gl_PointCoord*2.-1.;float r=length(d);if(r>1.)discard;float core=1.-smoothstep(.12,.24,r);float halo=exp(-r*r*9.)*.12;float a=(core+halo)*b;o=vec4(col*a,a);}');
       P.cp=prog(FSQ,'in vec2 uv;out vec4 o;uniform sampler2D s;void main(){o=texture(s,uv);}');
       P.bl=prog(FSQ,'in vec2 uv;out vec4 o;uniform sampler2D s;uniform vec2 st;void main(){vec4 c=texture(s,uv)*.2270;c+=(texture(s,uv+st*1.3846)+texture(s,uv-st*1.3846))*.3162;c+=(texture(s,uv+st*3.2308)+texture(s,uv-st*3.2308))*.0703;o=c;}');
       P.gw=prog(FSQ,'in vec2 uv;out vec4 o;uniform sampler2D s;uniform vec3 tint;uniform float k;void main(){vec4 c=texture(s,uv);o=vec4(tint*c.a*k,0.);}');
@@ -71,7 +71,7 @@
   var api={ok:false,TEMAS:TEMAS,
     clear:function(){if(!api.ok)return;target(null);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT)},
     // o: {W,H,dpr,tema,gA,t,back:{d,n},front:{d,n},vol:{d,n,r},nod:{d,n}}
-    draw:function(o){if(!api.ok)return;var T=TEMAS[o.tema]||TEMAS.oscuro,W=Math.round(o.W*o.dpr),H=Math.round(o.H*o.dpr);size(W,H);
+    draw:function(o){if(!api.ok)return;var C=o.capa||'F',cV=C!=='B'&&C!=='C',cF=C!=='A',cX=C==='F';var T=TEMAS[o.tema]||TEMAS.oscuro,W=Math.round(o.W*o.dpr),H=Math.round(o.H*o.dpr);size(W,H);
       gl.disable(gl.DEPTH_TEST);gl.enable(gl.BLEND);gl.activeTexture(gl.TEXTURE0);
       // densidad del volumen interior (media resolución)
       target(F.d);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.blendFunc(gl.ONE,gl.ONE);
@@ -91,14 +91,14 @@
       target(F.b1);gl.bindTexture(gl.TEXTURE_2D,F.b2.t);gl.uniform2f(P.bl.u.st,0,1/F.b1.h);full();
       // composición en pantalla
       target(null);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
-      gl.useProgram(P.vol.p);gl.bindTexture(gl.TEXTURE_2D,F.d.t);gl.uniform1i(P.vol.u.d,0);gl.uniform3fv(P.vol.u.ce,T.volEdge);gl.uniform3fv(P.vol.u.cc,T.volCore);gl.uniform1f(P.vol.u.A,T.volA*(o.pulso?.93+.07*Math.sin(o.t*1.142):1));gl.uniform1f(P.vol.u.ga,o.gA);gl.uniform1f(P.vol.u.t,o.t);gl.uniform2fv(P.vol.u.E,T.volE||[.1,1]);full();
-      segs('back',o.back.d,o.back.n,o,T,1,0);
-      segs('front',o.front.d,o.front.n,o,T,1,0);
-      gl.blendFunc(gl.ONE,gl.ONE);gl.useProgram(P.gw.p);gl.bindTexture(gl.TEXTURE_2D,F.b1.t);gl.uniform1i(P.gw.u.s,0);gl.uniform3fv(P.gw.u.tint,T.bloom);gl.uniform1f(P.gw.u.k,T.bloomK*o.gA);full();
-      if(o.nod.n){gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(P.nod.p);gl.uniform2f(P.nod.u.res,o.W,o.H);gl.uniform1f(P.nod.u.dpr,o.dpr);gl.uniform3fv(P.nod.u.col,T.fib[3]);
+      if(cV){gl.useProgram(P.vol.p);gl.bindTexture(gl.TEXTURE_2D,F.d.t);gl.uniform1i(P.vol.u.d,0);gl.uniform3fv(P.vol.u.ce,T.volEdge);gl.uniform3fv(P.vol.u.cc,T.volCore);gl.uniform1f(P.vol.u.A,T.volA*(o.pulso?.93+.07*Math.sin(o.t*1.142):1));gl.uniform1f(P.vol.u.ga,o.gA);gl.uniform1f(P.vol.u.t,o.t);gl.uniform2fv(P.vol.u.E,T.volE||[.1,1]);full();}
+      if(cF)segs('back',o.back.d,o.back.n,o,T,1,0);
+      if(cF)segs('front',o.front.d,o.front.n,o,T,1,0);
+      if(cX){gl.blendFunc(gl.ONE,gl.ONE);gl.useProgram(P.gw.p);gl.bindTexture(gl.TEXTURE_2D,F.b1.t);gl.uniform1i(P.gw.u.s,0);gl.uniform3fv(P.gw.u.tint,T.bloom);gl.uniform1f(P.gw.u.k,T.bloomK*o.gA);full();}
+      if(cX&&o.nod.n){gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(P.nod.p);gl.uniform2f(P.nod.u.res,o.W,o.H);gl.uniform1f(P.nod.u.dpr,o.dpr);gl.uniform3fv(P.nod.u.col,T.fib[3]);
         gl.bindVertexArray(V.nod);gl.bindBuffer(gl.ARRAY_BUFFER,bufs.nod);gl.bufferData(gl.ARRAY_BUFFER,o.nod.d.subarray(0,o.nod.n*4),gl.STREAM_DRAW);gl.drawArrays(gl.POINTS,0,o.nod.n)}
       // partículas de vida: viajan dentro de las fibras (mismo dibujo que los nodos, más pequeñas)
-      if(o.par&&o.par.n){gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(P.nod.p);gl.uniform2f(P.nod.u.res,o.W,o.H);gl.uniform1f(P.nod.u.dpr,o.dpr);gl.uniform3fv(P.nod.u.col,T.fib[3]);
+      if(cX&&o.par&&o.par.n){gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(P.nod.p);gl.uniform2f(P.nod.u.res,o.W,o.H);gl.uniform1f(P.nod.u.dpr,o.dpr);gl.uniform3fv(P.nod.u.col,T.fib[3]);
         gl.bindVertexArray(V.par);gl.bindBuffer(gl.ARRAY_BUFFER,bufs.par);gl.bufferData(gl.ARRAY_BUFFER,o.par.d.subarray(0,o.par.n*4),gl.STREAM_DRAW);gl.drawArrays(gl.POINTS,0,o.par.n)}
       gl.bindVertexArray(null)}};
   api.init=function(c){api.ok=init(c);return api.ok};
