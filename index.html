@@ -442,6 +442,7 @@ html.ci-deep .ci-copy{opacity:0;transform:translateX(-24px);pointer-events:none}
 .ci-z:hover span{color:var(--ci-amber)}
 .ci-z:hover i::before{transform:scale(1.2)}
 .ci-z:focus-visible{outline:1px solid var(--ci-gold);outline-offset:2px;border-radius:99px}
+@media (max-width:400px){.ci-z{font-size:.58rem;letter-spacing:.14em}.ci-z span{padding-left:2.4rem}.ci-z span::before{width:1.9rem}.ci-z.tight span{padding-left:1rem}.ci-z.tight span::before{width:.6rem}}
 @keyframes ciBreath{0%,100%{transform:scale(1);opacity:.7}55%{transform:scale(2.2);opacity:0}}
 .cuerpo-in .ci-cap{position:relative;z-index:1;margin:2.2rem auto 0;max-width:none;font:500 .6rem/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ci-sub);text-align:center;transition:opacity .6s}
 html.ci-deep .cuerpo-in .ci-cap,html.ci-deep .cuerpo-in .cue{opacity:0}
@@ -637,8 +638,8 @@ html.hm-open .pd-open{opacity:0;pointer-events:none}
 .ci-m:hover,.ci-m.lit,.ci-m:focus-visible{color:#E7DED1}
 .ci-m.drag{cursor:grabbing}
 .ci-m:focus-visible{outline:1px solid rgba(217,195,138,.5);outline-offset:2px}
-.ci-ring.compact .ci-m span{display:none}.ci-ring.compact .ci-m.say span{display:inline;font-size:.6rem;letter-spacing:.14em}
-.ci-ring.compact .ci-m{min-height:44px}.ci-ring.compact .ci-m i{width:36px;height:36px;margin:-10px}
+.ci-ring.compact .ci-m{flex-direction:column;justify-content:flex-start;gap:.2rem;min-height:0;padding:0 .2rem .3rem}.ci-ring.compact .ci-m i{width:24px;height:24px;margin:0}
+.ci-ring.compact .ci-m span{display:block;max-width:76px;text-align:center;white-space:normal;font-size:.5rem;line-height:1.25;letter-spacing:.12em;text-wrap:balance}
 .cuerpo-in p.ci-hintg{position:absolute;left:0;top:0;margin:0;max-width:10.5em;transform:translate(-9999px,0);font:500 .74rem/1.45 var(--sans);letter-spacing:.04em;text-transform:none;text-align:right;color:#8a5a2e;opacity:0;transition:opacity .6s;pointer-events:none;z-index:2}
 .cuerpo-in p.ci-hintg.on{opacity:.92}
 html.ci-open .cuerpo-in p.ci-hintg,html.ci-deep .cuerpo-in p.ci-hintg{opacity:0}
@@ -1487,7 +1488,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     // zonas
     var fr2=fig.getBoundingClientRect(),sr=sec.getBoundingClientRect();
     ZP.forEach(function(z){prj(z.x,z.y,z.z,o);var vis=Math.max(0,Math.min(1,(Math.min(cy,cp)-.55)*4))*fd.zones;z.el.style.opacity=vis.toFixed(2);z.el.style.pointerEvents=vis>.5?'':'none';z.el.tabIndex=vis>.5?0:-1;
-      z.el.style.transform='translate('+(o.x-(fr2.left-sr.left)-22).toFixed(1)+'px,'+(o.y-(fr2.top-sr.top)).toFixed(1)+'px) translateY(-50%)'});
+      var zx=o.x-(fr2.left-sr.left)-22;z.el.classList.toggle('tight',o.x-22+z.el.offsetWidth+(z.el.classList.contains('tight')?22:0)>sr.width-4);z.el.style.transform='translate('+zx.toFixed(1)+'px,'+(o.y-(fr2.top-sr.top)).toFixed(1)+'px) translateY(-50%)'});
     // capas de interfaz según escala
     root.classList.toggle('ci-deep',m>1.2);leg.style.opacity=smooth(.55,.85,fd.tis).toFixed(2);leg.setAttribute('aria-hidden',fd.tis>.7?'false':'true');
     back.hidden=!(m>1.3||cy<.94||cp<.94);
@@ -1642,19 +1643,19 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     var sr=sec.getBoundingClientRect(),ZR=[],reach=0;ZP.forEach(function(z){if(zoom||+z.el.style.opacity<.3)return;var r=z.el.getBoundingClientRect(),r2=z.el.querySelector('span').getBoundingClientRect();if(!r.width)return;var q=[r.left-sr.left-6,r2.top-sr.top-6,r2.right-sr.left+8,r2.bottom-sr.top+6];ZR.push(q);reach=Math.max(reach,q[2]-cx)});
     if(!zoom&&RUTA&&!goEl.hidden&&!goEl.classList.contains('off')){var rg=goEl.getBoundingClientRect();if(rg.width){var qg=[rg.left-sr.left-6,rg.top-sr.top-4,rg.right-sr.left+8,rg.bottom-sr.top+4];ZR.push(qg);reach=Math.max(reach,qg[2]-cx)}}
     // escritorio: anillo simétrico y lo bastante ancho para pasar por fuera de las etiquetas; si no cabe, modo compacto (solo puntos)
-    var rx=Math.max(bw*1.35,340,reach+46),cmp=W<640||rx>W/2-130;if(cmp)rx=W/2-24;
+    var rx=Math.max(bw*1.35,340,reach+46),cmp=W<640||rx>W/2-130;if(cmp)rx=W/2-46;
     // al acercarse al tejido, el anillo se abre hasta el borde de la pantalla
-    if(zoom){rx=cmp?W/2-24:W/2-150;ry=H/2-64}ringEl.classList.toggle('compact',cmp);
+    if(zoom){rx=cmp?W/2-46:W/2-150;ry=H/2-64}ringEl.classList.toggle('compact',cmp);
     RN.forEach(function(n){if(n.i===10){var bth=bt.hidden?0:bt.offsetHeight+24;n.ax=cx;n.ay=Math.min(cy0+ry,H-46-bth);return}var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry});
     // compacto: si un punto del arco derecho cae sobre una etiqueta, se corre arriba o abajo, y su pareja del lado izquierdo hace lo mismo (se conserva la simetría)
-    {for(var k2=0;k2<5;k2++){var n=RN[k2],hr=12,tw2=cmp?0:(n.el.offsetWidth||80)-10;for(var pass=0;pass<4;pass++){var hit=false;for(var q=0;q<ZR.length;q++){var z=ZR[q];if(n.ax+hr+tw2>z[0]&&n.ax-hr<z[2]&&n.ay+hr>z[1]&&n.ay-hr<z[3]){n.ay=n.ay<(z[1]+z[3])/2?z[1]-hr-1:z[3]+hr+1;hit=true}}if(!hit)break}RN[9-k2].ay=n.ay}}
+    {for(var k2=0;k2<5;k2++){var n=RN[k2],hr=12,tw2=cmp?0:(n.el.offsetWidth||80)-10;for(var pass=0;pass<4;pass++){var hit=false;for(var q=0;q<ZR.length;q++){var z=ZR[q],x0=cmp?n.ax-42:n.ax-hr,x1=cmp?n.ax+42:n.ax+hr+tw2,y1=cmp?n.ay+34:n.ay+hr;if(x1>z[0]&&x0<z[2]&&y1>z[1]&&n.ay-hr<z[3]){n.ay=n.ay<(z[1]+z[3])/2?z[1]-(y1-n.ay)-1:z[3]+hr+1;hit=true}}if(!hit)break}RN[9-k2].ay=n.ay}}
     RN.forEach(function(n){if(!n.init){n.x=n.ax;n.y=n.ay;n.init=true}});
     if(!reduce||true){for(var it=0;it<2;it++){RN.forEach(function(n){if(n.drag)return;var fx=(n.ax-n.x)*.012,fy=(n.ay-n.y)*.012;
         [-1,1].forEach(function(s2){var m=RN[(n.i+s2+N)%N],dx=m.x-n.x,dy=m.y-n.y,d=Math.hypot(dx,dy)||1,rest=Math.hypot(m.ax-n.ax,m.ay-n.ay);fx+=dx/d*(d-rest)*.006;fy+=dy/d*(d-rest)*.006});
         RN.forEach(function(m){if(m===n)return;var dx=n.x-m.x,dy=n.y-m.y,d2=dx*dx+dy*dy;if(d2<6400&&d2>1){var f=60/d2;fx+=dx*f;fy+=dy*f}});
         n.vx=(n.vx+fx)*.86;n.vy=(n.vy+fy)*.86;n.x+=n.vx;n.y+=n.vy})}}
-    if(cmp)RN.forEach(function(n){if(n.drag)return;var hr=12,tw=cmp?0:(n.el.offsetWidth||80)-14,lft=cmp?n.x>cx:n.x<cx,bx0=lft?n.x-tw-hr:n.x-hr,bx1=lft?n.x+hr:n.x+tw+hr;
-      for(var q=0;q<ZR.length;q++){var z=ZR[q];if(bx1>z[0]&&bx0<z[2]&&n.y+hr>z[1]&&n.y-hr<z[3]){n.y=n.y<(z[1]+z[3])/2?z[1]-hr-1:z[3]+hr+1;n.vy=0}}});
+    if(cmp)RN.forEach(function(n){if(n.drag)return;var hr=12,tw=cmp?0:(n.el.offsetWidth||80)-14,bx0=n.x-42,bx1=n.x+42;
+      for(var q=0;q<ZR.length;q++){var z=ZR[q];if(bx1>z[0]&&bx0<z[2]&&n.y+34>z[1]&&n.y-hr<z[3]){n.y=n.y<(z[1]+z[3])/2?z[1]-35:z[3]+hr+1;n.vy=0}}});
     // hilos de micelio entre vecinos y algunos atajos; tenues en reposo
     fctx.save();fctx.lineCap='round';
     function thread(a,b,base,bow,lit){var mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=mx-cx,dy=my-cy0,dl=Math.hypot(dx,dy)||1,w=reduce?0:Math.sin(t*.4+a.i)*3,qx=mx+dx/dl*(bow+w),qy=my+dy/dl*(bow+w);
@@ -1669,6 +1670,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
       fctx.strokeStyle='rgba(216,200,183,'+((foc&&!n.rt?.12:.28+.15*br)+.4*n.lit).toFixed(3)+')';fctx.lineWidth=.6;fctx.beginPath();fctx.arc(x,y,5.5,0,6.283);fctx.stroke();
       fctx.fillStyle='rgba(231,222,209,'+(.5+.2*br+.3*n.lit).toFixed(3)+')';fctx.beginPath();fctx.arc(x,y,1.6,0,6.283);fctx.fill();
       if(n.i===10){n.el.classList.add('b');var bw2=n.el.offsetWidth||80;n.el.style.transform='translate('+(x-bw2/2).toFixed(1)+'px,'+(y-14).toFixed(1)+'px)';return}
+      if(cmp){n.el.classList.remove('l');var cw=n.el.offsetWidth||70,clx=Math.max(4,Math.min(W-cw-4,x-cw/2));n.el.style.transform='translate('+clx.toFixed(1)+'px,'+(y-12).toFixed(1)+'px)';return}
       var left=cmp?x>cx:x<cx;n.el.classList.toggle('l',left);var bwid=n.el.offsetWidth||80,lx=left?x-bwid+14:x-14;if(lx<4){left=false;n.el.classList.remove('l');lx=x-14}if(lx+bwid>W-4){left=true;n.el.classList.add('l');lx=x-bwid+14}n.el.style.transform='translate('+lx.toFixed(1)+'px,'+(y-20).toFixed(1)+'px)'});
     fctx.restore()}
   // ================= Fichas de los hongos (etapa 3) =================
@@ -1833,7 +1835,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
         if(!reduce){fctx.beginPath();smoothSpan(fctx,Math.max(HINT.a,i0-4),i0+1);fctx.strokeStyle='rgba(191,122,63,.5)';fctx.lineWidth=1.6;fctx.stroke()}
         var g3=fctx.createRadialGradient(gx,gy,0,gx,gy,10);g3.addColorStop(0,'rgba(191,122,63,.9)');g3.addColorStop(1,'rgba(191,122,63,0)');fctx.fillStyle=g3;fctx.fillRect(gx-10,gy-10,20,20);
         var mid=Math.floor((HINT.a+HINT.b)/2);if(SX[mid]===SX[mid]){var fr2=fig.getBoundingClientRect(),sr=sec.getBoundingClientRect();var mnx=1e9;for(var hq=HINT.a;hq<=HINT.b;hq++)if(SX[hq]<mnx)mnx=SX[hq];var hw=hintEl.offsetWidth||150,hh=hintEl.offsetHeight||36,hx=mnx-(fr2.left-sr.left)-16-hw,hy=SY[mid]-(fr2.top-sr.top)-hh/2;
-          if(hx+(fr2.left-sr.left)<10){hx=fr2.width/2-hw/2;hy=fr2.height+18;hintEl.style.whiteSpace='nowrap';hintEl.style.textAlign='center'}else hintEl.style.textAlign='right';
+          if(hx+(fr2.left-sr.left)<10){hw=Math.max(hw,hintEl.scrollWidth);hx=sr.width/2-hw/2-(fr2.left-sr.left);hy=-hh-6;hintEl.style.whiteSpace='nowrap';hintEl.style.textAlign='center'}else hintEl.style.textAlign='right';
           hintEl.style.transform='translate('+Math.round(hx)+'px,'+Math.round(hy)+'px)'}}
       hintEl.classList.add('on')}else hintEl.classList.remove('on');
     drawRing(now)}
