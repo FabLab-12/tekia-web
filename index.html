@@ -683,6 +683,22 @@ html.en-nos .top nav a.nos{color:#D9C38A}html.en-nos .top nav a.nos::after{trans
 html.en-nos .pd-open,html.en-nos .bt{display:none}
 @media (prefers-reduced-motion:reduce){.vista-nos{transition:none}}
 /* celular: en Nosotras se ven los cuatro enlaces, Nosotras marcada */
+/* celular (v0.83): cuerpo centrado en la pantalla; hongos con dibujo pequeño y translúcido; intenciones bajo su punto, dentro del cuerpo */
+.ci-m i.med svg{display:none}
+.ci-ring.compact .ci-m i.med{width:24px;height:24px;margin:0;border-radius:50%;border:.5px solid rgba(217,195,138,.14);background:rgba(18,15,13,.08);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);display:grid;place-items:center;overflow:hidden;transition:border-color 1.2s ease,background 1.2s ease,box-shadow 1.2s ease}
+.ci-ring.compact .ci-m i.med svg{display:block;width:23px;height:auto;opacity:.38;transition:opacity 1.2s ease}
+.ci-ring.compact .ci-m i.med svg path{vector-effect:non-scaling-stroke;stroke-width:.5px}
+.ci-ring.compact .ci-m i.med svg g{filter:none}
+.ci-ring.compact .ci-m.lit i.med,.ci-ring.compact .ci-m:active i.med{border-color:rgba(217,195,138,.7);background:rgba(193,161,92,.08);box-shadow:0 0 10px rgba(193,161,92,.16)}
+.ci-ring.compact .ci-m.lit i.med svg,.ci-ring.compact .ci-m:active i.med svg{opacity:1}
+.ci-ring.compact .ci-m span{color:rgba(225,214,196,.82)}
+@media (max-width:640px){
+  .cuerpo-in{min-height:100vh;min-height:100svh;padding-block:calc(88px + env(safe-area-inset-top,0px)) 12px;display:flex;flex-direction:column;justify-content:center}
+  .ci{width:100%}
+  .ci-fig{height:min(calc(100svh - 170px),640px);margin-top:14px}
+  .ci-z span,.ci-z.tight span{position:absolute;left:22px;top:34px;transform:translateX(-50%);padding:.1rem .3rem;font-size:.5rem;letter-spacing:.18em;white-space:nowrap;color:#E7DED1;text-shadow:0 0 6px rgba(15,12,10,.9)}
+  .ci-z span::before,.ci-z.tight span::before{display:none}
+}
 </style>
 
 </head>
@@ -1243,6 +1259,8 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
   var ZP=[{k:'pensamiento',x:100,y:30,z:-20},{k:'descanso',x:100,y:108,z:-24},{k:'cuidado',x:100,y:165,z:-20},{k:'movimiento',x:126,y:262,z:-14}].map(function(z){z.el=fig.querySelector('.ci-z[data-k="'+z.k+'"]');return z});
   var ctx=cv.getContext('2d'),fctx=fx.getContext('2d'),root=document.documentElement,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var LOW=((navigator.hardwareConcurrency||4)<=4)||Math.min(screen.width,screen.height)<520;
+  // en celular hay menos fibras: se compensan con más luz y trazo un poco más firme (micelio luminoso, no oscuro)
+  var BST=LOW?1.6:1,LWM=LOW?1.35:1;
   function rnd(s){return function(){s=(s*16807)%2147483647;return (s-1)/2147483646}}
   function clamp(v,a,b){return v<a?a:v>b?b:v}
   function smooth(a,b,v){var t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t)}
@@ -1378,7 +1396,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     return new Uint16Array(out)})();
   // fibras finas que recorren la piel (como pelusa luminosa vista en macro)
   var SEAM=null;
-  var FBR=(function(){var h=5.6,G3={},r=rnd(2611),out=[],NF=LOW?900:1700;function key(x,y,z){return Math.floor(x/h)+','+Math.floor(y/h)+','+Math.floor(z/h)}
+  var FBR=(function(){var h=5.6,G3={},r=rnd(2611),out=[],NF=LOW?1250:1700;function key(x,y,z){return Math.floor(x/h)+','+Math.floor(y/h)+','+Math.floor(z/h)}
     for(var i=0;i<NSURF;i++){var kk=key(SP[i*3],SP[i*3+1],SP[i*3+2]);(G3[kk]||(G3[kk]=[])).push(i)}
     function nb(i){var x=SP[i*3],y=SP[i*3+1],z=SP[i*3+2],gx=Math.floor(x/h),gy=Math.floor(y/h),gz=Math.floor(z/h),c=[];for(var a=-1;a<=1;a++)for(var b=-1;b<=1;b++)for(var d=-1;d<=1;d++){var L2=G3[(gx+a)+','+(gy+b)+','+(gz+d)];if(!L2)continue;for(var j=0;j<L2.length;j++){var q=L2[j];if(q===i)continue;var dx=SP[q*3]-x,dy=SP[q*3+1]-y,dz=SP[q*3+2]-z,dd=dx*dx+dy*dy+dz*dz;if(dd<h*h&&dd>1)c.push(q)}}return c}
     for(var f=0;f<NF;f++){var s0=Math.floor(r()*NSURF),n0=[SN[s0*3],SN[s0*3+1],SN[s0*3+2]],d=r()<.6?[ (r()-.5)*.5,1,(r()-.5)*.5]:[r()-.5,r()-.5,r()-.5],dn=d[0]*n0[0]+d[1]*n0[1]+d[2]*n0[2];d=norm([d[0]-dn*n0[0],d[1]-dn*n0[1],d[2]-dn*n0[2]]);
@@ -1602,25 +1620,25 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     if(m<1.05){var x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(i=0;i<NSURF;i+=3){if(!MV[i])continue;if(MX[i]<x0)x0=MX[i];if(MX[i]>x1)x1=MX[i];if(MY[i]<y0)y0=MY[i];if(MY[i]>y1)y1=MY[i]}if(x1>x0){RB.x0=x0;RB.x1=x1;RB.y0=y0;RB.y1=y1;RB.ok=true}}
     fctx.globalCompositeOperation='source-over';fctx.lineCap='round';
     // volumen: sombra cálida del cuerpo, distinta del fondo
-    fctx.fillStyle='rgba(38,30,21,'+(.3*gA).toFixed(3)+')';fctx.beginPath();var vz=Math.max(6,6.5*wz);for(i=0;i<NSURF;i+=2){if(!MV[i])continue;fctx.moveTo(MX[i]+vz,MY[i]);fctx.arc(MX[i],MY[i],vz,0,6.283)}fctx.fill();
+    fctx.fillStyle='rgba(38,30,21,'+((LOW?.1:.3)*gA).toFixed(3)+')';fctx.beginPath();var vz=Math.max(6,6.5*wz);for(i=0;i<NSURF;i+=2){if(!MV[i])continue;fctx.moveTo(MX[i]+vz,MY[i]);fctx.arc(MX[i],MY[i],vz,0,6.283)}fctx.fill();
     // red de la piel por niveles de luz; las zonas en sombra se pierden en el fondo
     var LP=[];for(var l=0;l<6;l++)LP.push(new Path2D());
     for(var k=0;k<LK.length;k+=2){var p=LK[k],q=LK[k+1];if(!MV[p]||!MV[q])continue;var lv2=lvOf(Math.min(SB[p],SB[q])*.6+Math.max(SB[p],SB[q])*.4);if(lv2<1)continue;LP[lv2].moveTo(MX[p],MY[p]);LP[lv2].lineTo(MX[q],MY[q])}
-    fctx.lineWidth=Math.max(.35,.42*wz);for(l=0;l<6;l++){var c=MAT[l];fctx.strokeStyle='rgba('+c[0]+','+c[1]+','+c[2]+','+([0,.22,.3,.36,.4,.42][l]*gA).toFixed(3)+')';fctx.stroke(LP[l])}
+    fctx.lineWidth=Math.max(.35,.42*wz)*LWM;for(l=0;l<6;l++){var c=MAT[l];fctx.strokeStyle='rgba('+c[0]+','+c[1]+','+c[2]+','+Math.min(.85,[0,.22,.3,.36,.4,.42][l]*gA*BST).toFixed(3)+')';fctx.stroke(LP[l])}
     // fibras finas y pequeños haces que acompañan la curva del cuerpo
     var FP=[],FH=[];for(l=0;l<6;l++){FP.push(new Path2D());FH.push(new Path2D())}
     for(var fi=0,fn=0;fi<FBR.length;fn++){var L3=FBR[fi],st=fi+1;fi=st+L3;var a0=FBR[st];if(!MV[a0])continue;var pa=null,last=-2;
       for(var q3=st+1;q3<fi;q3++){var p1=FBR[q3-1],p2=FBR[q3];if(!MV[p2]){last=-2;continue}var lv3=lvOf((SB[p1]+SB[p2])*.5);if(lv3<0){last=-2;continue}
         var tgt=(fn%5===0?FH:FP)[lv3];if(last!==lv3){tgt.moveTo(MX[p1],MY[p1])}tgt.lineTo(MX[p2],MY[p2]);last=lv3}}
-    fctx.lineWidth=Math.max(.3,.33*wz);for(l=0;l<6;l++){var c2=MAT[l];fctx.strokeStyle='rgba('+c2[0]+','+c2[1]+','+c2[2]+','+(.7*gA).toFixed(3)+')';fctx.stroke(FP[l])}
-    fctx.lineWidth=Math.max(.7,.8*wz);for(l=0;l<6;l++){var c3=MAT[l];fctx.strokeStyle='rgba('+c3[0]+','+c3[1]+','+c3[2]+','+(.55*gA).toFixed(3)+')';fctx.stroke(FH[l])}
+    fctx.lineWidth=Math.max(.3,.33*wz)*LWM;for(l=0;l<6;l++){var c2=MAT[l];fctx.strokeStyle='rgba('+c2[0]+','+c2[1]+','+c2[2]+','+Math.min(1,.7*gA*BST).toFixed(3)+')';fctx.stroke(FP[l])}
+    fctx.lineWidth=Math.max(.7,.8*wz)*LWM;for(l=0;l<6;l++){var c3=MAT[l];fctx.strokeStyle='rgba('+c3[0]+','+c3[1]+','+c3[2]+','+Math.min(1,.55*gA*BST).toFixed(3)+')';fctx.stroke(FH[l])}
     drawRegions(t,gA,wz);
     drawOrgans(t,gA,wz);
     if(!reduce){drawRunners(t,dt,gA,wz);drawGlints(t,gA,wz)}
     // capas interiores: oro antiguo apagado
     fctx.fillStyle='rgba(119,96,62,'+(.35*gA).toFixed(3)+')';fctx.beginPath();var isz=Math.min(1.4,.7*wz);for(i=NSURF;i<NSK;i+=2){if(!MV[i])continue;fctx.rect(MX[i]-isz/2,MY[i]-isz/2,isz,isz)}fctx.fill();
     // nodos: solo donde la luz los toca, pequeños
-    for(l=3;l<6;l++){var c4=MAT[l],sz=[0,0,0,.8,1,1.2][l]*Math.min(2,wz);fctx.fillStyle='rgba('+c4[0]+','+c4[1]+','+c4[2]+','+(.85*gA).toFixed(3)+')';fctx.beginPath();for(i=0;i<NSURF;i+=2){if(!MV[i]||lvOf(SB[i])!==l)continue;fctx.rect(MX[i]-sz/2,MY[i]-sz/2,sz,sz)}fctx.fill()}
+    for(l=3;l<6;l++){var c4=MAT[l],sz=[0,0,0,.8,1,1.2][l]*Math.min(2,wz)*LWM;fctx.fillStyle='rgba('+c4[0]+','+c4[1]+','+c4[2]+','+Math.min(1,.85*gA*(LOW?1.15:1)).toFixed(3)+')';fctx.beginPath();for(i=0;i<NSURF;i+=2){if(!MV[i]||lvOf(SB[i])!==l)continue;fctx.rect(MX[i]-sz/2,MY[i]-sz/2,sz,sz)}fctx.fill()}
     // reflejos puntuales en champán (pocos)
     if(!reduce){for(i=0;i<3;i++){var j3=-1;for(var tries=0;tries<40;tries++){var cyc5=Math.floor(t/9+i*.37),c5=Math.floor((Math.abs(Math.sin(cyc5*12.9898+i*78.233))*43758.5453%1)*NSURF+tries*131)%NSURF;if(MV[c5]&&SB[c5]>.8){j3=c5;break}}if(j3<0)continue;var u5=(t/9+i*.37)%1,ph=Math.pow(Math.sin(Math.PI*u5),2),gr=(3+5*ph)*Math.min(1.6,wz);
       var g4=fctx.createRadialGradient(MX[j3],MY[j3],0,MX[j3],MY[j3],gr);g4.addColorStop(0,'rgba(231,222,209,'+(.55*ph*gA).toFixed(3)+')');g4.addColorStop(1,'rgba(216,200,183,0)');fctx.fillStyle=g4;fctx.fillRect(MX[j3]-gr,MY[j3]-gr,2*gr,2*gr)}}
@@ -1645,22 +1663,22 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
   function drawRing(now){var zoom=Z.m>=1.25,on=grow>=1&&RB.ok;ringEl.classList.toggle('off',!on);if(!on)return;
     var dt=lastRing?Math.min(.05,(now-lastRing)/1000):0;lastRing=now;var t=now/1000,N=RN.length;
     var cx=(RB.x0+RB.x1)/2,cy0=(RB.y0+RB.y1)/2,bw=RB.x1-RB.x0,bh=RB.y1-RB.y0,ry=Math.max(60,Math.min(bh*.5,cy0-80,H-cy0-50));if(zoom){cx=W/2;cy0=H/2+10}
-    var sr=sec.getBoundingClientRect(),ZR=[],reach=0;ZP.forEach(function(z){if(zoom||+z.el.style.opacity<.3)return;var r=z.el.getBoundingClientRect(),r2=z.el.querySelector('span').getBoundingClientRect();if(!r.width)return;var q=[r.left-sr.left-6,r2.top-sr.top-6,r2.right-sr.left+8,r2.bottom-sr.top+6];ZR.push(q);reach=Math.max(reach,q[2]-cx)});
+    var sr=sec.getBoundingClientRect(),ZR=[],reach=0;ZP.forEach(function(z){if(zoom||W<640||+z.el.style.opacity<.3)return;var r=z.el.getBoundingClientRect(),r2=z.el.querySelector('span').getBoundingClientRect();if(!r.width)return;var q=[r.left-sr.left-6,r2.top-sr.top-6,r2.right-sr.left+8,r2.bottom-sr.top+6];ZR.push(q);reach=Math.max(reach,q[2]-cx)});
     if(!zoom&&RUTA&&!goEl.hidden&&!goEl.classList.contains('off')){var rg=goEl.getBoundingClientRect();if(rg.width){var qg=[rg.left-sr.left-6,rg.top-sr.top-4,rg.right-sr.left+8,rg.bottom-sr.top+4];ZR.push(qg);reach=Math.max(reach,qg[2]-cx)}}
     // escritorio: anillo simétrico y lo bastante ancho para pasar por fuera de las etiquetas; si no cabe, modo compacto (solo puntos)
     var rx=Math.max(bw*1.35,340,reach+46),cmp=W<640||rx>W/2-130;if(cmp)rx=W/2-46;
     // al acercarse al tejido, el anillo se abre hasta el borde de la pantalla
     if(zoom){rx=cmp?W/2-46:W/2-150;ry=H/2-64}ringEl.classList.toggle('compact',cmp);
-    RN.forEach(function(n){if(n.i===10){var bth=bt.hidden?0:bt.offsetHeight+24;n.ax=cx;n.ay=Math.min(cy0+ry,H-46-bth);return}var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry});
+    RN.forEach(function(n){if(n.i===10){var bth=bt.hidden?0:bt.offsetHeight+24;n.ax=cx;n.ay=Math.min(cy0+ry,H-46-bth);return}var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry;if(cmp){var bth2=bt.hidden?0:bt.offsetHeight+24;n.ay=Math.min(n.ay,H-56-bth2)}});
     // compacto: si un punto del arco derecho cae sobre una etiqueta, se corre arriba o abajo, y su pareja del lado izquierdo hace lo mismo (se conserva la simetría)
-    {var TOPM=(topEl?topEl.getBoundingClientRect().bottom:0)-sr.top+16;for(var k2=0;k2<5;k2++){var n=RN[k2],hr=12,tw2=cmp?0:(n.el.offsetWidth||80)-10;for(var pass=0;pass<4;pass++){var hit=false;for(var q=0;q<ZR.length;q++){var z=ZR[q],x0=cmp?n.ax-42:n.ax-hr,x1=cmp?n.ax+42:n.ax+hr+tw2,y1=cmp?n.ay+34:n.ay+hr;if(x1>z[0]&&x0<z[2]&&y1>z[1]&&n.ay-hr<z[3]){var up=z[1]-(y1-n.ay)-1;n.ay=(n.ay<(z[1]+z[3])/2&&up-hr>TOPM)?up:z[3]+hr+1;hit=true}}if(!hit)break}RN[9-k2].ay=n.ay}}
+    {var TOPM=(topEl?topEl.getBoundingClientRect().bottom:0)-sr.top+16;for(var k2=0;k2<5;k2++){var n=RN[k2],hr=12,tw2=cmp?0:(n.el.offsetWidth||80)-10;for(var pass=0;pass<4;pass++){var hit=false;for(var q=0;q<ZR.length;q++){var z=ZR[q],x0=cmp?n.ax-42:n.ax-hr,x1=cmp?n.ax+42:n.ax+hr+tw2,y1=cmp?n.ay+40:n.ay+hr,yt=cmp?n.ay-13:n.ay-hr;if(x1>z[0]&&x0<z[2]&&y1>z[1]&&yt<z[3]){var up=z[1]-(y1-n.ay)-1;n.ay=(n.ay<(z[1]+z[3])/2&&up-13>TOPM)?up:z[3]+(cmp?14:hr)+1;hit=true}}if(!hit)break}RN[9-k2].ay=n.ay}}
     RN.forEach(function(n){if(!n.init){n.x=n.ax;n.y=n.ay;n.init=true}});
     if(!reduce||true){for(var it=0;it<2;it++){RN.forEach(function(n){if(n.drag)return;var fx=(n.ax-n.x)*.012,fy=(n.ay-n.y)*.012;
         [-1,1].forEach(function(s2){var m=RN[(n.i+s2+N)%N],dx=m.x-n.x,dy=m.y-n.y,d=Math.hypot(dx,dy)||1,rest=Math.hypot(m.ax-n.ax,m.ay-n.ay);fx+=dx/d*(d-rest)*.006;fy+=dy/d*(d-rest)*.006});
         RN.forEach(function(m){if(m===n)return;var dx=n.x-m.x,dy=n.y-m.y,d2=dx*dx+dy*dy;if(d2<6400&&d2>1){var f=60/d2;fx+=dx*f;fy+=dy*f}});
         n.vx=(n.vx+fx)*.86;n.vy=(n.vy+fy)*.86;n.x+=n.vx;n.y+=n.vy})}}
     if(cmp)RN.forEach(function(n){if(n.drag)return;var hr=12,tw=cmp?0:(n.el.offsetWidth||80)-14,bx0=n.x-42,bx1=n.x+42;
-      for(var q=0;q<ZR.length;q++){var z=ZR[q];if(bx1>z[0]&&bx0<z[2]&&n.y+34>z[1]&&n.y-hr<z[3]){n.y=n.y<(z[1]+z[3])/2?z[1]-35:z[3]+hr+1;n.vy=0}}});
+      for(var q=0;q<ZR.length;q++){var z=ZR[q];if(bx1>z[0]&&bx0<z[2]&&n.y+40>z[1]&&n.y-13<z[3]){n.y=n.y<(z[1]+z[3])/2?z[1]-41:z[3]+14;n.vy=0}}});
     // hilos de micelio entre vecinos y algunos atajos; tenues en reposo
     fctx.save();fctx.lineCap='round';
     function thread(a,b,base,bow,lit){var mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=mx-cx,dy=my-cy0,dl=Math.hypot(dx,dy)||1,w=reduce?0:Math.sin(t*.4+a.i)*3,qx=mx+dx/dl*(bow+w),qy=my+dy/dl*(bow+w);
@@ -1706,6 +1724,8 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     for(var fi=0;fi<FBR.length;){var L3=FBR[fi],st=fi+1;fi=st+L3;var last=-1;for(var q3=st+1;q3<fi;q3++){var p1=FBR[q3-1],p2=FBR[q3];if(!MV[p1]||!MV[p2]){last=-1;continue}var w=(OW[p1]+OW[p2])*.5,lv=w<.08?-1:w<.4?0:1;if(lv<0){last=-1;continue}if(last!==lv)WP[lv].moveTo(MX[p1],MY[p1]);WP[lv].lineTo(MX[p2],MY[p2]);last=lv}}
     var WC=[[191,122,63,.35],[214,150,90,.55]];fctx.lineWidth=Math.max(.4,.45*wz);for(var l=0;l<2;l++){var c=WC[l];fctx.strokeStyle='rgba('+c[0]+','+c[1]+','+c[2]+','+(c[3]*gA).toFixed(3)+')';fctx.stroke(WP[l])}
     fctx.globalCompositeOperation='source-over'}
+  // celular: cada hongo del anillo lleva su dibujo, pequeño y translúcido (se pinta tras definir spec)
+  setTimeout(function(){RN.forEach(function(n){var e=n.el.querySelector('i');e.className='med';e.innerHTML=spec(n.i).replace(/ role="img" aria-label="[^"]*"/,'')})},0);
   // dibujos espectrales: trazo fino de oro y marfil
   function spec(i){var r=rnd(i*977+31),o=[],G='#D9C38A',V='#EDE6D6';function P(d,c,w,a){o.push('<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="'+w+'" stroke-opacity="'+a+'" stroke-linecap="round"/>')}function f(n){return n.toFixed(1)}
     function fan(cx,cy,R,a0,a1,bands,rad){var d='M'+f(cx)+','+f(cy);for(var k=0;k<=24;k++){var a=a0+(a1-a0)*k/24,rr=R*(1+.05*Math.sin(k*1.7+R));d+=' L'+f(cx+Math.cos(a)*rr)+','+f(cy+Math.sin(a)*rr)}P(d+' Z',V,.9,.75);
@@ -1855,7 +1875,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
         if(!reduce){fctx.beginPath();smoothSpan(fctx,Math.max(HINT.a,i0-4),i0+1);fctx.strokeStyle='rgba(191,122,63,.5)';fctx.lineWidth=1.6;fctx.stroke()}
         var g3=fctx.createRadialGradient(gx,gy,0,gx,gy,10);g3.addColorStop(0,'rgba(191,122,63,.9)');g3.addColorStop(1,'rgba(191,122,63,0)');fctx.fillStyle=g3;fctx.fillRect(gx-10,gy-10,20,20);
         var mid=Math.floor((HINT.a+HINT.b)/2);if(SX[mid]===SX[mid]){var fr2=fig.getBoundingClientRect(),sr=sec.getBoundingClientRect();var mnx=1e9;for(var hq=HINT.a;hq<=HINT.b;hq++)if(SX[hq]<mnx)mnx=SX[hq];var hw=hintEl.offsetWidth||150,hh=hintEl.offsetHeight||36,hx=mnx-(fr2.left-sr.left)-16-hw,hy=SY[mid]-(fr2.top-sr.top)-hh/2;
-          if(hx+(fr2.left-sr.left)<10){hw=Math.max(hw,hintEl.scrollWidth);hx=sr.width/2-hw/2-(fr2.left-sr.left);hy=Math.min(fr2.height,innerHeight-fr2.top)-hh-14;hintEl.style.whiteSpace='nowrap';hintEl.style.textAlign='center'}else hintEl.style.textAlign='right';
+          if(hx+(fr2.left-sr.left)<10){hw=Math.max(hw,hintEl.scrollWidth);hx=sr.width/2-hw/2-(fr2.left-sr.left);hy=(topEl?topEl.getBoundingClientRect().bottom:0)-fr2.top+8;hintEl.style.whiteSpace='nowrap';hintEl.style.textAlign='center'}else hintEl.style.textAlign='right';
           hintEl.style.transform='translate('+Math.round(hx)+'px,'+Math.round(hy)+'px)'}}
       hintEl.classList.add('on')}else hintEl.classList.remove('on');
     drawRing(now)}
