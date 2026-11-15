@@ -1984,7 +1984,8 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
   function cerrar(){if(!V||V.hidden)return;V.classList.remove('on');de.classList.remove('en-nos');link.removeAttribute('aria-current');atlas.setAttribute('aria-current','page');
     [].forEach.call(document.querySelectorAll('body>main,.depth'),function(e){e.inert=false});V.hidden=true}
   link.addEventListener('click',function(e){e.preventDefault();abrir(true)});
-  atlas.addEventListener('click',function(e){e.preventDefault();if(V&&!V.hidden){if(history.state&&history.state.nos)history.back();else cerrar()}});
+  atlas.addEventListener('click',function(e){e.preventDefault();if(V&&!V.hidden){if(history.state&&history.state.nos)history.back();else cerrar()}
+    var u=document.getElementById('umbral');(u||document.body).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});if(/^#f-/.test(location.hash))history.replaceState(history.state,'',location.pathname)});
   [].forEach.call(document.querySelectorAll('.top nav a[href^="#f-"],.top .brand'),function(a){a.addEventListener('click',function(){if(V&&!V.hidden){cerrar();if(history.state&&history.state.nos)history.replaceState(null,'',location.pathname)}})});
   addEventListener('popstate',function(){if(location.hash==='#nosotras')abrir(false);else cerrar()});
   if(location.hash==='#nosotras')abrir(false)})();
