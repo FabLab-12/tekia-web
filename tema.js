@@ -71,6 +71,7 @@
    '.tm-sw[aria-checked="true"]{color:#6B6156}.tm-sw[aria-checked="true"] .tm-t{border-color:rgba(193,161,92,.7);background:rgba(255,253,246,.6)}.tm-sw[aria-checked="true"] .tm-t i{transform:translateX(12px);background:#C1A15C}'+
    '.tm-sw:focus-visible{outline:1px solid #C1A15C;outline-offset:3px;border-radius:6px}'+
    '.tm-gate{transition:opacity .9s ease}.gate.go .tm-gate,.gate.out .tm-gate{opacity:0;pointer-events:none}'+
+   '@media (max-width:640px){.ci-back{top:calc(var(--barra-b,82px) + 20px)!important}}'+
    '.tm-dock{justify-self:end;display:flex;align-items:center;gap:.6rem}'+
    '.tm-dock .tm-sw{position:static;min-height:40px;padding:.3rem .5rem;border-radius:99px}'+
    '@media (max-width:640px){.tm-dock{flex-direction:column;align-items:center;gap:.1rem;align-self:center}.tm-dock .tm-sw{min-width:48px;min-height:40px;justify-content:center;padding:.35rem .5rem}'+
@@ -83,5 +84,9 @@
    '#umbral,.vista-nos,main.nos{transition:opacity .9s ease}'+
    '@media (prefers-reduced-motion:reduce){#umbral,.vista-nos,main.nos{transition:none}}';
   document.head.appendChild(st);
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boton);else boton();
+  // la barra mide distinto en cada teléfono: se mide y Centrar queda debajo con el mismo aire que a la izquierda
+  function barra(){var t=document.querySelector('.top');if(!t)return;root.style.setProperty('--barra-b',Math.round(t.getBoundingClientRect().bottom)+'px')}
+  function medir(){barra();addEventListener('resize',barra);addEventListener('orientationchange',function(){setTimeout(barra,300)});
+    var t=document.querySelector('.top');if(t&&window.ResizeObserver)new ResizeObserver(barra).observe(t);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(barra)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){boton();medir()});else{boton();medir()}
 })();
