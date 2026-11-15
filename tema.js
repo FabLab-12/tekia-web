@@ -5,7 +5,7 @@
    - las hebras y luces más claras pasan a blanco cálido; las intermedias, a naranja y ámbar;
    - la mezcla aditiva («lighter») se vuelve normal. */
 (function(){
-  var root=document.documentElement,KEY='tekia-tema',on=false,cache={};
+  var root=document.documentElement,KEY='tekia-tema-v2',on=false,cache={};
   var q=/[?&]tema=(claro|oscuro)\b/.exec(location.search),t=null;
   try{if(q)localStorage.setItem(KEY,q[1]);t=localStorage.getItem(KEY)}catch(e){}
   if(q)t=q[1];
@@ -44,9 +44,9 @@
   HTMLCanvasElement.prototype.getContext=function(k){var c=gx.apply(this,arguments);return k==='2d'?wrap(c):c};
   var meta=document.createElement('meta');meta.name='theme-color';document.head.appendChild(meta);
   function apply(claro){on=claro;root.classList.toggle('claro',claro);meta.content=claro?'#F6F1E4':'#120F0D';
-    var b=document.getElementById('tema-sw');if(b){b.setAttribute('aria-checked',claro?'true':'false');b.querySelector('.tm-l').textContent=claro?'Claro':'Obscuro'}
+    [].forEach.call(document.querySelectorAll('.tm-sw'),function(b){b.setAttribute('aria-checked',claro?'true':'false');b.querySelector('.tm-l').textContent=claro?'Claro':'Obscuro'});
     if(window.TEKIA_nosHalo)try{TEKIA_nosHalo()}catch(e){}}
-  apply(t==='claro');
+  apply(t!=='oscuro'); // la web empieza en claro
   window.TEKIA_claro=function(){return on};
   // cambio en calma: la escena se desvanece, cambia el tema y vuelve a aparecer
   var busy=false,still=matchMedia('(prefers-reduced-motion: reduce)');
@@ -54,10 +54,13 @@
     if(still.matches){apply(claro);return}
     busy=true;root.classList.add('tm-velo');
     setTimeout(function(){apply(claro);requestAnimationFrame(function(){root.classList.remove('tm-velo');setTimeout(function(){busy=false},900)})},900)}
-  function boton(){var top=document.querySelector('.top');if(!top||document.getElementById('tema-sw'))return;
-    var b=document.createElement('button');b.type='button';b.id='tema-sw';b.className='tm-sw';b.setAttribute('role','switch');b.setAttribute('aria-label','Tema claro');
-    b.innerHTML='<span class="tm-t" aria-hidden="true"><i></i></span><span class="tm-l" aria-hidden="true"></span>';
-    b.addEventListener('click',cambiar);top.appendChild(b);apply(on)}
+  function crear(id,cls){var b=document.createElement('button');b.type='button';b.id=id;b.className=cls;b.setAttribute('role','switch');b.setAttribute('aria-label','Tema claro');
+    b.innerHTML='<span class="tm-t" aria-hidden="true"><i></i></span><span class="tm-l" aria-hidden="true"></span>';b.addEventListener('click',cambiar);return b}
+  // una palanquita en la barra superior y otra en la pantalla de entrada
+  function boton(){var top=document.querySelector('.top'),gate=document.getElementById('gate');
+    if(top&&!document.getElementById('tema-sw'))top.appendChild(crear('tema-sw','tm-sw'));
+    if(gate&&!document.getElementById('tema-sw-gate'))gate.appendChild(crear('tema-sw-gate','tm-sw tm-gate'));
+    apply(on)}
   var st=document.createElement('style');
   st.textContent=
    '.tm-sw{position:absolute;right:max(20px,env(safe-area-inset-right,0px));top:calc(100% + 10px);display:inline-flex;align-items:center;gap:.5rem;min-height:32px;padding:.2rem .3rem;background:none;border:0;cursor:pointer;font:400 .72rem/1 "Montserrat",system-ui,sans-serif;letter-spacing:.04em;color:#B4AA97;-webkit-tap-highlight-color:transparent}'+
@@ -66,6 +69,8 @@
    '.tm-sw[aria-checked="true"]{color:#6B6156}.tm-sw[aria-checked="true"] .tm-t{border-color:rgba(193,161,92,.7);background:rgba(255,253,246,.6)}.tm-sw[aria-checked="true"] .tm-t i{transform:translateX(12px);background:#C1A15C}'+
    '.tm-sw:focus-visible{outline:1px solid #C1A15C;outline-offset:3px;border-radius:6px}'+
    '.pd-open{margin-top:34px}'+
+   '.tm-sw.tm-gate{position:absolute;top:max(22px,env(safe-area-inset-top,0px));right:max(24px,env(safe-area-inset-right,0px));z-index:2}'+
+   '@media (max-width:640px){.tm-sw.tm-gate{top:max(16px,env(safe-area-inset-top,0px))}.tm-gate .tm-l{display:inline}}'+
    '@media (max-width:640px){.tm-sw{top:calc(100% + 6px)}.tm-l{display:none}}'+
    'html.tm-velo #umbral,html.tm-velo .vista-nos,html.tm-velo main.nos{opacity:0!important}'+
    '#umbral,.vista-nos,main.nos{transition:opacity .9s ease}'+
