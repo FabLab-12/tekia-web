@@ -37,7 +37,11 @@ a{color:inherit}
 @media (max-width:860px){.top nav{gap:1.1rem;font-size:.76rem}}
 @media (max-width:640px){.top{grid-template-columns:auto 1fr auto}.top .brand span{display:none}.top nav{gap:1rem}.top nav a{display:none}.top nav a.m{display:inline-flex}}
 
-/* Nosotras */
+</style>
+<style id="nos-css">
+/* Nosotras: estilos acotados a la sección (también se usan dentro del atlas) */
+.nos{--noche:#120F0D;--tx:#EDE6D6;--sub:#B4AA97;--oro:#D9C38A;--oro-tenue:#C9B071;--serif:"Cormorant Garamond","EB Garamond",Garamond,Georgia,serif;--sans:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--noche);color:var(--tx);font-family:var(--sans);line-height:1.6;min-height:100vh;min-height:100dvh}
+.nos *{box-sizing:border-box}.nos a{color:inherit}
 .nos{position:relative;isolation:isolate;padding:calc(76px + env(safe-area-inset-top,0px) + 2.2rem) max(20px,env(safe-area-inset-right,0px)) 4.5rem max(20px,env(safe-area-inset-left,0px))}
 .nos h1{margin:0 0 2.4rem;text-align:center;font:500 clamp(2.4rem,5vw,3.4rem)/1.05 var(--serif);letter-spacing:.01em;color:var(--tx)}
 .nos{overflow:hidden}
@@ -69,6 +73,10 @@ a{color:inherit}
   .mic{width:min(600px,calc(133.333% - 32px));top:calc(64px + env(safe-area-inset-top,0px) + 4.2rem)}
 }
 .halo{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
+/* el micelio de fondo respira: deriva de pocos px, muy lenta */
+@keyframes micVivo{0%{transform:translate(-50%,0);opacity:.86}50%{transform:translate(calc(-50% + 5px),-3px);opacity:1}100%{transform:translate(calc(-50% - 4px),2px);opacity:.92}}
+.mic{animation:micVivo 36s ease-in-out infinite alternate}
+@media (prefers-reduced-motion:reduce){.mic{animation:none}}
 .med{position:relative}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
@@ -110,35 +118,70 @@ a{color:inherit}
   <symbol id="i-ig" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><path d="M16.9 7.1v.1"/></g></symbol>
   <symbol id="i-sp" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M7.6 9.6c3-.9 6.3-.6 9 .9M8.1 12.6c2.4-.7 5-.4 7.2.8M8.6 15.4c1.9-.5 3.8-.3 5.5.6"/></g></symbol>
 </svg>
-<script>
-// anillos y partículas: capa decorativa aparte; los retratos no se tocan
-(function(){var cv=document.getElementById('halo'),nos=document.getElementById('nosotras'),cx=cv.getContext('2d'),dpr=1,W=0,H=0,M=[],P=[],O=[],
-  still=matchMedia('(prefers-reduced-motion: reduce)'),t0=performance.now(),raf=0;
-  function rnd(a,b){return a+Math.random()*(b-a)}
-  function layout(){var n=nos.getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);W=n.width;H=n.height;cv.width=W*dpr;cv.height=H*dpr;
-    M=[].map.call(nos.querySelectorAll('.med img'),function(m){var r=m.getBoundingClientRect();return {x:r.left-n.left+r.width/2,y:r.top-n.top+r.height/2,r:r.width/2}});
-    if(!P.length){for(var k=0;k<46;k++)P.push({u:Math.random(),v:rnd(.012,.035)*(Math.random()<.5?-1:1),o:rnd(-1,1),s:rnd(.6,1.6),a:rnd(.35,.9),ph:rnd(0,6.3)})}
-    if(!O.length){M.forEach(function(m,i){for(var k=0;k<5;k++)O.push({m:i,a:rnd(0,6.3),w:rnd(.08,.22)*(k%2?-1:1),rr:rnd(1.03,1.13),s:rnd(.7,1.5),ph:rnd(0,6.3)})})}
-    draw(performance.now())}
-  // hebra que une los dos retratos y sale a los bordes, con una ondulación suave
-  function strand(u,t){if(M.length<2)return [0,0];var a=M[0],b=M[1],y0=(a.y+b.y)/2,x=u*W,
-    w=Math.sin(u*9+t*.00035)*a.r*.07+Math.sin(u*23-t*.0005)*a.r*.025,
-    lift=-Math.exp(-Math.pow((x-(a.x+b.x)/2)/(a.r*1.4),2))*a.r*.08;return [x,y0+w+lift]}
-  function draw(t){cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);if(M.length<2)return;var dt=(t-t0)/1000,mv=!still.matches;
-    // anillos
-    M.forEach(function(m,i){var br=mv?.5+.5*Math.sin(dt*.6+i*1.7):.6;
-      cx.lineWidth=.7;cx.strokeStyle='rgba(217,195,138,'+(.32+.16*br)+')';cx.beginPath();cx.arc(m.x,m.y,m.r*1.06,0,6.2832);cx.stroke();
-      cx.lineWidth=.5;cx.strokeStyle='rgba(201,176,113,.24)';cx.beginPath();cx.arc(m.x,m.y,m.r*1.15,0,6.2832);cx.stroke();
-      var rot=mv?dt*(i?-.05:.05):0;cx.lineWidth=.9;cx.strokeStyle='rgba(240,222,170,'+(.5+.3*br)+')';cx.beginPath();cx.arc(m.x,m.y,m.r*1.06,rot+i*2,rot+i*2+1.1);cx.stroke();
-      cx.beginPath();cx.arc(m.x,m.y,m.r*1.15,-rot*1.4+3+i,-rot*1.4+3.6+i);cx.strokeStyle='rgba(217,195,138,.38)';cx.stroke()});
-    // partículas que orbitan
-    O.forEach(function(o){var m=M[o.m],a=o.a+(mv?dt*o.w:0),x=m.x+Math.cos(a)*m.r*o.rr,y=m.y+Math.sin(a)*m.r*o.rr,al=.45+.35*Math.sin(dt*1.3+o.ph);dot(x,y,o.s,mv?al:.6)});
+<script id="nos-js">
+// micelio vivo: capa decorativa aparte (canvas detrás); los retratos no se tocan
+(function(){var cv=document.getElementById('halo'),nos=document.getElementById('nosotras'),cx=cv.getContext('2d'),dpr=1,W=0,H=0,M=[],P=[],O=[],HY=[],TW=[],LK=[],
+  still=matchMedia('(prefers-reduced-motion: reduce)'),t0=performance.now(),raf=0,TAU=6.2832,
+  seed=7;function rnd(a,b){seed=(seed*16807)%2147483647;return a+(seed/2147483647)*(b-a)}
+  function sg(){return rnd(0,1)<.5?-1:1}
+  var COL=['203,186,153','217,195,138','232,212,158','201,176,113','226,204,150'];
+  // hebras precalculadas en unidades del radio; cada cuadro solo mueve parámetros
+  function build(){M.forEach(function(m,i){var n=8,base=HY.length;
+    for(var k=0;k<n;k++){var hs=[];for(var j=0;j<3;j++)hs.push({k:[2,3,5,7][(k+j*2)%4],A:rnd(.004,.013),ph:rnd(0,TAU),w:rnd(.025,.07)*sg()});
+      HY.push({m:i,rr:1.05+.19*k/(n-1)+rnd(-.008,.008),a0:rnd(0,TAU),span:rnd(2.8,6.1),dir:sg(),hs:hs,br:rnd(.004,.008),bw:TAU/rnd(10,20),bp:rnd(0,TAU),
+        gw:TAU/rnd(12,20),gp:rnd(0,TAU),al:rnd(.22,.46)*m.sc*(m.sc<1?1.1:1),lw:rnd(.5,.85),c:COL[[4,1,2,3,0][k%5]]})}
+    for(k=0;k<16;k++){var a=base+Math.floor(rnd(0,n-1)),free=k%3==0;
+      TW.push({h:free?base+n-1:a,h2:free?-1:a+1,f:rnd(0,TAU),d:rnd(.12,.38)*sg(),bulge:rnd(-.02,.05),out:rnd(.05,.1),gw:TAU/rnd(11,19),gp:rnd(0,TAU),al:rnd(.18,.38),fork:rnd(.4,.7),fd:rnd(.15,.3)*sg()})}
+    for(k=0;k<4;k++)LK.push({m:i,side:k<2?0:1,d:(k%2?1:-1)*rnd(.35,.7),x:rnd(1.35,1.7),rr:rnd(1.1,1.2),gw:TAU/rnd(13,20),gp:rnd(0,TAU)})});
+    for(var k=0;k<46;k++)P.push({u:rnd(0,1),v:rnd(.008,.022)*sg(),o:rnd(-1,1),s:rnd(.5,1.1),a:rnd(.35,.8),ph:rnd(0,TAU)});
+    for(k=0;k<14;k++)O.push({h:Math.floor(rnd(0,HY.length)),f:rnd(0,TAU),w:rnd(.02,.05)*sg(),s:rnd(.5,1),ph:rnd(0,TAU)})}
+  // si la sección está oculta (0×0) no se mide ni se dibuja; TEKIA_nosHalo() la recupera al mostrarse
+  function layout(){var n=nos.getBoundingClientRect();M=[];if(!nos.getClientRects().length||!(n.width>0)||!(n.height>0))return;
+    dpr=Math.min(2,devicePixelRatio||1);W=n.width;H=n.height;cv.width=W*dpr;cv.height=H*dpr;
+    M=[].map.call(nos.querySelectorAll('.med img'),function(m){var r=m.getBoundingClientRect();return {x:r.left-n.left+r.width/2,y:r.top-n.top+r.height/2,r:r.width/2,sc:r.width<240?.72:1}}).filter(function(m){return m.r>0&&isFinite(m.x)&&isFinite(m.y)});
+    if(M.length<2)M=[];
+    if(!HY.length&&M.length>1)build();draw(performance.now())}
+  function rot(i,t){return t*(i?-.012:.012)}
+  // radio de una hebra en el ángulo local f
+  function R(h,f,t){var m=M[h.m],v=h.rr-1+h.br*Math.sin(t*h.bw+h.bp);for(var j=0;j<3;j++){var q=h.hs[j];v+=q.A*Math.sin(q.k*f+q.ph+q.w*t)}return m.r*(1+v*m.sc)}
+  function pt(h,f,t,ex){var m=M[h.m],a=f+rot(h.m,t),r=R(h,f,t)+(ex||0)*m.r*m.sc;return [m.x+Math.cos(a)*r,m.y+Math.sin(a)*r]}
+  function grow(w,p,t){var s=.5+.5*Math.sin(t*w+p);return s*s*(3-2*s)}
+  // hebra horizontal que une los dos retratos y sale a los bordes
+  function strand(u,t,o){if(M.length<2)return [0,0];var a=M[0],b=M[1],y0=(a.y+b.y)/2,x=u*W,o=o||0,
+    w=Math.sin(u*(9+o*2.3)+t*.35+o*1.7)*a.r*.07+Math.sin(u*(23-o*4)-t*.5+o)*a.r*.025,
+    lift=-Math.exp(-Math.pow((x-(a.x+b.x)/2)/(a.r*1.4),2))*a.r*.08;return [x,y0+w+lift+o*a.r*.045]}
+  function seg(pts,al,c,lw,fade){cx.lineWidth=lw;var n=pts.length,ch=6;for(var i=0;i<n-1;i+=ch){var e=Math.min(n-1,i+ch),u=(i+e)/2/(n-1),f=fade?fade(u,pts[i]):1;
+      if(al*f<.01)continue;cx.strokeStyle='rgba('+c+','+(al*f).toFixed(3)+')';cx.beginPath();cx.moveTo(pts[i][0],pts[i][1]);for(var j=i+1;j<=e;j++)cx.lineTo(pts[j][0],pts[j][1]);cx.stroke()}}
+  function quad(p0,c,p2,g,n){var o=[];n=n||10;for(var i=0;i<=n;i++){var s=g*i/n,z=1-s;o.push([z*z*p0[0]+2*z*s*c[0]+s*s*p2[0],z*z*p0[1]+2*z*s*c[1]+s*s*p2[1]])}return o}
+  function draw(T){cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);if(M.length<2)return;var mv=!still.matches,t=mv?(T-t0)/1000+40:47;
+    cx.lineCap='round';cx.lineJoin='round';
+    // hebras horizontales
+    [[0,.34,.8],[-1,.2,.55],[1.2,.16,.5]].forEach(function(s){var pts=[];for(var i=0;i<=140;i++)pts.push(strand(i/140,t,s[0]));
+      seg(pts,s[1],COL[0],s[2],function(u){return Math.min(1,u*5,(1-u)*5)})});
+    // anillos de micelio que rodean cada retrato, crecen y se repliegan despacio
+    HY.forEach(function(h){var g=mv?.58+.42*grow(h.gw,h.gp,t):.9,sp=h.span*g,n=Math.max(8,Math.ceil(sp/.05)),pts=[];
+      for(var i=0;i<=n;i++)pts.push(pt(h,h.a0+h.dir*sp*i/n,t));var m=M[h.m];
+      seg(pts,h.al,h.c,h.lw,function(u,p){var dn=(p[1]-m.y)/(m.r*1.2);return Math.min(1,u*7,(1-u)*4)*(1-.4*Math.max(0,dn*dn*dn))})});
+    // ramitas que se bifurcan y se reconectan con la hebra vecina
+    TW.forEach(function(w){var h=HY[w.h],g=mv?grow(w.gw,w.gp,t):.8;if(g<.03)return;var p0=pt(h,w.f,t),p2,c,f2=w.f+w.d;
+      if(w.h2>=0){var h2=HY[w.h2];p2=pt(h2,f2,t);c=pt(h,w.f+w.d*.5,t,(h2.rr-h.rr)*.5+w.bulge)}else{p2=pt(h,f2,t,w.out);c=pt(h,w.f+w.d*.3,t,w.out*.7)}
+      var pts=quad(p0,c,p2,g,12);seg(pts,w.al,COL[2],.5,function(u){return w.h2>=0?1:1-u*.6});
+      if(w.h2<0&&g>w.fork){var b=quad(p0,c,p2,w.fork,6).pop(),e=pt(h,f2+w.fd,t,w.out*1.25),gg=(g-w.fork)/(1-w.fork);
+        seg(quad(b,[(b[0]+e[0])/2,(b[1]+e[1])/2],e,gg,6),w.al*.8,COL[0],.45)}});
+    // enlaces entre la hebra horizontal y los anillos
+    LK.forEach(function(l){var m=M[l.m],sd=l.side?-1:1,x=Math.max(0,Math.min(W,m.x+sd*m.r*l.x*m.sc)),s=strand(x/W,t,0),
+      a=(l.side?Math.PI:0)+l.d-rot(l.m,t),e=pt({m:l.m,rr:l.rr,br:0,bw:0,bp:0,hs:HY[0].hs},a,t),c=[(s[0]+e[0])/2,s[1]+(e[1]-s[1])*.25],g=mv?.4+.6*grow(l.gw,l.gp,t):.85;
+      seg(quad(s,c,e,g,12),.26,COL[1],.5)});
+    // partículas que recorren los anillos
+    O.forEach(function(o){var h=HY[o.h],p=pt(h,o.f+(mv?o.w*t:0),t);dot(p[0],p[1],o.s,mv?.35+.3*Math.sin(t*.8+o.ph):.5)});
     // partículas que viajan por la hebra
-    P.forEach(function(p){var u=((p.u+(mv?dt*p.v:0))%1+1)%1,q=strand(u,mv?t:0),edge=Math.min(1,u*6,(1-u)*6),y=q[1]+p.o*M[0].r*.05;
-      dot(q[0],y,p.s,p.a*edge*(mv?.6+.4*Math.sin(dt*2+p.ph):.7))})}
-  function dot(x,y,s,a){var g=cx.createRadialGradient(x,y,0,x,y,s*4);g.addColorStop(0,'rgba(255,240,200,'+a+')');g.addColorStop(.3,'rgba(232,212,158,'+a*.5+')');g.addColorStop(1,'rgba(201,176,113,0)');cx.fillStyle=g;cx.beginPath();cx.arc(x,y,s*4,0,6.2832);cx.fill()}
-  function loop(t){draw(t);raf=still.matches||document.hidden?0:requestAnimationFrame(loop)}
-  function go(){if(!raf&&!still.matches&&!document.hidden)raf=requestAnimationFrame(loop);else draw(performance.now())}
+    P.forEach(function(p){var u=((p.u+(mv?t*p.v:0))%1+1)%1,q=strand(u,t,0),edge=Math.min(1,u*6,(1-u)*6),y=q[1]+p.o*M[0].r*.05;
+      dot(q[0],y,p.s,p.a*edge*(mv?.55+.35*Math.sin(t*1.2+p.ph):.6))})}
+  function dot(x,y,s,a){var g=cx.createRadialGradient(x,y,0,x,y,s*3);g.addColorStop(0,'rgba(250,236,198,'+a+')');g.addColorStop(.35,'rgba(232,212,158,'+a*.4+')');g.addColorStop(1,'rgba(201,176,113,0)');cx.fillStyle=g;cx.beginPath();cx.arc(x,y,s*3,0,6.2832);cx.fill()}
+  function off(){return still.matches||document.hidden||!nos.isConnected||!nos.getClientRects().length}
+  function loop(t){draw(t);raf=off()?0:requestAnimationFrame(loop)}
+  function go(){if(!raf&&!off())raf=requestAnimationFrame(loop);else draw(performance.now())}
+  window.TEKIA_nosHalo=function(){layout();go()};
   addEventListener('resize',layout);document.addEventListener('visibilitychange',go);still.addEventListener&&still.addEventListener('change',go);
   [].forEach.call(nos.querySelectorAll('.med img'),function(i){if(!i.complete)i.addEventListener('load',layout)});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);layout();go()})();
