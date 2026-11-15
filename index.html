@@ -982,13 +982,21 @@ html.claro .vista-nos{background:#F6F4EA}
     if(rutaScene)cur=rutaScene; // con el recorrido abierto suena el paisaje de su mirada
     if(cur===curScene||!AC)return;curScene=cur;var t=AC.currentTime;
     Object.keys(buses).forEach(function(k){var g=buses[k].gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.setTargetAtTime(k===cur?1:0,t,k===cur?1.4:1.1)})}
-  function setOn(on){snd.setAttribute('aria-pressed',String(on));
+  function setOn(on){snd.setAttribute('aria-pressed',String(on));hold(on);
     if(on){if(!AC)build();wake();var t=AC.currentTime;master.gain.cancelScheduledValues(t);master.gain.setTargetAtTime(.5,t,1.2);curScene=null;scene();clearInterval(bellT);bellT=setInterval(bell,3200)}
     else if(AC){var t2=AC.currentTime;master.gain.cancelScheduledValues(t2);master.gain.setTargetAtTime(0,t2,.4);clearInterval(bellT);setTimeout(function(){if(snd.getAttribute('aria-pressed')==='false')AC.suspend()},1800)}}
   // El sonido aparece encendido; los navegadores solo dejan sonar tras el primer toque, clic o tecla.
   // Solo se da por iniciado cuando el navegador realmente deja sonar (desplazarse o apoyar el dedo no cuenta).
   // En Android el contexto debe crearse y reanudarse dentro del mismo toque; un búfer mudo de una muestra termina de desbloquearlo.
   function wake(){var p=AC.resume();if(p&&p.catch)p.catch(function(){});try{var s=AC.createBufferSource();s.buffer=AC.createBuffer(1,1,22050);s.connect(AC.destination);s.start(0)}catch(e){}return p}
+  // iPhone: con el interruptor en silencio Web Audio calla. Se pide la sesión de reproducción y, de respaldo,
+  // un <audio> mudo en bucle (WAV generado) la mantiene; se detiene al apagar el sonido.
+  var keep=null;function le(v,b){var s='';for(var i=0;i<b;i++){s+=String.fromCharCode(v&255);v>>=8}return s}
+  function hold(on){try{if(navigator.audioSession)navigator.audioSession.type=on?'playback':'auto'}catch(e){}
+    if(!on){if(keep)keep.pause();return}
+    try{if(!keep){var n=800;keep=new Audio('data:audio/wav;base64,'+btoa('RIFF'+le(36+n,4)+'WAVEfmt '+le(16,4)+le(1,2)+le(1,2)+le(8000,4)+le(8000,4)+le(1,2)+le(8,2)+'data'+le(n,4)+new Array(n+1).join('\x80')));
+      keep.loop=true;keep.setAttribute('playsinline','');keep.setAttribute('aria-hidden','true')}
+      var p=keep.play();if(p&&p.catch)p.catch(function(){})}catch(e){}}
   var started=false,GEST=['pointerup','touchend','click','keydown'];snd.classList.add('pending');
   function done(){started=true;snd.classList.remove('pending')}
   function tryStart(){if(snd.getAttribute('aria-pressed')!=='true')return;setOn(true);
@@ -1000,7 +1008,7 @@ html.claro .vista-nos{background:#F6F4EA}
     if(!started){snd.setAttribute('aria-pressed','true');tryStart();return}
     setOn(snd.getAttribute('aria-pressed')!=='true')});
   window.addEventListener('scroll',function(){scene()},{passive:true});
-  document.addEventListener('visibilitychange',function(){if(!AC)return;if(document.hidden)AC.suspend();else if(snd.getAttribute('aria-pressed')==='true')AC.resume().catch(function(){})});
+  document.addEventListener('visibilitychange',function(){if(!AC)return;if(document.hidden){AC.suspend();if(keep)keep.pause()}else if(snd.getAttribute('aria-pressed')==='true'){AC.resume().catch(function(){});hold(true)}});
 
   // ---------- Grabados dorados de la bienvenida (generados) ----------
   var es=23;function er(){es=(es*16807)%2147483647;return es/2147483647}
@@ -1103,7 +1111,7 @@ html.claro .vista-nos{background:#F6F4EA}
     function enter(){if(!gate||gate.classList.contains('go'))return;try{sessionStorage.setItem('tekia-dentro','1')}catch(e){}gate.classList.add('go');scrollTo(0,0);if(reduce){reveal();return}extend();setTimeout(reveal,600)}
     // Entrar cuenta como primer toque: el sonido arranca ahí. "Entrar sin sonido" lo deja apagado.
     enterBtn.addEventListener('click',function(){tryStart();enter()});
-    muteBtn.addEventListener('click',function(){try{sessionStorage.setItem('tekia-sonido','no')}catch(e){}snd.setAttribute('aria-pressed','false');snd.classList.remove('pending');enter()});
+    muteBtn.addEventListener('click',function(){try{sessionStorage.setItem('tekia-sonido','no')}catch(e){}snd.setAttribute('aria-pressed','false');snd.classList.remove('pending');hold(false);enter()});
     gate.addEventListener('keydown',function(e){if(e.key==='Escape')enter()});
     enterBtn.focus({preventScroll:true});
   }
