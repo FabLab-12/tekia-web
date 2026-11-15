@@ -691,7 +691,8 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
 .ci-ring.compact .ci-m i.med svg g{filter:none}
 .ci-ring.compact .ci-m.lit i.med,.ci-ring.compact .ci-m:active i.med{border-color:rgba(217,195,138,.7);background:rgba(193,161,92,.08);box-shadow:0 0 10px rgba(193,161,92,.16)}
 .ci-ring.compact .ci-m.lit i.med svg,.ci-ring.compact .ci-m:active i.med svg{opacity:1}
-.ci-ring.compact .ci-m span{color:rgba(225,214,196,.82)}
+.ci-ring.compact .ci-m span{color:rgba(225,214,196,.82);opacity:0;transition:opacity 1.2s ease}
+.ci-ring.compact .ci-m.lit span,.ci-ring.compact .ci-m.say span,.ci-ring.compact .ci-m:active span,.ci-ring.compact .ci-m:focus-visible span{opacity:1}
 @media (max-width:640px){
   .cuerpo-in{min-height:100vh;min-height:100svh;padding-block:calc(88px + env(safe-area-inset-top,0px)) 12px;display:flex;flex-direction:column;justify-content:center}
   .ci{width:100%}
