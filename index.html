@@ -1979,10 +1979,10 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     var s1=document.createElement('style');s1.textContent=st.textContent;document.head.appendChild(s1);V.appendChild(document.importNode(m,true));[].forEach.call(d.querySelectorAll('body>svg'),function(x){V.appendChild(document.importNode(x,true))});document.body.appendChild(V);
     var s2=document.createElement('script');s2.textContent=js.textContent;document.body.appendChild(s2);return V}).catch(function(){cargando=null;throw 0});return cargando}
   function abrir(push){cargar().then(function(){if(!V.hidden)return;V.hidden=false;de.classList.add('en-nos');link.setAttribute('aria-current','page');atlas.removeAttribute('aria-current');
-    [].forEach.call(document.querySelectorAll('main,.depth'),function(e){e.inert=true});V.scrollTop=0;requestAnimationFrame(function(){V.classList.add('on');window.TEKIA_nosHalo&&window.TEKIA_nosHalo()});
+    [].forEach.call(document.querySelectorAll('body>main,.depth'),function(e){e.inert=true});V.scrollTop=0;requestAnimationFrame(function(){V.classList.add('on');window.TEKIA_nosHalo&&window.TEKIA_nosHalo()});
     if(push)history.pushState({nos:1},'','#nosotras');var h=V.querySelector('h1');h&&(h.setAttribute('tabindex','-1'),h.focus({preventScroll:true}))}).catch(function(){location.href='nosotras.html'})}
   function cerrar(){if(!V||V.hidden)return;V.classList.remove('on');de.classList.remove('en-nos');link.removeAttribute('aria-current');atlas.setAttribute('aria-current','page');
-    [].forEach.call(document.querySelectorAll('main,.depth'),function(e){e.inert=false});V.hidden=true}
+    [].forEach.call(document.querySelectorAll('body>main,.depth'),function(e){e.inert=false});V.hidden=true}
   link.addEventListener('click',function(e){e.preventDefault();abrir(true)});
   atlas.addEventListener('click',function(e){e.preventDefault();if(V&&!V.hidden){if(history.state&&history.state.nos)history.back();else cerrar()}});
   [].forEach.call(document.querySelectorAll('.top nav a[href^="#f-"],.top .brand'),function(a){a.addEventListener('click',function(){if(V&&!V.hidden){cerrar();if(history.state&&history.state.nos)history.replaceState(null,'',location.pathname)}})});
