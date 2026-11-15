@@ -600,6 +600,18 @@ a.hm-add{display:block;text-decoration:none;text-align:center}
 .hm-inv dl{border-top:0;padding-top:0}.hm-ci{font-size:.78rem!important}.hm-inv a{color:#E7D2A5;text-underline-offset:3px}
 .hm-fu a{display:block;padding:.4rem 0;font:500 .82rem/1.4 var(--sans)}
 .bt-k span{color:#B4AA97;letter-spacing:.14em}
+.bt-go{font:600 .62rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#1E1712;background:#D9C38A;border:1px solid #D9C38A;border-radius:99px;padding:.6rem 1rem;cursor:pointer}.bt-go:hover{background:#E6D3A0}.bt-go:focus-visible{outline:2px solid #D9C38A;outline-offset:3px}
+.pd{z-index:70}.pd-box{width:min(26rem,100%);overflow:auto}
+.pd-f{display:flex;flex-direction:column;gap:.9rem;padding:2.2rem 1.6rem 1.6rem;text-align:left}
+.pd-f h2{font:500 1.45rem/1.2 var(--serif);margin:0;text-align:center;color:#EDE6D6}
+.pd-l{list-style:none;margin:0 0 .3rem;padding:0;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}.pd-l li{font:500 .68rem/1 var(--sans);letter-spacing:.06em;padding:.45rem .7rem;border-radius:99px;border:1px solid rgba(217,195,138,.25);background:rgba(217,195,138,.1)}
+.pd-f label{display:flex;flex-direction:column;gap:.35rem;font:600 .58rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#D9C38A}
+.pd-f input{font:400 .9rem/1.3 var(--sans);letter-spacing:0;text-transform:none;color:#EDE6D6;background:rgba(18,13,11,.45);border:1px solid rgba(217,195,138,.25);border-radius:10px;padding:.65rem .8rem}.pd-f input:focus{outline:none;border-color:#D9C38A}.pd-f input[aria-invalid=true]{border-color:#BF7A3F}
+.pd-av{margin:0;font:400 .7rem/1.45 var(--sans);color:#B4AA97}
+.pd-go{align-self:center;margin-top:.3rem;font:600 .62rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#1E1712;background:#D9C38A;border:0;border-radius:99px;padding:.75rem 1.4rem;cursor:pointer}.pd-go:focus-visible{outline:2px solid #D9C38A;outline-offset:3px}
+.pd-msg{margin:0;min-height:1em;font:400 .72rem/1.45 var(--sans);color:#CFC6B4;text-align:center}
+.bt-k{white-space:nowrap}
+@media (max-width:600px){.bt{width:calc(100% - 32px);padding:.5rem .6rem;gap:.4rem .5rem;border-radius:20px}.bt-k span{display:none}.bt-go{padding:.55rem .8rem;font-size:.58rem;letter-spacing:.14em}.bt-l button{padding:.45rem .6rem}}
 .bt-n{flex-basis:100%;margin:0;font:400 .7rem/1.45 var(--sans);color:#CFC6B4;text-align:center;max-width:34rem}
 .ci-ring.focus .ci-m:not(.lit){color:rgba(216,200,183,.32)}
 .ci-ring.off{opacity:0}.ci-ring.off .ci-m{pointer-events:none}
@@ -668,7 +680,14 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   <canvas id="ci-fx" aria-hidden="true"></canvas>
   <div class="ci-ring" id="ci-ring" role="group" aria-label="Diez hongos"></div>
   <div class="hm" id="hm" hidden><div class="hm-box" id="hm-box" role="dialog" aria-modal="true" aria-labelledby="hm-h"><button type="button" class="hm-bk" id="hm-bk" aria-label="Ficha anterior" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" class="hm-x" id="hm-x" aria-label="Cerrar ficha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button><div id="hm-c"></div></div></div>
-  <div class="bt" id="bt" hidden><p class="bt-k">Mi blend <span>· Tu selección</span></p><ul class="bt-l" id="bt-l"></ul><p class="bt-n" id="bt-n" hidden></p></div>
+  <div class="bt" id="bt" hidden><p class="bt-k">Mi blend <span>· Tu selección</span></p><ul class="bt-l" id="bt-l"></ul><button type="button" class="bt-go" id="bt-go">Pedir blend</button><p class="bt-n" id="bt-n" hidden></p></div>
+  <div class="hm pd" id="pd" hidden><div class="hm-box pd-box" role="dialog" aria-modal="true" aria-labelledby="pd-h"><button type="button" class="hm-x" id="pd-x" aria-label="Cerrar pedido"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+    <form class="pd-f" id="pd-f" novalidate><h2 id="pd-h">Pedir mi blend</h2><ul class="pd-l" id="pd-l"></ul>
+      <label>Nombre<input name="nombre" autocomplete="name" required></label>
+      <label>Correo<input name="correo" type="email" autocomplete="email" inputmode="email" required></label>
+      <label>Teléfono<input name="telefono" type="tel" autocomplete="tel" inputmode="tel" required></label>
+      <p class="pd-av">Usaremos tus datos solo para responder a tu pedido. <span class="ph">[aviso de privacidad pendiente]</span></p>
+      <button type="submit" class="pd-go">Enviar pedido</button><p class="pd-msg" id="pd-msg" role="status" aria-live="polite"></p></form></div></div>
   <div class="ci">
     <div class="ci-copy" aria-hidden="true"></div>
     <h1 id="u-h" class="ci-sr">Atlas interior</h1>
@@ -701,13 +720,6 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
 
 <section class="datos gut" id="datos" data-top="dark" aria-label="La ficha">
   <div class="in" data-rv>
-    <div class="cell" id="f-origen" tabindex="-1"><h3>De dónde viene</h3><dl>
-      <dt>Especie</dt><dd><span class="ph">[pendiente]</span></dd>
-      <dt>Parte usada</dt><dd><span class="ph">[pendiente]</span></dd>
-      <dt>Procedencia</dt><dd><span class="ph">[pendiente de documentar]</span></dd>
-      <dt>Análisis del lote</dt><dd><span class="ph">[pendiente]</span></dd></dl></div>
-    <div class="cell" id="f-nosabemos" tabindex="-1"><h3>Lo que aún no sabemos</h3><ul>
-      <li>De dónde viene exactamente</li><li>Qué parte del hongo se usa y cómo se extrae</li><li>Qué mide el análisis de cada lote</li></ul></div>
     <div class="cell" id="f-precauciones" tabindex="-1"><h3>Antes de considerarlo</h3><div class="caution"><b>Precauciones.</b> <span class="ph">[pendientes de revisión]</span> Si estás embarazada, lactando o tomas medicamentos, consúltalo antes con tu médico.</div></div>
   </div>
   <div class="cell acomp" id="f-acomp" tabindex="-1" data-rv>
@@ -1699,6 +1711,16 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   hmX.addEventListener('click',closeHM);hmB.addEventListener('click',function(){history.back()});hm.addEventListener('click',function(e){if(e.target===hm)closeHM()});
   document.addEventListener('keydown',function(e){if(hmI==null)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();closeHM();return}
     if(e.key==='Tab'){var f=[].slice.call(hmBox.querySelectorAll('button,a[href]')).filter(function(x){return x.offsetParent!==null});if(!f.length)return;var a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}},true);
+
+  // pedido: formulario visual; aún sin destino conectado, no envía datos a ningún lado
+  (function(){var pd=document.getElementById('pd'),f=document.getElementById('pd-f'),m=document.getElementById('pd-msg'),back=null;document.body.appendChild(pd);
+    function open(){back=document.activeElement;document.getElementById('pd-l').innerHTML=BLEND.map(function(i){return '<li>'+HONG[i][0]+'</li>'}).join('');m.textContent='';pd.hidden=false;requestAnimationFrame(function(){pd.classList.add('on')});setTimeout(function(){f.nombre.focus()},60)}
+    function close(){pd.classList.remove('on');setTimeout(function(){pd.hidden=true},reduce?0:450);if(back&&back.focus)back.focus({preventScroll:true})}
+    document.getElementById('bt-go').addEventListener('click',open);document.getElementById('pd-x').addEventListener('click',close);pd.addEventListener('click',function(e){if(e.target===pd)close()});
+    document.addEventListener('keydown',function(e){if(!pd.hidden&&e.key==='Escape'){e.preventDefault();close()}});
+    f.addEventListener('submit',function(e){e.preventDefault();var bad=null;[f.nombre,f.correo,f.telefono].forEach(function(x){var ok=x.value.trim()&&x.checkValidity()&&(x.name!=='telefono'||x.value.replace(/\D/g,'').length>=10);x.setAttribute('aria-invalid',String(!ok));if(!ok&&!bad)bad=x});
+      if(bad){m.textContent='Revisa los datos marcados.';bad.focus();return}
+      m.textContent='Vista de prueba: el pedido aún no se envía a ningún lado.'})})();
   function toggleBlend(i){var k=BLEND.indexOf(i);if(k>=0)BLEND.splice(k,1);else BLEND.push(i);renderBlend()}
   function renderBlend(){bt.hidden=!BLEND.length;btL.innerHTML=BLEND.map(function(i){return '<li><button type="button" data-i="'+i+'" aria-label="Quitar '+HONG[i][0]+' de mi blend">'+HONG[i][0]+'<span aria-hidden="true">×</span></button></li>'}).join('');
     [].forEach.call(btL.querySelectorAll('button'),function(b){b.addEventListener('click',function(){toggleBlend(+b.dataset.i)})});RN.forEach(function(n){n.inB=BLEND.indexOf(n.i)>=0});live.textContent=BLEND.length?'Tu selección: '+BLEND.map(function(i){return HONG[i][0]}).join(', '):'Mi blend está vacío';
