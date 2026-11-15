@@ -43,6 +43,7 @@ a{color:inherit}
 .nos{--noche:#120F0D;--tx:#EDE6D6;--sub:#B4AA97;--oro:#D9C38A;--oro-tenue:#C9B071;--serif:"Cormorant Garamond","EB Garamond",Garamond,Georgia,serif;--sans:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--noche);color:var(--tx);font-family:var(--sans);line-height:1.6;min-height:100vh;min-height:100dvh}
 .nos *{box-sizing:border-box}.nos a{color:inherit}
 .nos{position:relative;isolation:isolate;padding:calc(76px + env(safe-area-inset-top,0px) + 2.2rem) max(20px,env(safe-area-inset-right,0px)) 4.5rem max(20px,env(safe-area-inset-left,0px))}
+.nos h1:focus,.nos h1:focus-visible{outline:none}
 .nos h1{margin:0 0 2.4rem;text-align:center;font:500 clamp(2.4rem,5vw,3.4rem)/1.05 var(--serif);letter-spacing:.01em;color:var(--tx)}
 .nos{overflow:hidden}
 .mic{position:absolute;z-index:-1;left:50%;transform:translateX(-50%);top:calc(76px + env(safe-area-inset-top,0px));width:max(100%,1200px);max-width:none;height:auto;pointer-events:none}
@@ -61,7 +62,8 @@ a{color:inherit}
 .ct a:focus-visible{outline:1px solid var(--oro);outline-offset:2px}
 .ct svg{width:21px;height:21px}
 @media (max-width:640px){
-  .nos{padding:calc(64px + env(safe-area-inset-top,0px) + 1.4rem) 12px 3rem}
+  .nos{padding:calc(88px + env(safe-area-inset-top,0px) + 1rem) 12px 2.5rem;display:flex;flex-direction:column;justify-content:center}
+  .nos>*{flex:none}
   .nos h1{margin-bottom:1.5rem}
   .fichas{column-gap:10px;max-width:440px}
   .med{width:100%;margin-bottom:.8rem}
