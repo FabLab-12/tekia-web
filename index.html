@@ -1615,6 +1615,7 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     fctx.lineWidth=Math.max(.3,.33*wz);for(l=0;l<6;l++){var c2=MAT[l];fctx.strokeStyle='rgba('+c2[0]+','+c2[1]+','+c2[2]+','+(.7*gA).toFixed(3)+')';fctx.stroke(FP[l])}
     fctx.lineWidth=Math.max(.7,.8*wz);for(l=0;l<6;l++){var c3=MAT[l];fctx.strokeStyle='rgba('+c3[0]+','+c3[1]+','+c3[2]+','+(.55*gA).toFixed(3)+')';fctx.stroke(FH[l])}
     drawRegions(t,gA,wz);
+    drawOrgans(t,gA,wz);
     if(!reduce){drawRunners(t,dt,gA,wz);drawGlints(t,gA,wz)}
     // capas interiores: oro antiguo apagado
     fctx.fillStyle='rgba(119,96,62,'+(.35*gA).toFixed(3)+')';fctx.beginPath();var isz=Math.min(1.4,.7*wz);for(i=NSURF;i<NSK;i+=2){if(!MV[i])continue;fctx.rect(MX[i]-isz/2,MY[i]-isz/2,isz,isz)}fctx.fill();
@@ -1689,6 +1690,21 @@ html.en-nos .pd-open,html.en-nos .bt{display:none}
     fctx.globalCompositeOperation='lighter';var WP=[new Path2D(),new Path2D(),new Path2D()];
     for(var fi=0;fi<FBR.length;){var L3=FBR[fi],st=fi+1;fi=st+L3;var last=-1;for(var q3=st+1;q3<fi;q3++){var p1=FBR[q3-1],p2=FBR[q3];if(!MV[p1]||!MV[p2]){last=-1;continue}var w=(WM[p1]+WM[p2])*.5,lv=w<.1?-1:w<.35?0:w<.6?1:2;if(lv<0){last=-1;continue}if(last!==lv)WP[lv].moveTo(MX[p1],MY[p1]);WP[lv].lineTo(MX[p2],MY[p2]);last=lv}}
     var WC=[[191,122,63,.3],[193,161,92,.45],[231,210,165,.55]];fctx.lineWidth=Math.max(.4,.45*wz);for(var l=0;l<3;l++){var c=WC[l];fctx.strokeStyle='rgba('+c[0]+','+c[1]+','+c[2]+','+(c[3]*gA).toFixed(3)+')';fctx.stroke(WP[l])}
+    fctx.globalCompositeOperation='source-over'}
+  // precauciones de la ficha: la zona que nombra el reporte (hígado, riñones, digestivo, boca y garganta) late en ámbar, lento
+  // solo zonas explícitas en el texto de seguridad; ámbar = precaución, distinto del oro de los hallazgos
+  var ORG_DEF={},ORGW={},ORG={2:['higado'],9:['higado'],8:['rinones'],0:['abdomen'],5:['abdomen'],7:['abdomen'],10:['boca']},orgA=0,orgK=null,OW=new Float32Array(NSURF);
+  (function(){var sT=0,nT=0,sH=0,nH=0;for(var i=0;i<NSURF;i++){var x=SP[i*3],y=SP[i*3+1];if(y>140&&y<160){sT+=x;nT++}if(y<60){sH+=x;nH++}}var cT=nT?sT/nT:100,cH=nH?sH/nH:100;
+    ORG_DEF={higado:[[cT-13,138,-10,17,15,24]],rinones:[[cT-12,156,12,10,13,16],[cT+12,156,12,10,13,16]],abdomen:[[cT,178,-12,22,22,20]],boca:[[cH,47,-14,9,10,12],[cH,65,-6,8,8,12]]};
+    for(var k in ORG_DEF){var w=new Float32Array(NSURF);ORG_DEF[k].forEach(function(e){for(var i=0;i<NSURF;i++){var dx=(SP[i*3]-e[0])/e[3],dy=(SP[i*3+1]-e[1])/e[4],dz=(SP[i*3+2]-e[2])/e[5],d=dx*dx+dy*dy+dz*dz;if(d<1){var v=1-d;if(v>w[i])w[i]=v}}});ORGW[k]=w}})();
+  function drawOrgans(t,gA,wz){var want=(typeof hmI==='number'&&ORG[hmI])?ORG[hmI]:null;if(want)orgK=want;orgA+=((want?1:0)-orgA)*.02;if(orgA<.01||!orgK||Z.m>6)return;
+    var pu=.5-.5*Math.cos(t*6.283/5.5);pu=pu*pu*(3-2*pu);var a=orgA*(.25+.75*pu);
+    OW.fill(0);orgK.forEach(function(kk){var m=ORGW[kk];for(var i=0;i<NSURF;i++){if(!MV[i]||!m[i])continue;var w=a*m[i];if(w>OW[i])OW[i]=w}});
+    fctx.globalCompositeOperation='lighter';
+    orgK.forEach(function(kk){ORG_DEF[kk].forEach(function(e){prj(e[0],e[1],e[2],o);if(!o.v)return;var r=Math.max(e[3],e[4])*1.6*o.s*k,g=fctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r);g.addColorStop(0,'rgba(191,122,63,'+(.3*a*gA).toFixed(3)+')');g.addColorStop(1,'rgba(191,122,63,0)');fctx.fillStyle=g;fctx.fillRect(o.x-r,o.y-r,2*r,2*r)})});
+    var WP=[new Path2D(),new Path2D()];
+    for(var fi=0;fi<FBR.length;){var L3=FBR[fi],st=fi+1;fi=st+L3;var last=-1;for(var q3=st+1;q3<fi;q3++){var p1=FBR[q3-1],p2=FBR[q3];if(!MV[p1]||!MV[p2]){last=-1;continue}var w=(OW[p1]+OW[p2])*.5,lv=w<.08?-1:w<.4?0:1;if(lv<0){last=-1;continue}if(last!==lv)WP[lv].moveTo(MX[p1],MY[p1]);WP[lv].lineTo(MX[p2],MY[p2]);last=lv}}
+    var WC=[[191,122,63,.35],[214,150,90,.55]];fctx.lineWidth=Math.max(.4,.45*wz);for(var l=0;l<2;l++){var c=WC[l];fctx.strokeStyle='rgba('+c[0]+','+c[1]+','+c[2]+','+(c[3]*gA).toFixed(3)+')';fctx.stroke(WP[l])}
     fctx.globalCompositeOperation='source-over'}
   // dibujos espectrales: trazo fino de oro y marfil
   function spec(i){var r=rnd(i*977+31),o=[],G='#D9C38A',V='#EDE6D6';function P(d,c,w,a){o.push('<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="'+w+'" stroke-opacity="'+a+'" stroke-linecap="round"/>')}function f(n){return n.toFixed(1)}
