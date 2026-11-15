@@ -26,9 +26,9 @@
   var FSQ='in vec2 q;out vec2 uv;void main(){uv=q;gl_Position=vec4(q*2.-1.,0,1);}';
   // segmento instanciado: x1,y1,x2,y2 (px CSS), b (0..1: luz y cercanía), ancho (px CSS)
   var SEG_VS='layout(location=0) in vec2 q;layout(location=1) in vec4 s;layout(location=2) in vec2 m;'+
-    'uniform vec2 res;uniform float dpr,sc,thr;uniform vec3 c0,c1,c2,c3;uniform float aMin,aMax,ga;out vec4 vc;out float vd,hw;'+
+    'uniform vec2 res;uniform float dpr,sc,thr,tt;uniform vec3 c0,c1,c2,c3,pul;uniform float aMin,aMax,ga;out vec4 vc;out float vd,hw;'+
     'void main(){vec2 a=s.xy*dpr*sc,b=s.zw*dpr*sc,e=b-a;float L=length(e);vec2 dr=L>.001?e/L:vec2(1,0),nr=vec2(-dr.y,dr.x);'+
-    'float wr=m.y*dpr*sc,wd=max(1.,wr);hw=wd*.5+.6;vec2 p=mix(a,b,q.x)+dr*(q.x*2.-1.)*wd*.5+nr*q.y*hw;vd=q.y*hw;float k=m.x;'+
+    'float k=m.x,bw=0.;if(pul.z>0.){float d=length((s.xy+s.zw)*.5-pul.xy)/pul.z,cy=fract(tt/7.5),fr=cy*1.25;bw=exp(-pow((d-fr)/.075,2.))*(1.-cy)*smoothstep(0.,.08,cy);k=min(1.,k+bw*.4);k*=.95+.05*sin(tt*1.142);}'+'float wr=m.y*dpr*sc*(1.+bw*.35),wd=max(1.,wr);hw=wd*.5+.6;vec2 p=mix(a,b,q.x)+dr*(q.x*2.-1.)*wd*.5+nr*q.y*hw;vd=q.y*hw;'+
     'vec3 c=k<.33?mix(c0,c1,k/.33):k<.72?mix(c1,c2,(k-.33)/.39):mix(c2,c3,(k-.72)/.28);'+
     'float al=mix(aMin,aMax,k*k)*min(1.,wr)*ga;if(thr>0.)al*=smoothstep(thr,1.,k);'+
     'vc=vec4(c,al);vec2 cl=p/res*2.-1.;gl_Position=vec4(cl.x,-cl.y,0,1);}';
@@ -55,6 +55,7 @@
       gl.bindBuffer(gl.ARRAY_BUFFER,bufs[k]);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,4,gl.FLOAT,false,24,0);gl.vertexAttribDivisor(1,1);gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,2,gl.FLOAT,false,24,16);gl.vertexAttribDivisor(2,1);V[k]=v});
     bufs.vol=gl.createBuffer();V.vol=gl.createVertexArray();gl.bindVertexArray(V.vol);gl.bindBuffer(gl.ARRAY_BUFFER,bufs.vol);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);
     bufs.nod=gl.createBuffer();V.nod=gl.createVertexArray();gl.bindVertexArray(V.nod);gl.bindBuffer(gl.ARRAY_BUFFER,bufs.nod);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,0,0);
+    bufs.par=gl.createBuffer();V.par=gl.createVertexArray();gl.bindVertexArray(V.par);gl.bindBuffer(gl.ARRAY_BUFFER,bufs.par);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,0,0);
     gl.bindVertexArray(null);
     c.addEventListener('webglcontextlost',function(e){e.preventDefault();api.ok=false});
     return true}
@@ -63,7 +64,7 @@
   function target(f){gl.bindFramebuffer(gl.FRAMEBUFFER,f?f.f:null);gl.viewport(0,0,f?f.w:w,f?f.h:h)}
   function full(){gl.bindVertexArray(V.q);gl.drawArrays(gl.TRIANGLE_STRIP,0,4)}
   function segs(k,data,n,o,T,sc,thr){if(!n)return;var p=P.seg,u=p.u;gl.useProgram(p.p);gl.uniform2f(u.res,sc<1?F.b1.w:w,sc<1?F.b1.h:h);gl.uniform1f(u.dpr,o.dpr);gl.uniform1f(u.sc,sc);gl.uniform1f(u.thr,thr);
-    gl.uniform3fv(u.c0,T.fib[0]);gl.uniform3fv(u.c1,T.fib[1]);gl.uniform3fv(u.c2,T.fib[2]);gl.uniform3fv(u.c3,T.fib[3]);gl.uniform1f(u.aMin,T.aMin);gl.uniform1f(u.aMax,T.aMax);gl.uniform1f(u.ga,o.gA);
+    gl.uniform3fv(u.c0,T.fib[0]);gl.uniform3fv(u.c1,T.fib[1]);gl.uniform3fv(u.c2,T.fib[2]);gl.uniform3fv(u.c3,T.fib[3]);gl.uniform1f(u.tt,o.t);gl.uniform3fv(u.pul,o.pulso?[o.pulso.x,o.pulso.y,o.pulso.s]:[0,0,0]);gl.uniform1f(u.aMin,T.aMin);gl.uniform1f(u.aMax,T.aMax);gl.uniform1f(u.ga,o.gA);
     gl.bindVertexArray(V[k]);gl.bindBuffer(gl.ARRAY_BUFFER,bufs[k]);gl.bufferData(gl.ARRAY_BUFFER,data.subarray(0,n*6),gl.STREAM_DRAW);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,n)}
   var api={ok:false,TEMAS:TEMAS,
     clear:function(){if(!api.ok)return;target(null);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT)},
@@ -76,8 +77,8 @@
       gl.bindVertexArray(V.vol);gl.bindBuffer(gl.ARRAY_BUFFER,bufs.vol);gl.bufferData(gl.ARRAY_BUFFER,o.vol.d.subarray(0,o.vol.n*3),gl.STREAM_DRAW);gl.drawArrays(gl.POINTS,0,o.vol.n);
       // la densidad se suaviza una vez: el verde es una bruma continua, sin manchas
       gl.disable(gl.BLEND);gl.useProgram(P.bl.p);gl.uniform1i(P.bl.u.s,0);
-      target(F.b2);gl.bindTexture(gl.TEXTURE_2D,F.d.t);gl.uniform2f(P.bl.u.st,1.5/F.d.w,0);full();
-      target(F.d);gl.bindTexture(gl.TEXTURE_2D,F.b2.t);gl.uniform2f(P.bl.u.st,0,1.5/F.d.h);full();gl.enable(gl.BLEND);
+      target(F.b2);gl.bindTexture(gl.TEXTURE_2D,F.d.t);gl.uniform2f(P.bl.u.st,1.4*o.dpr/F.d.w,0);full();
+      target(F.d);gl.bindTexture(gl.TEXTURE_2D,F.b2.t);gl.uniform2f(P.bl.u.st,0,1.4*o.dpr/F.d.h);full();gl.enable(gl.BLEND);
       // brillo selectivo: solo fibras cercanas muy luminosas, a media resolución
       target(F.b1);gl.clear(gl.COLOR_BUFFER_BIT);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);segs('front',o.front.d,o.front.n,o,T,.5,.62);
       gl.disable(gl.BLEND);gl.useProgram(P.bl.p);gl.uniform1i(P.bl.u.s,0);
@@ -86,11 +87,14 @@
       // composición en pantalla
       target(null);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
       segs('back',o.back.d,o.back.n,o,T,1,0);
-      gl.useProgram(P.vol.p);gl.bindTexture(gl.TEXTURE_2D,F.d.t);gl.uniform1i(P.vol.u.d,0);gl.uniform3fv(P.vol.u.ce,T.volEdge);gl.uniform3fv(P.vol.u.cc,T.volCore);gl.uniform1f(P.vol.u.A,T.volA);gl.uniform1f(P.vol.u.ga,o.gA);gl.uniform1f(P.vol.u.t,o.t);full();
+      gl.useProgram(P.vol.p);gl.bindTexture(gl.TEXTURE_2D,F.d.t);gl.uniform1i(P.vol.u.d,0);gl.uniform3fv(P.vol.u.ce,T.volEdge);gl.uniform3fv(P.vol.u.cc,T.volCore);gl.uniform1f(P.vol.u.A,T.volA*(o.pulso?.93+.07*Math.sin(o.t*1.142):1));gl.uniform1f(P.vol.u.ga,o.gA);gl.uniform1f(P.vol.u.t,o.t);full();
       segs('front',o.front.d,o.front.n,o,T,1,0);
       gl.blendFunc(gl.ONE,gl.ONE);gl.useProgram(P.gw.p);gl.bindTexture(gl.TEXTURE_2D,F.b1.t);gl.uniform1i(P.gw.u.s,0);gl.uniform3fv(P.gw.u.tint,T.bloom);gl.uniform1f(P.gw.u.k,T.bloomK*o.gA);full();
       if(o.nod.n){gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(P.nod.p);gl.uniform2f(P.nod.u.res,o.W,o.H);gl.uniform1f(P.nod.u.dpr,o.dpr);gl.uniform3fv(P.nod.u.col,T.fib[3]);
         gl.bindVertexArray(V.nod);gl.bindBuffer(gl.ARRAY_BUFFER,bufs.nod);gl.bufferData(gl.ARRAY_BUFFER,o.nod.d.subarray(0,o.nod.n*4),gl.STREAM_DRAW);gl.drawArrays(gl.POINTS,0,o.nod.n)}
+      // partículas de vida: viajan dentro de las fibras (mismo dibujo que los nodos, más pequeñas)
+      if(o.par&&o.par.n){gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(P.nod.p);gl.uniform2f(P.nod.u.res,o.W,o.H);gl.uniform1f(P.nod.u.dpr,o.dpr);gl.uniform3fv(P.nod.u.col,T.fib[3]);
+        gl.bindVertexArray(V.par);gl.bindBuffer(gl.ARRAY_BUFFER,bufs.par);gl.bufferData(gl.ARRAY_BUFFER,o.par.d.subarray(0,o.par.n*4),gl.STREAM_DRAW);gl.drawArrays(gl.POINTS,0,o.par.n)}
       gl.bindVertexArray(null)}};
   api.init=function(c){api.ok=init(c);return api.ok};
   window.TEKIA_GL=api;
