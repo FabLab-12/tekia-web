@@ -1864,7 +1864,8 @@ html.claro .vista-nos{background:#F6F1E4}
     function thread(a,b,base,bow,lit){var mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=mx-cx,dy=my-cy0,dl=Math.hypot(dx,dy)||1,w=reduce?0:Math.sin(t*.4+a.i)*3,qx=mx+dx/dl*(bow+w),qy=my+dy/dl*(bow+w);
       fctx.strokeStyle=CLR?'rgba(150,112,48,'+Math.min(1,base*2.2).toFixed(3)+')':'rgba(150,126,90,'+base.toFixed(3)+')';fctx.lineWidth=.6;fctx.beginPath();fctx.moveTo(a.x,a.y);fctx.quadraticCurveTo(qx,qy,b.x,b.y);fctx.stroke();
       if(lit>.02){fctx.globalCompositeOperation='lighter';fctx.strokeStyle='rgba(193,161,92,'+(.55*lit).toFixed(3)+')';fctx.lineWidth=.9;fctx.stroke();fctx.globalCompositeOperation='source-over'}}
-    var foc=LINKS.length>0;ringEl.classList.toggle('focus',foc);for(var i=0;i<N;i++){var a=RN[i],b=RN[(i+1)%N];thread(a,b,foc?.06:.22,10,foc?0:Math.max(a.lit,b.lit)*.8);var c=RN[(i+3)%N];if(i%2===0&&!foc)thread(a,c,.08,-30,Math.max(a.lit,c.lit)*.35)}
+    var foc=LINKS.length>0;ringEl.classList.toggle('focus',foc);var RO=[0,1,2,3,4,10,5,6,7,8,9]; // contorno en el orden real alrededor del anillo (Seta de cardo, i=10, va abajo entre Hongo de nieve y Seta de ostra)
+    for(var i=0;i<N;i++){var a=RN[RO[i]],b=RN[RO[(i+1)%N]];thread(a,b,foc?.06:.22,10,foc?0:Math.max(a.lit,b.lit)*.8);a=RN[i];var c=RN[(i+3)%N];if(i%2===0&&!foc)thread(a,c,.08,-30,Math.max(a.lit,c.lit)*.35)}
     drawRouteLinks(t);
     // nodos
     RN.forEach(function(n){n.el.classList.toggle('say',!!(n.hold&&now-n.hold<2600));if(n.rt){n.lit=1;n.el.classList.add('lit')}else if(n.inB&&n.lit<.3){n.lit=.3}if(n.hold&&now-n.hold<2600)n.lit=Math.max(n.lit,1-(now-n.hold)/2600*.4);else n.lit*=Math.pow(.25,dt);if(n.lit<.03){n.lit=0;n.el.classList.remove('lit')}
