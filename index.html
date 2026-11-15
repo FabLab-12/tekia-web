@@ -651,8 +651,8 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     master=AC.createGain();master.gain.value=0;
     var lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2400;master.connect(lp);lp.connect(AC.destination);
     ['umbral','mente','cuerpo','espiritu','datos'].forEach(function(k){var g=AC.createGain();g.gain.value=0;g.connect(master);buses[k]=g});
-    // Umbral: un acorde abierto y grave (La)
-    [[110,.10],[164.81,.06],[220,.04]].forEach(function(n,i){var v=osc(n[0],'sine',n[1],buses.umbral,i*3);lfo(.05+i*.02,n[1]*.4,v.g.gain)});
+    // Umbral / Atlas: pieza propia y generada (sin muestras ni grabaciones): órgano suave, arpegio lento y reverberación larga
+    music(buses.umbral);
     // Mente: tonos claros (Re) y campanitas pentatónicas ocasionales
     [[146.83,.07],[220,.05],[293.66,.035]].forEach(function(n,i){var v=osc(n[0],'sine',n[1],buses.mente,-4+i*4);lfo(.07+i*.03,n[1]*.35,v.g.gain)});
     // Cuerpo: fondo grave (Sol) con viento suave
@@ -664,6 +664,26 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     // Ficha: casi silencio, una nota grave muy tenue
     osc(110,'sine',.05,buses.datos);osc(165,'sine',.025,buses.datos);
   }
+  // Re mayor, luminosa y en calma: Dmaj9 · Bm11 · Gmaj7(#11) · Asus2; cada acorde se funde con el siguiente
+  var MF=function(m){return 440*Math.pow(2,(m-69)/12)},CH=[[38,45,54,57,64],[35,42,50,57,64],[31,38,47,54,61],[33,40,47,52,59]],AR=[[69,74,76,78,76,74,73,74],[66,69,71,74,71,69,66,69],[67,71,73,74,73,71,69,71],[64,69,71,73,71,69,64,66]];
+  var MU=null;
+  function music(bus){var rv=AC.createConvolver(),len=AC.sampleRate*5,ir=AC.createBuffer(2,len,AC.sampleRate);for(var c=0;c<2;c++){var d=ir.getChannelData(c);for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.2)}rv.buffer=ir;
+    var wet=AC.createGain();wet.gain.value=.55;rv.connect(wet);wet.connect(bus);var dry=AC.createGain();dry.gain.value=.5;dry.connect(bus);var send=AC.createGain();send.gain.value=1;send.connect(rv);
+    var out=AC.createGain();out.gain.value=1;out.connect(dry);out.connect(send);
+    // fondo grave que une todo
+    var dr=osc(MF(26),'sine',.07,out);lfo(.03,.025,dr.g.gain);osc(MF(38),'sine',.03,out,4);
+    // voces del órgano: una por nota de cada acorde, con armónicos suaves; solo cambia su volumen
+    var V=CH.map(function(ch){return ch.map(function(m,j){var g=AC.createGain();g.gain.value=0;g.connect(out);var base=.05/(1+j*.35);[[1,1],[2,.32],[3,.12],[4,.05]].forEach(function(h,q){var o=AC.createOscillator();o.type='sine';o.frequency.value=MF(m)*h[0];o.detune.value=(q%2?3:-3)+j;var v=AC.createGain();v.gain.value=base*h[1];o.connect(v);v.connect(g);o.start()});return g})});
+    var arp=AC.createGain();arp.gain.value=1;arp.connect(out);
+    MU={V:V,arp:arp,ci:-1,next:AC.currentTime+.5,step:0,chordT:0}}
+  function tone(f,t,g,dur,dest){var o=AC.createOscillator(),o2=AC.createOscillator(),v=AC.createGain(),v2=AC.createGain();o.type='sine';o2.type='sine';o.frequency.value=f;o2.frequency.value=f*2;v2.gain.value=.18;
+    v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(g,t+.06);v.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(v);o2.connect(v2);v2.connect(v);v.connect(dest);o.start(t);o2.start(t);o.stop(t+dur+.1);o2.stop(t+dur+.1)}
+  function tick(){if(!AC||!MU||snd.getAttribute('aria-pressed')!=='true')return;var now=AC.currentTime,BEAT=.92;
+    while(MU.next<now+.6){var t=MU.next;if(MU.step%16===0){var old=MU.ci;MU.ci=(MU.ci+1)%CH.length;MU.V.forEach(function(vs,k){vs.forEach(function(g){g.gain.cancelScheduledValues(t);g.gain.setTargetAtTime(k===MU.ci?1:0,t,k===MU.ci?2.2:2.8)})})}
+      var pat=AR[MU.ci],m=pat[MU.step%8];if(MU.step%16<14)tone(MF(m),t,MU.step%4===0?.034:.022,3.4,MU.arp);
+      if(MU.step%32===6)tone(MF(pat[2]+12),t+.3,.012,5,MU.arp);
+      MU.step++;MU.next+=BEAT}}
+  setInterval(tick,250);
   var penta=[587.33,659.25,739.99,880,987.77,1174.66];
   function bell(){if(!AC||curScene!=='mente')return;var f=penta[Math.floor(Math.random()*penta.length)],o=AC.createOscillator(),v=AC.createGain(),t=AC.currentTime;
     o.type='sine';o.frequency.value=f;v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(.035,t+.02);v.gain.exponentialRampToValueAtTime(.0001,t+4);o.connect(v);v.connect(buses.mente);o.start(t);o.stop(t+4.2)}
