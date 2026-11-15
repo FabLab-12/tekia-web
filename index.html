@@ -75,6 +75,20 @@ html.at-top .top nav a:hover{border-color:rgba(237,230,214,.5);background:transp
 html.at-top .snd,html.at-top .snd[aria-pressed="true"]{background:transparent;color:var(--noche-tx);border-color:transparent}
 @media (max-width:860px){.top nav{gap:.4rem;font-size:.62rem;letter-spacing:.1em}.top nav a{padding:.3rem .6rem}}
 @media (max-width:640px){.top{grid-template-columns:auto 1fr auto}.top nav a{display:none}.top nav a.pre{display:inline-flex}}
+/* menú superior (v0.67): emblema + TEKIA, enlaces en tipo fino, activo con subrayado de oro */
+.top .brand{display:inline-flex;align-items:center;gap:.7rem;text-decoration:none;color:var(--top-fg,var(--tinta))}
+.top .brand span{font:500 1.15rem/1 var(--serif);letter-spacing:.14em}
+html.at-top .top .brand{color:#EDE6D6}
+.top nav{gap:2rem;font:400 .82rem/1 var(--sans);letter-spacing:.01em;text-transform:none}
+.top nav a,html.at-top .top nav a{border:0;border-radius:0;padding:.55rem 0;background:none;position:relative}
+.top nav a:hover,html.at-top .top nav a:hover{background:none;color:#D9C38A}
+.top nav a::after{content:"";position:absolute;left:0;right:0;bottom:.1rem;height:1px;background:#D9C38A;transform:scaleX(0);transition:transform .3s}
+.top nav a:hover::after,html.at-top .top nav a.atlas::after{transform:scaleX(1)}
+html.at-top .top nav a.atlas{color:#D9C38A}
+.top nav a:focus-visible{outline:1px solid #D9C38A;outline-offset:4px}
+.snd,html.at-top .snd,html.at-top .snd[aria-pressed="true"]{border-color:transparent;font:400 .82rem/1 var(--sans);letter-spacing:.01em;text-transform:none}
+@media (max-width:860px){.top nav{gap:1.1rem;font-size:.76rem}}
+@media (max-width:640px){.top .brand span{display:none}.top nav{font-size:.76rem}}
 
 /* Medidor de profundidad (como The Deep Sea) */
 .depth{position:fixed;right:max(14px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:8;display:flex;flex-direction:column;gap:14px;align-items:flex-end}
@@ -569,6 +583,7 @@ a.hm-add{display:block;text-decoration:none;text-align:center}
 .ci-m{position:absolute;left:0;top:0;pointer-events:auto;display:flex;align-items:center;gap:.5rem;min-height:40px;padding:0 .35rem;background:none;border:0;border-radius:99px;cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent;color:rgba(216,200,183,.72);font:500 .62rem/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;transition:color .5s}
 .ci-m i{flex:none;width:28px;height:28px;margin:-6px}
 .ci-m.l{flex-direction:row-reverse}
+.ci-m.b{flex-direction:column;gap:.15rem;padding:0}
 .ci-m:hover,.ci-m.lit,.ci-m:focus-visible{color:#E7DED1}
 .ci-m.drag{cursor:grabbing}
 .ci-m:focus-visible{outline:1px solid rgba(217,195,138,.5);outline-offset:2px}
@@ -619,8 +634,8 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   </div>
 </div>
 <header class="top">
-  <a href="#umbral" aria-label="TEKIA, volver al inicio"><img src="assets/tekia-emblema-oro-web.png" alt=""></a>
-  <nav aria-label="Navegación general"><a href="#f-origen">Ingredientes</a><a href="#f-nosabemos">Cómo elegimos</a><a class="pre" href="#f-precauciones">Precauciones</a><a href="#f-acomp">Acompañamiento</a></nav>
+  <a class="brand" href="#umbral" aria-label="TEKIA, volver al inicio"><img src="assets/tekia-emblema-oro-web.png" alt=""><span aria-hidden="true">TEKIA</span></a>
+  <nav aria-label="Navegación general"><a class="atlas" href="#umbral">Explorar el atlas</a><a href="#f-acomp">Nosotras</a><a class="pre" href="#f-precauciones">Precauciones</a><a href="#f-acomp">Escríbenos</a></nav>
   <button class="snd" type="button" aria-pressed="true" aria-label="Sonido ambiental"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg><span class="lbl">Sonido</span><span class="hint">Toca para escuchar</span><span class="hint-s">Escuchar</span><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
 </header>
 
@@ -1569,7 +1584,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     var rx=Math.max(bw*1.35,340,reach+46),cmp=W<640||rx>W/2-130;if(cmp)rx=W/2-24;
     // al acercarse al tejido, el anillo se abre hasta el borde de la pantalla
     if(zoom){rx=cmp?W/2-24:W/2-150;ry=H/2-64}ringEl.classList.toggle('compact',cmp);
-    RN.forEach(function(n){if(n.i===10){n.ax=cx;n.ay=Math.max(zoom?44:30,Math.min(cy0-ry,(zoom?cy0-ry:RB.y0-30)));return}var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry});
+    RN.forEach(function(n){if(n.i===10){var bth=bt.hidden?0:bt.offsetHeight+24;n.ax=cx;n.ay=Math.min(cy0+ry,H-46-bth);return}var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry});
     // compacto: si un punto del arco derecho cae sobre una etiqueta, se corre arriba o abajo, y su pareja del lado izquierdo hace lo mismo (se conserva la simetría)
     if(cmp){for(var k2=0;k2<5;k2++){var n=RN[k2],hr=12;for(var pass=0;pass<4;pass++){var hit=false;for(var q=0;q<ZR.length;q++){var z=ZR[q];if(n.ax+hr>z[0]&&n.ax-hr<z[2]&&n.ay+hr>z[1]&&n.ay-hr<z[3]){n.ay=n.ay<(z[1]+z[3])/2?z[1]-hr-1:z[3]+hr+1;hit=true}}if(!hit)break}RN[9-k2].ay=n.ay}}
     RN.forEach(function(n){if(!n.init){n.x=n.ax;n.y=n.ay;n.init=true}});
@@ -1592,6 +1607,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
       if(n.lit>.02){var gr=18,g=fctx.createRadialGradient(x,y,0,x,y,gr);g.addColorStop(0,'rgba(193,161,92,'+(.35*n.lit).toFixed(3)+')');g.addColorStop(1,'rgba(193,161,92,0)');fctx.globalCompositeOperation='lighter';fctx.fillStyle=g;fctx.fillRect(x-gr,y-gr,2*gr,2*gr);fctx.globalCompositeOperation='source-over'}
       fctx.strokeStyle='rgba(216,200,183,'+(.28+.15*br+.4*n.lit).toFixed(3)+')';fctx.lineWidth=.6;fctx.beginPath();fctx.arc(x,y,5.5,0,6.283);fctx.stroke();
       fctx.fillStyle='rgba(231,222,209,'+(.5+.2*br+.3*n.lit).toFixed(3)+')';fctx.beginPath();fctx.arc(x,y,1.6,0,6.283);fctx.fill();
+      if(n.i===10){n.el.classList.add('b');var bw2=n.el.offsetWidth||80;n.el.style.transform='translate('+(x-bw2/2).toFixed(1)+'px,'+(y-14).toFixed(1)+'px)';return}
       var left=cmp?x>cx:x<cx;n.el.classList.toggle('l',left);var bwid=n.el.offsetWidth||80,lx=left?x-bwid+14:x-14;if(lx<4){left=false;n.el.classList.remove('l');lx=x-14}if(lx+bwid>W-4){left=true;n.el.classList.add('l');lx=x-bwid+14}n.el.style.transform='translate('+lx.toFixed(1)+'px,'+(y-20).toFixed(1)+'px)'});
     fctx.restore()}
   // ================= Fichas de los hongos (etapa 3) =================
