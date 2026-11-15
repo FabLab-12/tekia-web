@@ -1302,7 +1302,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     if(fd.tis>.01&&TIS)drawTissue(fd);
     // zonas
     var fr2=fig.getBoundingClientRect(),sr=sec.getBoundingClientRect();
-    ZP.forEach(function(z){prj(z.x,z.y,z.z,o);var vis=Math.max(0,Math.min(1,(cy*cp-.3)*3.5))*fd.zones;z.el.style.opacity=vis.toFixed(2);z.el.style.pointerEvents=vis>.5?'':'none';z.el.tabIndex=vis>.5?0:-1;
+    ZP.forEach(function(z){prj(z.x,z.y,z.z,o);var vis=Math.max(0,Math.min(1,(Math.min(cy,cp)-.55)*4))*fd.zones;z.el.style.opacity=vis.toFixed(2);z.el.style.pointerEvents=vis>.5?'':'none';z.el.tabIndex=vis>.5?0:-1;
       z.el.style.transform='translate('+(o.x-(fr2.left-sr.left)-22).toFixed(1)+'px,'+(o.y-(fr2.top-sr.top)).toFixed(1)+'px) translateY(-50%)'});
     // capas de interfaz según escala
     root.classList.toggle('ci-deep',m>1.2);leg.style.opacity=smooth(.55,.85,fd.tis).toFixed(2);leg.setAttribute('aria-hidden',fd.tis>.7?'false':'true');
@@ -1451,21 +1451,23 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   function hidePanel(){if(panel.classList.contains('open')||!card.hidden){panelWas=lastZ}else if(!panelWas)panelWas=null}
   function reopen(){var z=panelWas;panelWas=null;if(z)show(z,true)}
   function dbl(x,y){setFocus(x,y);if(!Z.P)return;var m=Z.mt;if(m<3)zoomTo(8);else if(Z.tissue&&m<30)zoomTo(56);else zoomTo(1)}
-  dg.addEventListener('pointerdown',function(e){if(e.isPrimary){pts.clear();G=null;Z.pinch=false}var p=local(e);TOUCH={x:p.x,y:p.y,t:performance.now()};pts.set(e.pointerId,{x:p.x,y:p.y,x0:p.x,y0:p.y,t:performance.now()});try{dg.setPointerCapture(e.pointerId)}catch(_){}
-    if(pts.size===1){var q=hitFiber(p.x,p.y,e.pointerType==='touch'?26:16);G={mode:'pending',q:q,pinched:false};yawV=0;pitchV=0}
-    else if(pts.size===2){var a=Array.from(pts.values());var cx=(a[0].x+a[1].x)/2,cyy=(a[0].y+a[1].y)/2;setFocus(cx,cyy);G={mode:'pinch',d0:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1,m0:Z.m,pinched:true,c0:{x:cx,y:cyy},S0:Z.S?{x:Z.S.x,y:Z.S.y}:null};Z.pinch=true;glow=null;dg.style.touchAction='none'}});
+  dg.addEventListener('pointerdown',function(e){pd(e,null)});
+  function pd(e,zone){if(e.isPrimary){pts.clear();G=null;Z.pinch=false}var p=local(e);TOUCH={x:p.x,y:p.y,t:performance.now()};pts.set(e.pointerId,{x:p.x,y:p.y,x0:p.x,y0:p.y,t:performance.now()});try{dg.setPointerCapture(e.pointerId)}catch(_){}
+    if(pts.size===1){var q=zone?-1:hitFiber(p.x,p.y,e.pointerType==='touch'?26:16);G={mode:'pending',q:q,pinched:false};yawV=0;pitchV=0}
+    else if(pts.size===2){var a=Array.from(pts.values());var cx=(a[0].x+a[1].x)/2,cyy=(a[0].y+a[1].y)/2;setFocus(cx,cyy);G={mode:'pinch',d0:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1,m0:Z.m,pinched:true,c0:{x:cx,y:cyy},S0:Z.S?{x:Z.S.x,y:Z.S.y}:null};Z.pinch=true;glow=null;dg.style.touchAction='none'}if(zone&&G&&G.mode==='pending'){G.q=-1;G.zone=zone;TOUCH=null}}
   dg.addEventListener('pointermove',function(e){var p0=pts.get(e.pointerId);if(!p0||!G)return;var p=local(e);var dx=p.x-p0.x;p0.x=p.x;p0.y=p.y;
     if(G.mode==='pinch'&&pts.size>=2){var a=Array.from(pts.values()),d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),cx=(a[0].x+a[1].x)/2,cyy=(a[0].y+a[1].y)/2;
       Z.m=clamp(G.m0*Math.pow(d/G.d0,1.5),1,Z.max);Z.mt=Z.m;if(G.S0&&Z.S){Z.S.x=G.S0.x+(cx-G.c0.x);Z.S.y=G.S0.y+(cyy-G.c0.y)}dirty=true;return}
     var moved=Math.hypot(p.x-p0.x0,p.y-p0.y0);
     if(G.mode==='light'){var q=hitFiber(p.x,p.y,44,LIT.f);if(q>=0){light(q,q);glow={x:SX[q],y:SY[q]}}else glow={x:p.x,y:p.y};return}
-    if(G.mode==='pending'&&moved>6){G.mode=Z.m>1.15?'pan':'rotate';drag.on=G.mode==='rotate';dg.classList.add('on')}
+    if(G.mode==='pending'&&moved>6){G.mode=Z.m>2.5?'pan':'rotate';if(G.mode==='rotate'&&Z.m>1.01)zoomTo(1);drag.on=G.mode==='rotate';dg.classList.add('on')}
     if(G.mode==='rotate'){var dv=dx*.011*(Math.cos(pitch)<0?-1:1),dvy=(p.y-(p0.ry==null?p.y:p0.ry))*.011;p0.ry=p.y;yawT+=dv;yawV=dv*.6;pitchT+=dvy;pitchV=dvy*.6;touched=true}
     else if(G.mode==='pan'&&Z.S){Z.S.x+=dx;Z.S.y+=p.y-(p0.py||p.y);p0.py=p.y;dirty=true}});
   function up(e){var p0=pts.get(e.pointerId);pts.delete(e.pointerId);if(!G)return;
     if(G.mode==='pinch'){if(pts.size===0){Z.pinch=false;Z.mt=Z.m<1.08?1:Z.m;G=null;dg.classList.remove('on');dg.style.touchAction=Z.m>1.05?'none':''}return}
     if(pts.size)return;drag.on=false;dg.classList.remove('on');glow=null;
     if(p0&&(G.mode==='pending'||G.mode==='light')&&!G.pinched){var dt=performance.now()-p0.t,mv=Math.hypot(p0.x-p0.x0,p0.y-p0.y0);
+      if(mv<10&&G.zone){var zz=G.zone;G=null;dg.style.touchAction=Z.m>1.05?'none':'';touched=true;show(zz);return}
       if(mv<10&&G.q>=0&&grow>=1)light(G.q,G.q);
       if(dt<320&&mv<10){var now=performance.now();if(lastTap&&now-lastTap.t<330&&Math.hypot(lastTap.x-p0.x,lastTap.y-p0.y)<34){lastTap=null;dbl(p0.x,p0.y)}else lastTap={t:now,x:p0.x,y:p0.y}}}
     G=null;dg.style.touchAction=Z.m>1.05?'none':''}
@@ -1475,8 +1477,8 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   dg.addEventListener('wheel',function(e){e.preventDefault();var p=local(e);if(!Z.P||Z.m<1.01)setFocus(p.x,p.y);Z.mt=clamp(Z.mt*Math.exp(-e.deltaY*.0018),1,Z.max);if(Z.mt>=Z.max&&!Z.tissue&&e.deltaY<0)say('El tejido de cerca se explora en el antebrazo.');dirty=true},{passive:false});
   dg.addEventListener('dblclick',function(e){e.preventDefault()});
   dg.addEventListener('keydown',function(e){var K=e.key;
-    if(K==='ArrowLeft'||K==='ArrowRight'){if(Z.m<1.15){e.preventDefault();yawT+=(K==='ArrowLeft'?-1:1)*Math.PI/8;touched=true}return}
-    if(K==='ArrowUp'||K==='ArrowDown'){if(Z.m<1.15){e.preventDefault();pitchT+=(K==='ArrowUp'?-1:1)*Math.PI/8;touched=true}return}
+    if(K==='ArrowLeft'||K==='ArrowRight'){if(Z.m<2.5){if(Z.m>1.01)zoomTo(1);e.preventDefault();yawT+=(K==='ArrowLeft'?-1:1)*Math.PI/8;touched=true}return}
+    if(K==='ArrowUp'||K==='ArrowDown'){if(Z.m<2.5){if(Z.m>1.01)zoomTo(1);e.preventDefault();pitchT+=(K==='ArrowUp'?-1:1)*Math.PI/8;touched=true}return}
     if(K==='+'||K==='='){e.preventDefault();if(!Z.P){var q=LIT?Math.floor((LIT.a+LIT.b)/2):(HINT?Math.floor((HINT.a+HINT.b)/2):0);if(!LIT&&HINT)light(q,q);setFocus(SX[q],SY[q])}zoomTo(Z.mt*1.7);return}
     if(K==='-'||K==='_'){e.preventDefault();zoomTo(Z.mt/1.7);return}
     if(K==='Escape'||K==='0'){if(Z.m>1.01){e.preventDefault();zoomTo(1)}return}
@@ -1534,7 +1536,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     if(!quiet)setTimeout(function(){var h=card.querySelector('#ci-ph2');if(h)h.focus({preventScroll:true})},reduce?0:200)}
   function close(ret){root.classList.remove('ci-open');panel.classList.remove('open');lastZ=null;panelWas=null;card.hidden=true;empty.hidden=false;panel.setAttribute('aria-labelledby','ci-ph');if(ret&&last)last.focus({preventScroll:true})}
   hidePanel=function(){if(lastZ){panelWas=lastZ;panel.classList.remove('open')}};
-  ZP.forEach(function(z){z.el.addEventListener('click',function(){touched=true;show(z)})});
+  ZP.forEach(function(z){z.el.addEventListener('click',function(){if(lastZ===z&&card&&!card.hidden)return;touched=true;show(z)});z.el.addEventListener('pointerdown',function(ev){if(ev.button>0)return;pd(ev,z)})});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lastZ&&Z.m<1.05)close(true)});
   window.tekiaAtlas={punto:function(){var q=HINT?Math.floor((HINT.a+HINT.b)/2):0;return {x:SX[q],y:SY[q],q:q}},escala:function(){return Z.m}};
 })();
