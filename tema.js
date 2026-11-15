@@ -1,7 +1,7 @@
 /* Tema claro / oscuro (prueba). Una palanquita bajo «Sonido» cambia entre los dos sin recargar; la elección se recuerda.
    También responde a ?tema=claro y ?tema=oscuro.
    En claro, los dibujos en canvas pensados para fondo oscuro se traducen así:
-   - el volumen del cuerpo (tonos muy oscuros) pasa a luz dorada cálida y translúcida;
+   - el cuerpo lleva dentro una capa verde recortada por su silueta (se dibuja en index.html, sin traducir);
    - las hebras y luces más claras pasan a blanco cálido; las intermedias, a naranja y ámbar;
    - la mezcla aditiva («lighter») se vuelve normal. */
 (function(){
@@ -17,10 +17,10 @@
     if(d){h=mx===R?((G-B)/d)%6:mx===G?(B-R)/d+2:(R-G)/d+4;h*=60;if(h<0)h+=360}
     var hw=Math.max(22,Math.min(40,d?h:32)),o;
     if(l<.2)o=k==='f'?[hsl2rgb(34,.8,.6),2.0,1]                         // volumen del cuerpo: miel ámbar, con halo
-                    :[hsl2rgb(36,.82,.7),.9];                                   // hebras profundas: ámbar tenue
-    else if(l<.42)o=[hsl2rgb(40,.9,.8),1.1];                    // hebras del fondo: oro suave
+                    :[hsl2rgb(40,.85,.78),1.6];                                   // hebras profundas: ámbar tenue
+    else if(l<.42)o=[hsl2rgb(41,.9,.8),1.9];                    // hebras del fondo: oro suave
     else if(k==='f'&&l>=.6)o=[hsl2rgb(44,.9,.965),1.5];                         // polvo y destellos: luz blanca cálida
-    else if(l<.8)o=[hsl2rgb(44,.95,.86-.04*(l-.42)/.38),1.35,2];   // hebras: oro pálido luminoso
+    else if(l<.8)o=[hsl2rgb(43,.95,.84-.04*(l-.42)/.38),1.6,2];   // hebras: oro pálido luminoso
     else o=[hsl2rgb(44,.9,.96),1.3,2];                                          // hebras más claras: blanco cálido, con brillo
     return cache[key]=o}
   function map(v,k,c){if(!on||typeof v!=='string')return v;
@@ -29,22 +29,16 @@
     m=/^#([0-9a-f]{6})$/i.exec(v);if(m){var n=parseInt(m[1],16);return 'rgb('+rgb(n>>16,n>>8&255,n&255,k)[0]+')'}
     return v}
   var P=CanvasRenderingContext2D.prototype,fs=Object.getOwnPropertyDescriptor(P,'fillStyle'),ss=Object.getOwnPropertyDescriptor(P,'strokeStyle'),gc=Object.getOwnPropertyDescriptor(P,'globalCompositeOperation');
-  function wrapG(g){var a=g.addColorStop;g.addColorStop=function(o,c){a.call(g,o,map(c,'f'))};return g}
+  function wrapG(g,raw){var a=g.addColorStop;g.addColorStop=function(o,c){a.call(g,o,raw?c:map(c,'f'))};return g}
   function wrap(c){if(!c||c.__tema)return c;c.__tema=1;
-    Object.defineProperty(c,'fillStyle',{get:function(){return fs.get.call(this)},set:function(v){this.__vol=false;fs.set.call(this,map(v,'f',this))}});
-    Object.defineProperty(c,'strokeStyle',{get:function(){return ss.get.call(this)},set:function(v){this.__glow=false;ss.set.call(this,map(v,'s',this))}});
+    Object.defineProperty(c,'fillStyle',{get:function(){return fs.get.call(this)},set:function(v){fs.set.call(this,this.__raw?v:map(v,'f',this))}});
+    Object.defineProperty(c,'strokeStyle',{get:function(){return ss.get.call(this)},set:function(v){this.__glow=false;ss.set.call(this,this.__raw?v:map(v,'s',this))}});
     Object.defineProperty(c,'globalCompositeOperation',{get:function(){return gc.get.call(this)},set:function(v){gc.set.call(this,on&&v==='lighter'?'source-over':v)}});
-    // el volumen del cuerpo se rellena con un halo (sombra difusa, funciona también en Safari), como luz dentro de la figura
-    var fl=c.fill,canF=(function(){try{var t=document.createElement('canvas').getContext('2d');if(!('filter' in t))return false;t.filter='blur(2px)';return t.filter==='blur(2px)'&&!/sinfiltro/.test(location.search)}catch(e){return false}})();
-    c.fill=function(){if(!(on&&this.__vol))return fl.apply(this,arguments);
-      var ga=this.globalAlpha;
-      if(canF){var f=this.filter;this.filter='blur(8px)';fl.apply(this,arguments);this.filter=f}
-      else{var sc=this.shadowColor,sb=this.shadowBlur;this.globalAlpha=ga*.5;this.shadowColor='rgba(226,150,70,.8)';this.shadowBlur=26;fl.apply(this,arguments);this.shadowColor=sc;this.shadowBlur=sb;this.globalAlpha=ga}};
     // las hebras más claras brillan con un halo dorado
     var sk=c.stroke;c.stroke=function(){if(on&&this.__glow){var sc=this.shadowColor,sb=this.shadowBlur;this.shadowColor='rgba(240,180,90,.95)';this.shadowBlur=5;sk.apply(this,arguments);this.shadowColor=sc;this.shadowBlur=sb}else sk.apply(this,arguments)};
     var rg=c.createRadialGradient,lg=c.createLinearGradient;
-    c.createRadialGradient=function(){return wrapG(rg.apply(this,arguments))};
-    c.createLinearGradient=function(){return wrapG(lg.apply(this,arguments))};
+    c.createRadialGradient=function(){return wrapG(rg.apply(this,arguments),this.__raw)};
+    c.createLinearGradient=function(){return wrapG(lg.apply(this,arguments),this.__raw)};
     return c}
   var gx=HTMLCanvasElement.prototype.getContext;
   HTMLCanvasElement.prototype.getContext=function(k){var c=gx.apply(this,arguments);return k==='2d'?wrap(c):c};

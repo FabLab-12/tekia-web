@@ -738,7 +738,6 @@ html.claro .snd,html.claro.at-top .snd,html.claro.at-top .snd[aria-pressed="true
 html.claro .cuerpo-in{--ci-ink:#2F2A27;--ci-sub:#6B6156;--ci-gold:#C1A15C;--ci-green:#7D5F27;--ci-amber:#9A5A26;--ci-paper:#FBF8EF;--ci-line:rgba(193,161,92,.38);
   background:
     
-    radial-gradient(ellipse 30% 46% at 50% 48%,rgba(255,251,238,.92),rgba(255,251,238,0) 74%),
     radial-gradient(ellipse 50% 40% at 6% 0%,rgba(255,246,222,.7),rgba(255,246,222,0) 70%),
     radial-gradient(ellipse 78% 76% at 50% 48%,#F6F2E6 18%,#E3E7D4 58%,#CFD9C2 88%,#C3CFB5 100%)}
 html.claro .ci-z i::before{background:#FBF8EF;border-color:var(--cl-gold);box-shadow:inset 0 0 0 2px #FBF8EF,inset 0 0 0 4px #C1A15C,0 0 10px rgba(193,161,92,.45)}
@@ -1731,7 +1730,14 @@ html.claro .vista-nos{background:#F6F1E4}
     if(m<1.05){var x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(i=0;i<NSURF;i+=3){if(!MV[i])continue;if(MX[i]<x0)x0=MX[i];if(MX[i]>x1)x1=MX[i];if(MY[i]<y0)y0=MY[i];if(MY[i]>y1)y1=MY[i]}if(x1>x0){RB.x0=x0;RB.x1=x1;RB.y0=y0;RB.y1=y1;RB.ok=true}}
     fctx.globalCompositeOperation='source-over';fctx.lineCap='round';
     // volumen: sombra cálida del cuerpo, distinta del fondo
-    fctx.fillStyle='rgba(38,30,21,'+((LOW?.1:.3)*gA).toFixed(3)+')';fctx.beginPath();var vz=Math.max(6,6.5*wz);for(i=0;i<NSURF;i+=2){if(!MV[i])continue;fctx.moveTo(MX[i]+vz,MY[i]);fctx.arc(MX[i],MY[i],vz,0,6.283)}fctx.fill();
+    if(root.classList.contains('claro')){
+      // tema claro: capa verde interna recortada por la silueta, debajo de la red; sin halo
+      fctx.__raw=1;fctx.beginPath();var vz2=Math.max(7,7*wz);for(i=0;i<NSURF;i++){if(!MV[i])continue;fctx.moveTo(MX[i]+vz2,MY[i]);fctx.arc(MX[i],MY[i],vz2,0,6.283)}
+      fctx.fillStyle='rgba(130,158,110,'+(.4*gA).toFixed(3)+')';fctx.fill();
+      if(RB.ok){fctx.save();fctx.clip();var bcx=(RB.x0+RB.x1)/2,bcy=(RB.y0+RB.y1)/2,bh=RB.y1-RB.y0,gv=fctx.createRadialGradient(bcx,bcy-bh*.12,0,bcx,bcy,bh*.5);
+        gv.addColorStop(0,'rgba(78,98,66,'+(.32*gA).toFixed(3)+')');gv.addColorStop(.6,'rgba(96,116,80,'+(.14*gA).toFixed(3)+')');gv.addColorStop(1,'rgba(96,116,80,0)');fctx.fillStyle=gv;fctx.fillRect(bcx-bh,bcy-bh,2*bh,2*bh);fctx.restore()}
+      fctx.__raw=0}
+    else{fctx.fillStyle='rgba(38,30,21,'+((LOW?.1:.3)*gA).toFixed(3)+')';fctx.beginPath();var vz=Math.max(6,6.5*wz);for(i=0;i<NSURF;i+=2){if(!MV[i])continue;fctx.moveTo(MX[i]+vz,MY[i]);fctx.arc(MX[i],MY[i],vz,0,6.283)}fctx.fill()}
     // red de la piel por niveles de luz; las zonas en sombra se pierden en el fondo
     var LP=[];for(var l=0;l<6;l++)LP.push(new Path2D());
     for(var k=0;k<LK.length;k+=2){var p=LK[k],q=LK[k+1];if(!MV[p]||!MV[q])continue;var lv2=lvOf(Math.min(SB[p],SB[q])*.6+Math.max(SB[p],SB[q])*.4);if(lv2<1)continue;LP[lv2].moveTo(MX[p],MY[p]);LP[lv2].lineTo(MX[q],MY[q])}
