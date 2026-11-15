@@ -1484,20 +1484,19 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   var lastRing=0;
   function drawRing(now){var on=Z.m<1.25&&grow>=1&&RB.ok;ringEl.classList.toggle('off',!on);if(!on)return;
     var dt=lastRing?Math.min(.05,(now-lastRing)/1000):0;lastRing=now;var t=now/1000,N=RN.length;
-    var cx=(RB.x0+RB.x1)/2,cy0=(RB.y0+RB.y1)/2,bw=RB.x1-RB.x0,bh=RB.y1-RB.y0,cmp=W<640,rx=cmp?W/2-24:Math.min(Math.max(bw*1.35,340),W/2-150),ry=Math.max(60,Math.min(bh*.5,cy0-80,H-cy0-50));ringEl.classList.toggle('compact',cmp);
-    // anclas en el anillo y simulación de fuerzas suave
-    RN.forEach(function(n){var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry;});
-    // nunca encima de Pensamiento, Descanso, Cuidado o Movilidad: si el nodo o su nombre tocan una etiqueta, se corre arriba o abajo
-    var sr=sec.getBoundingClientRect(),ZR=[];ZP.forEach(function(z){if(+z.el.style.opacity<.3)return;var r=z.el.getBoundingClientRect(),r2=z.el.querySelector('span').getBoundingClientRect();if(!r.width)return;ZR.push([r.left-sr.left-6,r2.top-sr.top-6,r2.right-sr.left+8,r2.bottom-sr.top+6])});
-    RN.forEach(function(n){var tw=cmp?0:(n.el.offsetWidth||80)-14,lft=cmp?n.ax>cx:n.ax<cx;
-      var hr=cmp?12:12;for(var pass=0;pass<4;pass++){var bx0=lft?n.ax-tw-hr:n.ax-hr,bx1=lft?n.ax+hr:n.ax+tw+hr,hit=false;
-        for(var q=0;q<ZR.length;q++){var z=ZR[q];if(bx1>z[0]&&bx0<z[2]&&n.ay+hr>z[1]&&n.ay-hr<z[3]){n.ay=n.ay<(z[1]+z[3])/2?z[1]-hr-1:z[3]+hr+1;hit=true}}if(!hit)break}
-      if(!n.init){n.x=n.ax;n.y=n.ay;n.init=true}});
+    var cx=(RB.x0+RB.x1)/2,cy0=(RB.y0+RB.y1)/2,bw=RB.x1-RB.x0,bh=RB.y1-RB.y0,ry=Math.max(60,Math.min(bh*.5,cy0-80,H-cy0-50));
+    var sr=sec.getBoundingClientRect(),ZR=[],reach=0;ZP.forEach(function(z){if(+z.el.style.opacity<.3)return;var r=z.el.getBoundingClientRect(),r2=z.el.querySelector('span').getBoundingClientRect();if(!r.width)return;var q=[r.left-sr.left-6,r2.top-sr.top-6,r2.right-sr.left+8,r2.bottom-sr.top+6];ZR.push(q);reach=Math.max(reach,q[2]-cx)});
+    // escritorio: anillo simétrico y lo bastante ancho para pasar por fuera de las etiquetas; si no cabe, modo compacto (solo puntos)
+    var rx=Math.max(bw*1.35,340,reach+46),cmp=W<640||rx>W/2-130;if(cmp)rx=W/2-24;ringEl.classList.toggle('compact',cmp);
+    RN.forEach(function(n){var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry});
+    // compacto: si un punto del arco derecho cae sobre una etiqueta, se corre arriba o abajo, y su pareja del lado izquierdo hace lo mismo (se conserva la simetría)
+    if(cmp){for(var k2=0;k2<5;k2++){var n=RN[k2],hr=12;for(var pass=0;pass<4;pass++){var hit=false;for(var q=0;q<ZR.length;q++){var z=ZR[q];if(n.ax+hr>z[0]&&n.ax-hr<z[2]&&n.ay+hr>z[1]&&n.ay-hr<z[3]){n.ay=n.ay<(z[1]+z[3])/2?z[1]-hr-1:z[3]+hr+1;hit=true}}if(!hit)break}RN[9-k2].ay=n.ay}}
+    RN.forEach(function(n){if(!n.init){n.x=n.ax;n.y=n.ay;n.init=true}});
     if(!reduce||true){for(var it=0;it<2;it++){RN.forEach(function(n){if(n.drag)return;var fx=(n.ax-n.x)*.012,fy=(n.ay-n.y)*.012;
         [-1,1].forEach(function(s2){var m=RN[(n.i+s2+N)%N],dx=m.x-n.x,dy=m.y-n.y,d=Math.hypot(dx,dy)||1,rest=Math.hypot(m.ax-n.ax,m.ay-n.ay);fx+=dx/d*(d-rest)*.006;fy+=dy/d*(d-rest)*.006});
         RN.forEach(function(m){if(m===n)return;var dx=n.x-m.x,dy=n.y-m.y,d2=dx*dx+dy*dy;if(d2<6400&&d2>1){var f=60/d2;fx+=dx*f;fy+=dy*f}});
         n.vx=(n.vx+fx)*.86;n.vy=(n.vy+fy)*.86;n.x+=n.vx;n.y+=n.vy})}}
-    RN.forEach(function(n){if(n.drag)return;var hr=12,tw=cmp?0:(n.el.offsetWidth||80)-14,lft=cmp?n.x>cx:n.x<cx,bx0=lft?n.x-tw-hr:n.x-hr,bx1=lft?n.x+hr:n.x+tw+hr;
+    if(cmp)RN.forEach(function(n){if(n.drag)return;var hr=12,tw=cmp?0:(n.el.offsetWidth||80)-14,lft=cmp?n.x>cx:n.x<cx,bx0=lft?n.x-tw-hr:n.x-hr,bx1=lft?n.x+hr:n.x+tw+hr;
       for(var q=0;q<ZR.length;q++){var z=ZR[q];if(bx1>z[0]&&bx0<z[2]&&n.y+hr>z[1]&&n.y-hr<z[3]){n.y=n.y<(z[1]+z[3])/2?z[1]-hr-1:z[3]+hr+1;n.vy=0}}});
     // hilos de micelio entre vecinos y algunos atajos; tenues en reposo
     fctx.save();fctx.lineCap='round';
