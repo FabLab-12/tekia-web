@@ -490,6 +490,16 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(251,24
 
 /* Atlas interior (v0.44) */
 #ci-fx{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
+.ci-ring{position:absolute;inset:0;z-index:3;pointer-events:none;transition:opacity .6s}
+.ci-ring.off{opacity:0}.ci-ring.off .ci-m{pointer-events:none}
+.ci-m{position:absolute;left:0;top:0;pointer-events:auto;display:flex;align-items:center;gap:.5rem;min-height:40px;padding:0 .35rem;background:none;border:0;border-radius:99px;cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent;color:rgba(216,200,183,.72);font:500 .62rem/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;transition:color .5s}
+.ci-m i{flex:none;width:28px;height:28px;margin:-6px}
+.ci-m.l{flex-direction:row-reverse}
+.ci-m:hover,.ci-m.lit,.ci-m:focus-visible{color:#E7DED1}
+.ci-m.drag{cursor:grabbing}
+.ci-m:focus-visible{outline:1px solid rgba(217,195,138,.5);outline-offset:2px}
+.ci-ring.compact .ci-m span{display:none}.ci-ring.compact .ci-m.lit span{display:inline;font-size:.6rem;letter-spacing:.14em}
+.ci-ring.compact .ci-m{min-height:44px}.ci-ring.compact .ci-m i{width:36px;height:36px;margin:-10px}
 .cuerpo-in p.ci-hintg{position:absolute;left:0;top:0;margin:0;max-width:10.5em;transform:translate(-9999px,0);font:500 .74rem/1.45 var(--sans);letter-spacing:.04em;text-transform:none;text-align:right;color:#8a5a2e;opacity:0;transition:opacity .6s;pointer-events:none;z-index:2}
 .cuerpo-in p.ci-hintg.on{opacity:.92}
 html.ci-open .cuerpo-in p.ci-hintg,html.ci-deep .cuerpo-in p.ci-hintg{opacity:0}
@@ -544,6 +554,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
 <section class="umbral cuerpo-in gut" id="umbral" data-top="dark" aria-labelledby="u-h">
   <canvas id="ci-net" aria-hidden="true"></canvas>
   <canvas id="ci-fx" aria-hidden="true"></canvas>
+  <div class="ci-ring" id="ci-ring" role="group" aria-label="Diez hongos"></div>
   <div class="ci">
     <div class="ci-copy" aria-hidden="true"></div>
     <h1 id="u-h" class="ci-sr">Atlas interior</h1>
@@ -1430,6 +1441,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
       var b=(rz<.15?1:.35)*(.04+.95*Math.pow(dif,1.8)+rl+SG[i])*(1.05-.35*SP[i3+1]/420)*tw;
       if(tch){var ddx=o.x-TOUCH.x,ddy=o.y-TOUCH.y,dd=ddx*ddx+ddy*ddy;if(dd<5000)b+=tch*.5*(1-dd/5000)}
       SB[i]=Math.min(1,b)}
+    if(m<1.05){var x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(i=0;i<NSURF;i+=3){if(!MV[i])continue;if(MX[i]<x0)x0=MX[i];if(MX[i]>x1)x1=MX[i];if(MY[i]<y0)y0=MY[i];if(MY[i]>y1)y1=MY[i]}if(x1>x0){RB.x0=x0;RB.x1=x1;RB.y0=y0;RB.y1=y1;RB.ok=true}}
     fctx.globalCompositeOperation='source-over';fctx.lineCap='round';
     // volumen: sombra cálida del cuerpo, distinta del fondo
     fctx.fillStyle='rgba(38,30,21,'+(.3*gA).toFixed(3)+')';fctx.beginPath();var vz=Math.max(6,6.5*wz);for(i=0;i<NSURF;i+=2){if(!MV[i])continue;fctx.moveTo(MX[i]+vz,MY[i]);fctx.arc(MX[i],MY[i],vz,0,6.283)}fctx.fill();
@@ -1456,6 +1468,43 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     // motas que flotan alrededor (tenues)
     fctx.fillStyle='rgba(216,200,183,'+(.14*gA).toFixed(3)+')';fctx.beginPath();for(i=0;i<MO.length;i++){var mo=MO[i];prj(mo[0]+Math.sin(t*.2+mo[3])*6,mo[1]+Math.cos(t*.15+mo[3])*5,mo[2],o);if(!o.v)continue;var rr=mo[4]*Math.min(1.6,wz);fctx.moveTo(o.x+rr,o.y);fctx.arc(o.x,o.y,rr,0,6.283)}fctx.fill();
     drawTravel(now,dt)}
+  // ================= Anillo de los diez hongos (etapa 2) =================
+  // Solo nombres; las fichas llegan en la etapa 3. Sin relación con zonas del cuerpo (no hay matriz documentada).
+  var HONG=[['Melena de león','Hericium erinaceus'],['Cordyceps','Cordyceps militaris'],['Reishi','Ganoderma'],['Shiitake','Lentinula edodes'],['Hongo de nieve','Tremella fuciformis'],['Seta de ostra','Pleurotus ostreatus'],['Maitake','Grifola frondosa'],['Cola de pavo','Trametes versicolor'],['Chaga','Inonotus obliquus'],['Hongo del sol','Agaricus subrufescens']];
+  var ringEl=document.getElementById('ci-ring'),RB={x0:0,y0:0,x1:0,y1:0,ok:false},RN=HONG.map(function(h,i){var b=document.createElement('button');b.type='button';b.className='ci-m';b.setAttribute('aria-label',h[0]+' ('+h[1]+')');b.innerHTML='<i aria-hidden="true"></i><span>'+h[0]+'</span>';ringEl.appendChild(b);
+      var n={i:i,el:b,x:0,y:0,vx:0,vy:0,ax:0,ay:0,lit:0,drag:false,init:false,ph:i*1.7};
+      b.addEventListener('pointerdown',function(e){if(e.button>0)return;e.preventDefault();try{b.setPointerCapture(e.pointerId)}catch(_){}n.pd={x:e.clientX,y:e.clientY,ox:n.x,oy:n.y,moved:false}});
+      b.addEventListener('pointermove',function(e){if(!n.pd)return;var dx=e.clientX-n.pd.x,dy=e.clientY-n.pd.y;if(!n.pd.moved&&Math.hypot(dx,dy)>5){n.pd.moved=true;n.drag=true;b.classList.add('drag')}if(n.drag){n.x=n.pd.ox+dx;n.y=n.pd.oy+dy;n.vx=n.vy=0;litNode(n,.9)}});
+      function end(){if(!n.pd)return;var mv=n.pd.moved;n.pd=null;n.drag=false;b.classList.remove('drag');if(!mv)touchNode(n)}
+      b.addEventListener('pointerup',end);b.addEventListener('pointercancel',function(){n.pd=null;n.drag=false;b.classList.remove('drag')});
+      b.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();touchNode(n)}});
+      return n});
+  function litNode(n,v){n.lit=Math.max(n.lit,v);n.el.classList.add('lit')}
+  function touchNode(n){touched=true;RN.forEach(function(m){if(m!==n&&m.lit>.4)m.lit=.4});litNode(n,1);n.hold=performance.now();n.el.setAttribute('aria-pressed','true');RN.forEach(function(m){if(m!==n)m.el.setAttribute('aria-pressed','false')});live.textContent=HONG[n.i][0]}
+  var lastRing=0;
+  function drawRing(now){var on=Z.m<1.25&&grow>=1&&RB.ok;ringEl.classList.toggle('off',!on);if(!on)return;
+    var dt=lastRing?Math.min(.05,(now-lastRing)/1000):0;lastRing=now;var t=now/1000,N=RN.length;
+    var cx=(RB.x0+RB.x1)/2,cy0=(RB.y0+RB.y1)/2,bw=RB.x1-RB.x0,bh=RB.y1-RB.y0,cmp=W<640,rx=cmp?W/2-24:Math.min(Math.max(bw*1.35,340),W/2-150),ry=Math.max(60,Math.min(bh*.5,cy0-80,H-cy0-50));ringEl.classList.toggle('compact',cmp);
+    // anclas en el anillo y simulación de fuerzas suave
+    RN.forEach(function(n){var a=(n.i<5?-62+n.i*31:118+(n.i-5)*31)*Math.PI/180+(reduce?0:Math.sin(t*.05)*.03);n.ax=cx+Math.cos(a)*rx;n.ay=cy0+Math.sin(a)*ry;if(!n.init){n.x=n.ax;n.y=n.ay;n.init=true}});
+    if(!reduce||true){for(var it=0;it<2;it++){RN.forEach(function(n){if(n.drag)return;var fx=(n.ax-n.x)*.012,fy=(n.ay-n.y)*.012;
+        [-1,1].forEach(function(s2){var m=RN[(n.i+s2+N)%N],dx=m.x-n.x,dy=m.y-n.y,d=Math.hypot(dx,dy)||1,rest=Math.hypot(m.ax-n.ax,m.ay-n.ay);fx+=dx/d*(d-rest)*.006;fy+=dy/d*(d-rest)*.006});
+        RN.forEach(function(m){if(m===n)return;var dx=n.x-m.x,dy=n.y-m.y,d2=dx*dx+dy*dy;if(d2<6400&&d2>1){var f=60/d2;fx+=dx*f;fy+=dy*f}});
+        n.vx=(n.vx+fx)*.86;n.vy=(n.vy+fy)*.86;n.x+=n.vx;n.y+=n.vy})}}
+    // hilos de micelio entre vecinos y algunos atajos; tenues en reposo
+    fctx.save();fctx.lineCap='round';
+    function thread(a,b,base,bow,lit){var mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=mx-cx,dy=my-cy0,dl=Math.hypot(dx,dy)||1,w=reduce?0:Math.sin(t*.4+a.i)*3,qx=mx+dx/dl*(bow+w),qy=my+dy/dl*(bow+w);
+      fctx.strokeStyle='rgba(150,126,90,'+base.toFixed(3)+')';fctx.lineWidth=.6;fctx.beginPath();fctx.moveTo(a.x,a.y);fctx.quadraticCurveTo(qx,qy,b.x,b.y);fctx.stroke();
+      if(lit>.02){fctx.globalCompositeOperation='lighter';fctx.strokeStyle='rgba(193,161,92,'+(.55*lit).toFixed(3)+')';fctx.lineWidth=.9;fctx.stroke();fctx.globalCompositeOperation='source-over'}}
+    for(var i=0;i<N;i++){var a=RN[i],b=RN[(i+1)%N];thread(a,b,.22,10,Math.max(a.lit,b.lit)*.8);var c=RN[(i+3)%N];if(i%2===0)thread(a,c,.08,-30,Math.max(a.lit,c.lit)*.35)}
+    // nodos
+    RN.forEach(function(n){if(n.hold&&now-n.hold<2600)n.lit=Math.max(n.lit,1-(now-n.hold)/2600*.4);else n.lit*=Math.pow(.25,dt);if(n.lit<.03){n.lit=0;n.el.classList.remove('lit')}
+      var br=reduce?.5:.5+.5*Math.sin(t*.6+n.ph),x=n.x,y=n.y;
+      if(n.lit>.02){var gr=18,g=fctx.createRadialGradient(x,y,0,x,y,gr);g.addColorStop(0,'rgba(193,161,92,'+(.35*n.lit).toFixed(3)+')');g.addColorStop(1,'rgba(193,161,92,0)');fctx.globalCompositeOperation='lighter';fctx.fillStyle=g;fctx.fillRect(x-gr,y-gr,2*gr,2*gr);fctx.globalCompositeOperation='source-over'}
+      fctx.strokeStyle='rgba(216,200,183,'+(.28+.15*br+.4*n.lit).toFixed(3)+')';fctx.lineWidth=.6;fctx.beginPath();fctx.arc(x,y,5.5,0,6.283);fctx.stroke();
+      fctx.fillStyle='rgba(231,222,209,'+(.5+.2*br+.3*n.lit).toFixed(3)+')';fctx.beginPath();fctx.arc(x,y,1.6,0,6.283);fctx.fill();
+      var left=cmp?x>cx:x<cx;n.el.classList.toggle('l',left);var bwid=n.el.offsetWidth||80,lx=left?x-bwid+14:x-14;if(lx<4){left=false;n.el.classList.remove('l');lx=x-14}if(lx+bwid>W-4){left=true;n.el.classList.add('l');lx=x-bwid+14}n.el.style.transform='translate('+lx.toFixed(1)+'px,'+(y-20).toFixed(1)+'px)'});
+    fctx.restore()}
   function drawFx(now){fctx.setTransform(dpr,0,0,dpr,0,0);fctx.clearRect(0,0,W,H);drawSkin(now);fctx.lineCap='round';fctx.lineJoin='round';var fd=fade(),wz=Math.min(3.4,Math.sqrt(Z.m));
     // hebra elegida: se reconoce en todas las escalas
     // la hebra elegida no se resalta: conserva el mismo tono que las demás
@@ -1468,7 +1517,8 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
         var mid=Math.floor((HINT.a+HINT.b)/2);if(SX[mid]===SX[mid]){var fr2=fig.getBoundingClientRect(),sr=sec.getBoundingClientRect();var mnx=1e9;for(var hq=HINT.a;hq<=HINT.b;hq++)if(SX[hq]<mnx)mnx=SX[hq];var hw=hintEl.offsetWidth||150,hh=hintEl.offsetHeight||36,hx=mnx-(fr2.left-sr.left)-16-hw,hy=SY[mid]-(fr2.top-sr.top)-hh/2;
           if(hx+(fr2.left-sr.left)<10){hx=fr2.width/2-hw/2;hy=fr2.height+18;hintEl.style.whiteSpace='nowrap';hintEl.style.textAlign='center'}else hintEl.style.textAlign='right';
           hintEl.style.transform='translate('+Math.round(hx)+'px,'+Math.round(hy)+'px)'}}
-      hintEl.classList.add('on')}else hintEl.classList.remove('on')}
+      hintEl.classList.add('on')}else hintEl.classList.remove('on');
+    drawRing(now)}
 
   // ================= 8. Bucle =================
   var running=false,raf=0,visible=true,started=false;
