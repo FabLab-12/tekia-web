@@ -527,6 +527,8 @@ a.hm-add{display:block;text-decoration:none;text-align:center}
 .hm-k{font:600 .62rem/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#D9C38A;margin:0 0 .7rem}
 .hm h2{font:500 clamp(2rem,6vw,2.6rem)/1.05 var(--serif);margin:0;color:#F3EDE1;text-wrap:balance}
 .hm-sci{font:italic 400 1.15rem/1.3 var(--serif);color:#CFC6B4;margin:.35rem 0 0}
+.hm-arts{display:flex;flex-wrap:wrap;justify-content:center;row-gap:.6rem;margin:1.6rem auto .4rem;max-width:320px}.hm-arts.n3,.hm-arts.n5,.hm-arts.n6{max-width:400px}.hm-arts figure{margin:0;flex:0 0 50%;padding:0 .5rem;box-sizing:border-box}.hm-arts.n3 figure,.hm-arts.n5 figure,.hm-arts.n6 figure{flex-basis:33.333%}.hm-arts svg{display:block;width:100%;height:auto}.hm-arts figcaption{margin-top:-.2rem;font:500 .56rem/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#B4AA97;text-wrap:balance}
+.hm-ped{display:block;width:100%;margin:1.1rem 0 .2rem}
 .hm-art{margin:1.1rem auto .6rem;max-width:300px}.hm-art svg{display:block;width:100%;height:auto}
 .hm-lead{font:400 .98rem/1.6 var(--sans);color:#EDE6D6;margin:0 auto 1.2rem;max-width:34ch;text-wrap:pretty}
 .hm dl{margin:0;display:grid;gap:.9rem;padding-top:1.1rem;border-top:1px solid rgba(217,195,138,.2);text-align:left}
@@ -576,7 +578,7 @@ a.hm-add{display:block;text-decoration:none;text-align:center}
   #hm-c{display:flex;flex-direction:column}
   #hm-c .hm-l,#hm-c .hm-r{display:contents}
   #hm-c .hm-l>*,#hm-c .hm-r>*{order:5}
-  #hm-c .hm-l>h2{order:1}#hm-c .hm-l>.hm-sci{order:2}#hm-c .hm-r>.hm-vis{order:3}#hm-c .hm-l>.hm-art{order:4;max-width:150px;margin:0 auto .6rem}#hm-c .hm-l>.hm-sci{margin-bottom:.8rem}#hm-c .hm-r>.hm-vis{font-size:.84rem}#hm-c .hm-r>.hm-fine{order:6}
+  #hm-c .hm-l>h2{order:1}#hm-c .hm-l>.hm-sci{order:2}#hm-c .hm-r>.hm-vis{order:3}#hm-c .hm-l>.hm-arts{order:4;max-width:280px;margin:.2rem auto .8rem}#hm-c .hm-l>.hm-art{order:4;max-width:150px;margin:0 auto .6rem}#hm-c .hm-l>.hm-sci{margin-bottom:.8rem}#hm-c .hm-r>.hm-vis{font-size:.84rem}#hm-c .hm-r>.hm-fine{order:6}
 }
 .ci-go[hidden]{display:none}
 .ci-z,.ci-m,.ci-go,.bt,#ci-ring,.ci-zones{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.ci-go.off,html.hm-open .ci-go{opacity:0;pointer-events:none}.ci-go:hover{border-color:#D9C38A}.ci-go:focus-visible{outline:2px solid #D9C38A;outline-offset:2px}
@@ -601,14 +603,24 @@ a.hm-add{display:block;text-decoration:none;text-align:center}
 .hm-fu a{display:block;padding:.4rem 0;font:500 .82rem/1.4 var(--sans)}
 .bt-k span{color:#B4AA97;letter-spacing:.14em}
 .bt-go{font:600 .62rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#1E1712;background:#D9C38A;border:1px solid #D9C38A;border-radius:99px;padding:.6rem 1rem;cursor:pointer}.bt-go:hover{background:#E6D3A0}.bt-go:focus-visible{outline:2px solid #D9C38A;outline-offset:3px}
-.pd{z-index:70}.pd-box{width:min(26rem,100%);overflow:auto}
-.pd-f{display:flex;flex-direction:column;gap:.9rem;padding:2.2rem 1.6rem 1.6rem;text-align:left}
-.pd-f h2{font:500 1.45rem/1.2 var(--serif);margin:0;text-align:center;color:#EDE6D6}
-.pd-l{list-style:none;margin:0 0 .3rem;padding:0;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}.pd-l li{font:500 .68rem/1 var(--sans);letter-spacing:.06em;padding:.45rem .7rem;border-radius:99px;border:1px solid rgba(217,195,138,.25);background:rgba(217,195,138,.1)}
+.pd{z-index:70}.pd-box{width:min(28rem,100%);overflow:auto;text-align:left}
+.pd-in{padding:2.2rem 1.6rem 0}.pd-in h2{font:500 1.45rem/1.2 var(--serif);margin:0 0 1rem;text-align:center;color:#EDE6D6}
+.pd-l{list-style:none;margin:0;padding:0;border-top:1px solid rgba(217,195,138,.18)}
+.pd-l li{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:.6rem;padding:.8rem 0;border-bottom:1px solid rgba(217,195,138,.18)}
+.pd-l b{display:block;font:500 .95rem/1.25 var(--serif);color:#EDE6D6}.pd-l small{display:block;margin-top:.2rem;font:400 .68rem/1.4 var(--sans);color:#B4AA97}
+.pd-q{display:inline-flex;align-items:center;border:1px solid rgba(217,195,138,.28);border-radius:99px}.pd-q button,.pd-del{width:34px;height:34px;display:grid;place-items:center;background:none;border:0;color:#EDE6D6;cursor:pointer;font:300 1rem/1 var(--sans);border-radius:99px}
+.pd-q output{min-width:1.4rem;text-align:center;font:500 .8rem/1 var(--sans)}.pd-del{border:1px solid rgba(217,195,138,.18);width:32px;height:32px}.pd-del svg{width:14px;height:14px}
+.pd-q button:focus-visible,.pd-del:focus-visible,.pd-open:focus-visible{outline:2px solid #D9C38A;outline-offset:2px}
+.pd-vac{margin:.4rem 0 1rem;font:400 .8rem/1.5 var(--sans);color:#CFC6B4;text-align:center}
+.pd-f[hidden]{display:none}.pd-f{display:flex;flex-direction:column;gap:.9rem;padding:1.3rem 1.6rem 1.6rem}
 .pd-f label{display:flex;flex-direction:column;gap:.35rem;font:600 .58rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#D9C38A}
 .pd-f input{font:400 .9rem/1.3 var(--sans);letter-spacing:0;text-transform:none;color:#EDE6D6;background:rgba(18,13,11,.45);border:1px solid rgba(217,195,138,.25);border-radius:10px;padding:.65rem .8rem}.pd-f input:focus{outline:none;border-color:#D9C38A}.pd-f input[aria-invalid=true]{border-color:#BF7A3F}
 .pd-av{margin:0;font:400 .7rem/1.45 var(--sans);color:#B4AA97}
 .pd-go{align-self:center;margin-top:.3rem;font:600 .62rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#1E1712;background:#D9C38A;border:0;border-radius:99px;padding:.75rem 1.4rem;cursor:pointer}.pd-go:focus-visible{outline:2px solid #D9C38A;outline-offset:3px}
+.pd-open[hidden]{display:none}.pd-open{position:fixed;z-index:31;right:max(16px,env(safe-area-inset-right,0px));top:calc(var(--top-h,60px) + 14px);display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .9rem;border-radius:99px;border:1px solid rgba(217,195,138,.35);background:rgba(30,23,18,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#EDE6D6;font:600 .6rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:opacity .4s}
+.pd-open span{display:inline-grid;place-items:center;min-width:1.4rem;height:1.4rem;padding:0 .3rem;border-radius:99px;background:#D9C38A;color:#1E1712;letter-spacing:0;font-size:.62rem}
+.pd-open.pop span{animation:pdpop .6s}@keyframes pdpop{40%{transform:scale(1.35)}}
+html.hm-open .pd-open{opacity:0;pointer-events:none}
 .pd-msg{margin:0;min-height:1em;font:400 .72rem/1.45 var(--sans);color:#CFC6B4;text-align:center}
 .bt-k{white-space:nowrap}
 @media (max-width:600px){.bt{width:calc(100% - 32px);padding:.5rem .6rem;gap:.4rem .5rem;border-radius:20px}.bt-k span{display:none}.bt-go{padding:.55rem .8rem;font-size:.58rem;letter-spacing:.14em}.bt-l button{padding:.45rem .6rem}}
@@ -681,8 +693,9 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   <div class="ci-ring" id="ci-ring" role="group" aria-label="Diez hongos"></div>
   <div class="hm" id="hm" hidden><div class="hm-box" id="hm-box" role="dialog" aria-modal="true" aria-labelledby="hm-h"><button type="button" class="hm-bk" id="hm-bk" aria-label="Ficha anterior" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" class="hm-x" id="hm-x" aria-label="Cerrar ficha"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button><div id="hm-c"></div></div></div>
   <div class="bt" id="bt" hidden><p class="bt-k">Mi blend <span>· Tu selección</span></p><ul class="bt-l" id="bt-l"></ul><button type="button" class="bt-go" id="bt-go">Pedir blend</button><p class="bt-n" id="bt-n" hidden></p></div>
+  <button type="button" class="pd-open" id="pd-open" hidden>Mi pedido <span id="pd-n">0</span></button>
   <div class="hm pd" id="pd" hidden><div class="hm-box pd-box" role="dialog" aria-modal="true" aria-labelledby="pd-h"><button type="button" class="hm-x" id="pd-x" aria-label="Cerrar pedido"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
-    <form class="pd-f" id="pd-f" novalidate><h2 id="pd-h">Pedir mi blend</h2><ul class="pd-l" id="pd-l"></ul>
+    <div class="pd-in"><h2 id="pd-h">Mi pedido</h2><ul class="pd-l" id="pd-l"></ul><p class="pd-vac" id="pd-vac" hidden>Tu pedido está vacío. Arma tu blend o elige una de las cuatro mezclas.</p></div><form class="pd-f" id="pd-f" novalidate>
       <label>Nombre<input name="nombre" autocomplete="name" required></label>
       <label>Correo<input name="correo" type="email" autocomplete="email" inputmode="email" required></label>
       <label>Teléfono<input name="telefono" type="tel" autocomplete="tel" inputmode="tel" required></label>
@@ -1712,11 +1725,25 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   document.addEventListener('keydown',function(e){if(hmI==null)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();closeHM();return}
     if(e.key==='Tab'){var f=[].slice.call(hmBox.querySelectorAll('button,a[href]')).filter(function(x){return x.offsetParent!==null});if(!f.length)return;var a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}},true);
 
-  // pedido: formulario visual; aún sin destino conectado, no envía datos a ningún lado
-  (function(){var pd=document.getElementById('pd'),f=document.getElementById('pd-f'),m=document.getElementById('pd-msg'),back=null;document.body.appendChild(pd);
-    function open(){back=document.activeElement;document.getElementById('pd-l').innerHTML=BLEND.map(function(i){return '<li>'+HONG[i][0]+'</li>'}).join('');m.textContent='';pd.hidden=false;requestAnimationFrame(function(){pd.classList.add('on')});setTimeout(function(){f.nombre.focus()},60)}
-    function close(){pd.classList.remove('on');setTimeout(function(){pd.hidden=true},reduce?0:450);if(back&&back.focus)back.focus({preventScroll:true})}
-    document.getElementById('bt-go').addEventListener('click',open);document.getElementById('pd-x').addEventListener('click',close);pd.addEventListener('click',function(e){if(e.target===pd)close()});
+  // Mi pedido: solicitud sin precios ni pagos; aún sin destino conectado, no envía datos a ningún lado
+  var PEDIDO=[];(function(){var pd=document.getElementById('pd'),f=document.getElementById('pd-f'),m=document.getElementById('pd-msg'),L=document.getElementById('pd-l'),op=document.getElementById('pd-open'),back=null;document.body.appendChild(op);document.body.appendChild(pd);
+    function nombres(it){if(it.t==='b')return it.h.map(function(i){return HONG[i][0]});var R=RT.ruta(it.id);return R.ingredientes.map(function(g){return g.i!=null?RT.hongo(g.i).comun:g.segun_fuente.split(', ')[0]})}
+    function titulo(it){return it.t==='b'?'Mi blend':RT.ruta(it.id).etiqueta}
+    function total(){return PEDIDO.reduce(function(a,it){return a+it.n},0)}
+    function pill(pop){var n=total();op.hidden=!n;document.getElementById('pd-n').textContent=n;op.setAttribute('aria-label','Mi pedido, '+n+(n===1?' mezcla':' mezclas'));if(pop){op.classList.remove('pop');void op.offsetWidth;op.classList.add('pop')}}
+    function agregar(it){var k=it.t==='b'?'b:'+it.h.slice().sort(function(x,y){return x-y}).join('-'):'r:'+it.id,e=PEDIDO.filter(function(x){return x.k===k})[0];if(e)e.n++;else{it.k=k;it.n=1;PEDIDO.push(it)}pill(true);live.textContent=titulo(it)+' agregado a tu pedido'}
+    window.TEKIA_agregarRuta=function(id){agregar({t:'r',id:id})};
+    function lista(){var vac=!PEDIDO.length;document.getElementById('pd-vac').hidden=!vac;f.hidden=vac;
+      L.innerHTML=PEDIDO.map(function(it,k){var t=titulo(it);return '<li><div><b>'+t+'</b><small>'+nombres(it).join('\u00a0· ')+'</small></div><div class="pd-q" role="group" aria-label="Cantidad de '+t+'"><button type="button" data-k="'+k+'" data-d="-1" aria-label="Quitar uno">−</button><output aria-live="polite">'+it.n+'</output><button type="button" data-k="'+k+'" data-d="1" aria-label="Agregar uno">+</button></div><button type="button" class="pd-del" data-k="'+k+'" aria-label="Eliminar '+t+' del pedido"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button></li>'}).join('')}
+    L.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var k=+b.dataset.k,it=PEDIDO[k];if(!it)return;
+      if(b.classList.contains('pd-del')||(+b.dataset.d<0&&it.n<=1))PEDIDO.splice(k,1);else it.n+= +b.dataset.d;
+      var fo=b.classList.contains('pd-del')?null:[k,b.dataset.d];lista();pill(false);
+      if(fo&&PEDIDO[fo[0]])L.querySelector('button[data-k="'+fo[0]+'"][data-d="'+fo[1]+'"]').focus();else(L.querySelector('button')||document.getElementById('pd-x')).focus()});
+    function open(){back=document.activeElement;lista();m.textContent='';pd.hidden=false;requestAnimationFrame(function(){pd.classList.add('on')});setTimeout(function(){document.getElementById('pd-x').focus()},60)}
+    function close(){pd.classList.remove('on');setTimeout(function(){pd.hidden=true},reduce?0:450);if(back&&back.focus&&document.contains(back))back.focus({preventScroll:true})}
+    op.addEventListener('click',open);
+    document.getElementById('bt-go').addEventListener('click',function(){if(!BLEND.length)return;agregar({t:'b',h:BLEND.slice()});BLEND.length=0;renderBlend();op.focus({preventScroll:true})});
+    document.getElementById('pd-x').addEventListener('click',close);pd.addEventListener('click',function(e){if(e.target===pd)close()});
     document.addEventListener('keydown',function(e){if(!pd.hidden&&e.key==='Escape'){e.preventDefault();close()}});
     f.addEventListener('submit',function(e){e.preventDefault();var bad=null;[f.nombre,f.correo,f.telefono].forEach(function(x){var ok=x.value.trim()&&x.checkValidity()&&(x.name!=='telefono'||x.value.replace(/\D/g,'').length>=10);x.setAttribute('aria-invalid',String(!ok));if(!ok&&!bad)bad=x});
       if(bad){m.textContent='Revisa los datos marcados.';bad.focus();return}
@@ -1759,14 +1786,15 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   // ficha de la ruta: intención, composición completa, frase breve, «Ir a investigación»; el tipo de evidencia como línea discreta
   function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
   function renderRoute(id){var R=RT.ruta(id),pen=id==='pensamiento';hmI='r:'+id;lights(RT.indicesDeRuta(id).map(function(i){return [id,i]}));
-    var html='<div class="hm-l"><h2 id="hm-h">'+R.etiqueta+'</h2><p class="hm-sci">'+R.cabecera+'</p></div><div class="hm-r"><p class="hm-vis">'+nb(R.texto)+'</p>';
+    var arts=R.ingredientes.filter(function(g){return g.i!=null}).map(function(g){return '<figure>'+spec(g.i)+'<figcaption>'+nb(RT.hongo(g.i).comun)+'</figcaption></figure>'}).join('');
+    var html='<div class="hm-l"><h2 id="hm-h">'+R.etiqueta+'</h2><p class="hm-sci">'+R.cabecera+'</p><div class="hm-arts n'+Math.min(R.ingredientes.filter(function(g){return g.i!=null}).length,6)+'" aria-hidden="true">'+arts+'</div></div><div class="hm-r"><p class="hm-vis">'+nb(R.texto)+'</p>';
     html+='<p class="hm-cl">'+R.encabezado+'</p><ul class="hm-ing">'+R.ingredientes.map(function(g){var h=g.i!=null?RT.hongo(g.i):null,sf=g.segun_fuente;
       var sp=sf.split(', ');if(h)return '<li><button type="button" class="hm-lk" data-h="'+g.i+'"><b>'+h.comun+'</b>'+(pen?'':'<small><em>'+esc(sp[0])+'</em>'+(sp[1]?' · '+esc(sp.slice(1).join(', ')):'')+'</small>')+'</button></li>';
       var pr=sf.split(', ');return '<li><div class="hm-nn"><b>'+esc(pr[0])+'</b>'+(pr[1]?'<small>'+esc(pr.slice(1).join(', '))+'</small>':'')+'</div></li>'}).join('')+'</ul>';
     var inv='<p>'+nb(R.criterio)+'</p>';
     if(pen)inv+=R.ingredientes.map(function(g,k){var h=RT.hongo(g.i),f=R.fuentes[k];return '<section class="hm-es"><h3>'+h.comun+'</h3><h4>Preparación y población</h4><p>'+nb(h.estudio)+'</p><h4>Resultado</h4><p>'+nb(h.resultado)+'</p>'+(f?fuentes([f]):'')+'</section>'}).join('');
     else inv+=fuentes(R.fuentes);
-    html+='<div class="hm-acts">'+acc('hm-st',pen?'Ver los estudios':'Ir a investigación',inv)+'</div>';
+    html+='<div class="hm-acts">'+acc('hm-st',pen?'Ver los estudios':'Ir a investigación',inv)+'</div><button type="button" class="hm-add hm-ped" id="hm-ped" data-r="'+id+'">Pedir blend</button>';
     html+='<p class="hm-fine">'+nb(RT.A.uso)+' Información general. No es una evaluación personal ni una recomendación de&nbsp;consumo.</p></div>';
     showBox(html)}
     // navegación entre fichas con historial: la vuelta atrás del navegador recorre las fichas y regresa al atlas
@@ -1778,7 +1806,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   function closeHM(){var d=DEPTH;DEPTH=0;closeUI();if(d>0)try{history.go(-d)}catch(_){}}
   window.addEventListener('popstate',function(ev){var e=parseKey(location.hash),tk=ev.state&&ev.state.tk;
     if(e&&tk){STK.length=Math.min(STK.length,tk);if(STK.length<tk||keyOf(STK[tk-1])!==keyOf(e)){STK[tk-1]=e}DEPTH=tk;renderEntry(e)}else{DEPTH=0;closeUI()}});
-  var showT=0;hmBox.addEventListener('click',function(ev){if(performance.now()-showT<450){ev.stopPropagation();ev.preventDefault()}},true);hmC.addEventListener('click',function(ev){var s2=ev.target.closest&&ev.target.closest('.hm-st');if(s2){var bx=document.getElementById(s2.getAttribute('aria-controls')),op=bx.hidden;bx.hidden=!op;s2.setAttribute('aria-expanded',String(op));s2.querySelector('.hm-pm').textContent=op?'−':'+';return}var b=ev.target.closest&&ev.target.closest('.hm-lk,.hm-tag');if(!b)return;if(b.dataset.r)nav({t:'r',id:b.dataset.r});else if(b.dataset.h!=null)nav({t:'h',i:+b.dataset.h})});
+  var showT=0;hmBox.addEventListener('click',function(ev){if(performance.now()-showT<450){ev.stopPropagation();ev.preventDefault()}},true);hmC.addEventListener('click',function(ev){var s2=ev.target.closest&&ev.target.closest('.hm-st');if(s2){var bx=document.getElementById(s2.getAttribute('aria-controls')),op=bx.hidden;bx.hidden=!op;s2.setAttribute('aria-expanded',String(op));s2.querySelector('.hm-pm').textContent=op?'−':'+';return}var pq=ev.target.closest&&ev.target.closest('#hm-ped');if(pq){window.TEKIA_agregarRuta(pq.dataset.r);pq.textContent='En mi pedido';return}var b=ev.target.closest&&ev.target.closest('.hm-lk,.hm-tag');if(!b)return;if(b.dataset.r)nav({t:'r',id:b.dataset.r});else if(b.dataset.h!=null)nav({t:'h',i:+b.dataset.h})});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&RUTA&&hmI==null&&Z.m<1.05)clearRoute()});
   // tocar fuera de las intenciones y del anillo apaga la ruta: nunca se queda encendida
   var tapAt=null;sec.addEventListener('pointerdown',function(e){tapAt=(e.target.closest&&e.target.closest('.ci-z,.ci-m,.ci-go,.hm,.bt,a,button'))?null:[e.clientX,e.clientY]},true);
