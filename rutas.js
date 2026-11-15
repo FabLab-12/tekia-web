@@ -36,7 +36,7 @@
   var RUTAS = [
     {
       id: 'pensamiento',
-      intencion: 'Enfocar',
+      intencion: 'Pensamiento',
       titulo_ficha: 'Enfocar',
       tema: 'Pensamiento',
       tipo: 'hipotesis',
@@ -90,7 +90,7 @@
     },
     {
       id: 'descanso',
-      intencion: 'Descansar',
+      intencion: 'Descanso',
       titulo_ficha: 'Descansar',
       tema: 'Descanso',
       tipo: 'estudiada',
@@ -133,7 +133,7 @@
     },
     {
       id: 'cuidado',
-      intencion: 'Fluir',
+      intencion: 'Cuidado',
       titulo_ficha: 'Fluir',
       tema: 'Cuidado digestivo',
       tipo: 'registrado',
@@ -173,7 +173,7 @@
     },
     {
       id: 'movimiento',
-      intencion: 'Actuar',
+      intencion: 'Rendimiento',
       titulo_ficha: 'Actuar',
       tema: 'Rendimiento físico',
       tipo: 'estudiada',
@@ -229,7 +229,7 @@
         if (!porClave[ing.nodo]) throw new Error('Nodo desconocido: ' + ing.nodo + ' en ' + r.id);
         if (nodos.indexOf(ing.nodo) < 0) nodos.push(ing.nodo);
         // «Aparece en»: guarda la especie exacta que declaró cada estudio
-        aparece[ing.nodo].push({ ruta: r.id, titulo: r.titulo_ficha, tema: r.tema, tipo: TIPOS[r.tipo].etiqueta,
+        aparece[ing.nodo].push({ ruta: r.id, intencion: r.intencion, titulo: r.titulo_ficha, tema: r.tema, tipo: TIPOS[r.tipo].etiqueta,
           preparacion: r.preparacion.nombre, declarado: ing.declarado, taxon: ing.taxon, taxon_estado: ing.taxon_estado });
       });
       r.nodos = nodos;                       // intención → hongos que se iluminan

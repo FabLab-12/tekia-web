@@ -556,6 +556,9 @@ a.hm-add{display:block;text-decoration:none;text-align:center}
 .hm-lk b,.hm-nn b{font:500 .82rem/1.3 var(--sans)}.hm-lk small,.hm-nn small{font:400 .72rem/1.45 var(--sans);color:#B4AA97}.hm-lk,.hm-nn{padding:.55rem .85rem}
 .hm-lk b::after{content:" →";color:#D9C38A}
 .hm-nn{border-style:dashed;background:none}.hm-nn .hm-nt{font-size:.72rem;color:#9E9483}
+.hm-tags{display:flex!important;flex-wrap:wrap;gap:.4rem!important}
+.hm-tag{font:500 .62rem/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#E7DED1;background:rgba(217,195,138,.08);border:1px solid rgba(217,195,138,.3);border-radius:99px;padding:.5rem .75rem;cursor:pointer;min-height:30px}
+.hm-tag:hover{border-color:#D9C38A}.hm-tag:focus-visible{outline:2px solid #D9C38A;outline-offset:2px}
 .hm-ap{margin-top:1.2rem;padding-top:1.1rem;border-top:1px solid rgba(217,195,138,.2)}
 .hm-inv h3{font:500 1.05rem/1.3 var(--serif);color:#F3EDE1;margin:1.3rem 0 .6rem;text-align:left}
 .hm-inv dl{border-top:0;padding-top:0}.hm-ci{font-size:.78rem!important}.hm-inv a{color:#E7D2A5;text-underline-offset:3px}
@@ -635,10 +638,10 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
       <div class="ci-drag" id="ci-drag" tabindex="0" role="slider" aria-roledescription="Atlas interior" aria-label="Atlas interior. Flechas para girar; más y menos para acercarte; Escape para volver." aria-valuemin="0" aria-valuemax="360" aria-valuenow="0"></div>
       <p class="ci-hintg" id="ci-hintg" aria-hidden="true">Acerca dos dedos para explorar</p>
       <div class="ci-zones" role="group" aria-label="Zonas del cuerpo">
-        <button type="button" class="ci-z" data-k="pensamiento" aria-pressed="false"><i></i><span>Enfocar</span></button>
-        <button type="button" class="ci-z" data-k="descanso" aria-pressed="false"><i></i><span>Descansar</span></button>
-        <button type="button" class="ci-z" data-k="cuidado" aria-pressed="false"><i></i><span>Fluir</span></button>
-        <button type="button" class="ci-z" data-k="movimiento" aria-pressed="false"><i></i><span>Actuar</span></button>
+        <button type="button" class="ci-z" data-k="pensamiento" aria-pressed="false"><i></i><span>Pensamiento</span></button>
+        <button type="button" class="ci-z" data-k="descanso" aria-pressed="false"><i></i><span>Descanso</span></button>
+        <button type="button" class="ci-z" data-k="cuidado" aria-pressed="false"><i></i><span>Cuidado</span></button>
+        <button type="button" class="ci-z" data-k="movimiento" aria-pressed="false"><i></i><span>Rendimiento</span></button>
       </div>
     </div>
     <aside class="ci-panel" id="ci-panel" aria-live="polite" aria-labelledby="ci-ph">
@@ -1628,19 +1631,19 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     return '<svg viewBox="0 0 300 190" role="img" aria-label="Dibujo de '+HONG[i][0]+'"><defs><filter id="sg'+i+'"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#sg'+i+')">'+o.join('')+'</g></svg>'}
   var hm=document.getElementById('hm'),hmBox=document.getElementById('hm-box'),hmC=document.getElementById('hm-c'),hmX=document.getElementById('hm-x'),hmB=document.getElementById('hm-bk'),hmI=null,hmBack=null,bt=document.getElementById('bt'),btL=document.getElementById('bt-l');document.body.appendChild(hm);document.body.appendChild(bt);
   function renderHM(i){hmI=i;var care=i==='care',h=care?[D.care.name,D.care.sci]:HONG[i],d=care?D.care:(FK[i]?D[FK[i]]:null),ex=EXTRA[i],rows=(d?d.rows.filter(function(r){return !r[2]}):[]).concat(ex?ex.rows:[]);ringEl.classList.add('hide');
-    var html='<div class="hm-l"><p class="hm-k">'+(care?D.care.kicker:'Ficha del hongo')+'</p><h2 id="hm-h">'+h[0]+'</h2><p class="hm-sci">'+h[1]+'</p><div class="hm-art">'+(care?illo('care'):spec(i))+'</div>';
+    var html='<div class="hm-l"><h2 id="hm-h">'+h[0]+'</h2><p class="hm-sci">'+h[1]+'</p><div class="hm-art">'+(care?illo('care'):spec(i))+'</div>';
     if(ZONE[i])html+='<p class="hm-z"><i aria-hidden="true"></i>Se ha estudiado en: '+ZONE[i][1]+'</p>';
     if(d)html+='<p class="hm-lead">'+nb(d.lead)+'</p>';
     html+='</div><div class="hm-r">';
     if(rows.length)html+='<dl>'+rows.map(function(r){return '<div><dt>'+r[0]+'</dt><dd>'+nb(r[1])+'</dd></div>'}).join('')+'</dl>';
     var ap=(!care&&RT)?RT.apareceEn(RT.claveDeIndice(i)):[];lights(ap.map(function(a){return [a.ruta,i]}));if(!ap.length)lights([[null,i]]);
-    if(ap.length)html+='<div class="hm-ap"><p class="hm-cl">Aparece en</p><ul>'+ap.map(function(a){return '<li><button type="button" class="hm-lk" data-r="'+a.ruta+'"><b>'+a.titulo+'</b><small>'+a.tipo+(a.preparacion?' · '+a.preparacion:'')+'</small><small><em>'+esc(a.taxon||a.declarado)+'</em></small></button></li>'}).join('')+'</ul></div>';
-    var inB=BLEND.indexOf(i)>=0;html+='<div class="hm-acts">'+(care?'<a class="hm-add" href="#f-precauciones" id="hm-pre">Leer precauciones</a>':'<button type="button" class="hm-add" id="hm-add" aria-pressed="'+inB+'">'+(inB?'En mi blend':'Añadir a mi blend')+'</button>');
+    if(ap.length)html+='<div class="hm-ap"><p class="hm-cl">Aparece en</p><ul class="hm-tags">'+ap.map(function(a){return '<li><button type="button" class="hm-tag" data-r="'+a.ruta+'">'+a.intencion+'</button></li>'}).join('')+'</ul></div>';
+    var inRoute=STK.length>1&&STK[STK.length-2].t==='r',inB=BLEND.indexOf(i)>=0;html+='<div class="hm-acts">'+(inRoute?'':care?'<a class="hm-add" href="#f-precauciones" id="hm-pre">Leer precauciones</a>':'<button type="button" class="hm-add" id="hm-add" aria-pressed="'+inB+'">'+(inB?'En mi blend':'Añadir a mi blend')+'</button>');
     if(d&&d.studies)html+='<button type="button" class="hm-st" id="hm-st" aria-expanded="false" aria-controls="hm-sts">Ver estudios en personas<span aria-hidden="true">+</span></button><div class="hm-sts" id="hm-sts" hidden>'+d.studies.map(function(t){return '<p>'+nb(t)+'</p>'}).join('')+'</div>';
     html+='</div><p class="hm-fine">Información general. No es una evaluación personal ni una recomendación de&nbsp;consumo.</p>';
     showBox(html+'</div>');
     var pre=document.getElementById('hm-pre');if(pre)pre.addEventListener('click',function(){closeHM()});
-    if(!care)document.getElementById('hm-add').addEventListener('click',function(){toggleBlend(i);var b=document.getElementById('hm-add'),on=BLEND.indexOf(i)>=0;b.setAttribute('aria-pressed',String(on));b.textContent=on?'En mi blend':'Añadir a mi blend'});
+    if(!care&&!inRoute)document.getElementById('hm-add').addEventListener('click',function(){toggleBlend(i);var b=document.getElementById('hm-add'),on=BLEND.indexOf(i)>=0;b.setAttribute('aria-pressed',String(on));b.textContent=on?'En mi blend':'Añadir a mi blend'});
     var st=document.getElementById('hm-st');if(st)st.addEventListener('click',function(){var box=document.getElementById('hm-sts'),op=box.hidden;box.hidden=!op;st.setAttribute('aria-expanded',String(op));st.lastChild.textContent=op?'−':'+'});
   }
   function showBox(html){showT=performance.now();hmC.innerHTML=html;hmB.hidden=STK.length<2;var was=!hm.hidden;hm.hidden=false;document.documentElement.classList.add('hm-open');ringEl.classList.add('hide');requestAnimationFrame(function(){hm.classList.add('on')});hmC.scrollTop=0;
@@ -1683,7 +1686,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   // ficha de la ruta: intención, composición completa, frase breve, «Ir a investigación»; el tipo de evidencia como línea discreta
   function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
   function renderRoute(id){var R=RT.ruta(id);hmI='r:'+id;lights(RT.indicesDeRuta(id).map(function(i){return [id,i]}));
-    var html='<div class="hm-l"><p class="hm-k">Blend · '+R.tema+'</p><h2 id="hm-h">'+R.titulo_ficha+'</h2><p class="hm-ev">'+R.tipo_etiqueta+(R.preparacion.nombre?' · '+R.preparacion.nombre:'')+'</p>';
+    var html='<div class="hm-l"><h2 id="hm-h">'+R.titulo_ficha+'</h2><p class="hm-ev">'+R.tipo_etiqueta+(R.preparacion.nombre?' · '+R.preparacion.nombre:'')+'</p>';
     html+='<p class="hm-cl">Composición</p><ul class="hm-ing">'+R.ingredientes.map(function(g){var sci='<em>'+esc(g.taxon||g.declarado)+'</em>',n=g.nodo?RT.nodo(g.nodo):null;
       return '<li>'+(n?'<button type="button" class="hm-lk" data-h="'+n.i+'"><b>'+g.nombre+'</b><small>'+sci+'</small></button>':'<div class="hm-nn"><b>'+g.nombre+'</b><small>'+sci+'</small>'+'</div>')+'</li>'}).join('')+'</ul>';
     html+='</div><div class="hm-r"><p class="hm-lead">'+nb(R.texto_breve)+'</p><p class="hm-lock">'+(R.tipo==='hipotesis'?'Combinación cerrada: se explora tal como está.':'Combinación cerrada: se explora tal como se estudió.')+'</p>';
@@ -1705,7 +1708,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   function closeHM(){var d=DEPTH;DEPTH=0;closeUI();if(d>0)try{history.go(-d)}catch(_){}}
   window.addEventListener('popstate',function(ev){var e=parseKey(location.hash),tk=ev.state&&ev.state.tk;
     if(e&&tk){STK.length=Math.min(STK.length,tk);if(STK.length<tk||keyOf(STK[tk-1])!==keyOf(e)){STK[tk-1]=e}DEPTH=tk;renderEntry(e)}else{DEPTH=0;closeUI()}});
-  var showT=0;hmBox.addEventListener('click',function(ev){if(performance.now()-showT<450){ev.stopPropagation();ev.preventDefault()}},true);hmC.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('.hm-lk');if(!b)return;if(b.dataset.r)nav({t:'r',id:b.dataset.r});else if(b.dataset.h!=null)nav({t:'h',i:+b.dataset.h})});
+  var showT=0;hmBox.addEventListener('click',function(ev){if(performance.now()-showT<450){ev.stopPropagation();ev.preventDefault()}},true);hmC.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('.hm-lk,.hm-tag');if(!b)return;if(b.dataset.r)nav({t:'r',id:b.dataset.r});else if(b.dataset.h!=null)nav({t:'h',i:+b.dataset.h})});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&RUTA&&hmI==null&&Z.m<1.05)clearRoute()});
   // tocar fuera de las intenciones y del anillo apaga la ruta: nunca se queda encendida
   var tapAt=null;sec.addEventListener('pointerdown',function(e){tapAt=(e.target.closest&&e.target.closest('.ci-z,.ci-m,.ci-go,.hm,.bt,a,button'))?null:[e.clientX,e.clientY]},true);
