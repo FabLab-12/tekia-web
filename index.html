@@ -635,10 +635,10 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
       <div class="ci-drag" id="ci-drag" tabindex="0" role="slider" aria-roledescription="Atlas interior" aria-label="Atlas interior. Flechas para girar; más y menos para acercarte; Escape para volver." aria-valuemin="0" aria-valuemax="360" aria-valuenow="0"></div>
       <p class="ci-hintg" id="ci-hintg" aria-hidden="true">Acerca dos dedos para explorar</p>
       <div class="ci-zones" role="group" aria-label="Zonas del cuerpo">
-        <button type="button" class="ci-z" data-k="pensamiento" aria-pressed="false"><i></i><span>Pensamiento</span></button>
-        <button type="button" class="ci-z" data-k="descanso" aria-pressed="false"><i></i><span>Descanso</span></button>
-        <button type="button" class="ci-z" data-k="cuidado" aria-pressed="false"><i></i><span>Cuidado</span></button>
-        <button type="button" class="ci-z" data-k="movimiento" aria-pressed="false"><i></i><span>Movimiento</span></button>
+        <button type="button" class="ci-z" data-k="pensamiento" aria-pressed="false"><i></i><span>Enfocar</span></button>
+        <button type="button" class="ci-z" data-k="descanso" aria-pressed="false"><i></i><span>Descansar</span></button>
+        <button type="button" class="ci-z" data-k="cuidado" aria-pressed="false"><i></i><span>Fluir</span></button>
+        <button type="button" class="ci-z" data-k="movimiento" aria-pressed="false"><i></i><span>Actuar</span></button>
       </div>
     </div>
     <aside class="ci-panel" id="ci-panel" aria-live="polite" aria-labelledby="ci-ph">
@@ -1634,7 +1634,7 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
     html+='</div><div class="hm-r">';
     if(rows.length)html+='<dl>'+rows.map(function(r){return '<div><dt>'+r[0]+'</dt><dd>'+nb(r[1])+'</dd></div>'}).join('')+'</dl>';
     var ap=(!care&&RT)?RT.apareceEn(RT.claveDeIndice(i)):[];lights(ap.map(function(a){return [a.ruta,i]}));if(!ap.length)lights([[null,i]]);
-    if(ap.length)html+='<div class="hm-ap"><p class="hm-cl">Aparece en</p><ul>'+ap.map(function(a){return '<li><button type="button" class="hm-lk" data-r="'+a.ruta+'"><b>'+a.titulo+'</b><small>'+a.tipo+(a.preparacion?' · '+a.preparacion:'')+'</small><small>'+(a.taxon_estado==='comun'?'Declarado como «'+a.declarado+'», sin especie':'Declarado como <em>'+a.declarado+'</em>')+'</small></button></li>'}).join('')+'</ul></div>';
+    if(ap.length)html+='<div class="hm-ap"><p class="hm-cl">Aparece en</p><ul>'+ap.map(function(a){return '<li><button type="button" class="hm-lk" data-r="'+a.ruta+'"><b>'+a.titulo+'</b><small>'+a.tipo+(a.preparacion?' · '+a.preparacion:'')+'</small><small><em>'+esc(a.taxon||a.declarado)+'</em></small></button></li>'}).join('')+'</ul></div>';
     var inB=BLEND.indexOf(i)>=0;html+='<div class="hm-acts">'+(care?'<a class="hm-add" href="#f-precauciones" id="hm-pre">Leer precauciones</a>':'<button type="button" class="hm-add" id="hm-add" aria-pressed="'+inB+'">'+(inB?'En mi blend':'Añadir a mi blend')+'</button>');
     if(d&&d.studies)html+='<button type="button" class="hm-st" id="hm-st" aria-expanded="false" aria-controls="hm-sts">Ver estudios en personas<span aria-hidden="true">+</span></button><div class="hm-sts" id="hm-sts" hidden>'+d.studies.map(function(t){return '<p>'+nb(t)+'</p>'}).join('')+'</div>';
     html+='</div><p class="hm-fine">Información general. No es una evaluación personal ni una recomendación de&nbsp;consumo.</p>';
@@ -1683,9 +1683,9 @@ html.ci-open .ci-panel{background:radial-gradient(ellipse at 45% 50%,rgba(26,23,
   // ficha de la ruta: intención, composición completa, frase breve, «Ir a investigación»; el tipo de evidencia como línea discreta
   function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
   function renderRoute(id){var R=RT.ruta(id);hmI='r:'+id;lights(RT.indicesDeRuta(id).map(function(i){return [id,i]}));
-    var html='<div class="hm-l"><p class="hm-k">Intención · '+R.intencion+'</p><h2 id="hm-h">'+R.titulo_ficha+'</h2><p class="hm-ev">'+R.tipo_etiqueta+(R.preparacion.nombre?' · '+R.preparacion.nombre:'')+'</p>';
-    html+='<p class="hm-cl">Composición</p><ul class="hm-ing">'+R.ingredientes.map(function(g){var sci=g.taxon_estado==='comun'?'«'+esc(g.declarado)+'», sin especie':'<em>'+esc(g.declarado)+'</em>',n=g.nodo?RT.nodo(g.nodo):null;
-      return '<li>'+(n?'<button type="button" class="hm-lk" data-h="'+n.i+'"><b>'+g.nombre+'</b><small>'+sci+'</small></button>':'<div class="hm-nn"><b>'+g.nombre+'</b><small>'+sci+'</small>'+(g.nota?'<small class="hm-nt">'+nb(g.nota)+'</small>':'')+'</div>')+'</li>'}).join('')+'</ul>';
+    var html='<div class="hm-l"><p class="hm-k">Blend · '+R.tema+'</p><h2 id="hm-h">'+R.titulo_ficha+'</h2><p class="hm-ev">'+R.tipo_etiqueta+(R.preparacion.nombre?' · '+R.preparacion.nombre:'')+'</p>';
+    html+='<p class="hm-cl">Composición</p><ul class="hm-ing">'+R.ingredientes.map(function(g){var sci='<em>'+esc(g.taxon||g.declarado)+'</em>',n=g.nodo?RT.nodo(g.nodo):null;
+      return '<li>'+(n?'<button type="button" class="hm-lk" data-h="'+n.i+'"><b>'+g.nombre+'</b><small>'+sci+'</small></button>':'<div class="hm-nn"><b>'+g.nombre+'</b><small>'+sci+'</small>'+'</div>')+'</li>'}).join('')+'</ul>';
     html+='</div><div class="hm-r"><p class="hm-lead">'+nb(R.texto_breve)+'</p><p class="hm-lock">'+(R.tipo==='hipotesis'?'Combinación cerrada: se explora tal como está.':'Combinación cerrada: se explora tal como se estudió.')+'</p>';
     html+='<div class="hm-acts"><button type="button" class="hm-st" id="hm-st" aria-expanded="false" aria-controls="hm-sts">Ir a investigación<span aria-hidden="true">+</span></button><div class="hm-sts hm-inv" id="hm-sts" hidden>';
     if(R.preparacion.descripcion)html+='<p>'+nb(R.preparacion.descripcion)+'</p>';

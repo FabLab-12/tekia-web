@@ -29,14 +29,16 @@
     registrado: { etiqueta: 'Ensayo registrado',  nota: 'Ensayo inscrito en un registro público, todavía sin resultados depositados.' }
   };
 
+  // Composición en la ficha: todas las filas iguales (nombre + taxon), sin notas (Mónica, 2026-11-15). «sp.» = especie no declarada.
   // taxon_estado: 'especie' = el estudio declara la especie; 'comun' = solo nombre común.
   // nodo: clave del anillo o null. Regla (Mónica, 2026-11-15): si el hongo está en la mezcla investigada y tiene nodo, se ilumina.
   // Solo queda en reposo lo que no figura en la mezcla (p. ej. seta de ostra en PeakO₂, que lleva P. eryngii).
   var RUTAS = [
     {
       id: 'pensamiento',
-      intencion: 'Pensamiento',
-      titulo_ficha: 'Pensamiento',
+      intencion: 'Enfocar',
+      titulo_ficha: 'Enfocar',
+      tema: 'Pensamiento',
       tipo: 'hipotesis',
       preparacion: {
         nombre: null,
@@ -88,8 +90,9 @@
     },
     {
       id: 'descanso',
-      intencion: 'Descanso',
-      titulo_ficha: 'Descanso',
+      intencion: 'Descansar',
+      titulo_ficha: 'Descansar',
+      tema: 'Descanso',
       tipo: 'estudiada',
       preparacion: {
         nombre: 'Restake',
@@ -130,18 +133,17 @@
     },
     {
       id: 'cuidado',
-      intencion: 'Cuidado',
-      titulo_ficha: 'Cuidado digestivo',
+      intencion: 'Fluir',
+      titulo_ficha: 'Fluir',
+      tema: 'Cuidado digestivo',
       tipo: 'registrado',
       preparacion: {
         nombre: null,
         descripcion: 'Mezcla de tres hongos registrada por una empresa de Estados Unidos. El registro no da nombre comercial.'
       },
       ingredientes: [
-        { nombre: 'Cordyceps',      declarado: 'cordyceps', taxon: 'Cordyceps', taxon_estado: 'comun', nodo: 'cordyceps',
-          nota: 'El registro usa el nombre común sin indicar la especie.' },
-        { nombre: 'Reishi',         declarado: 'reishi', taxon: 'Ganoderma', taxon_estado: 'comun', nodo: 'reishi',
-          nota: 'El registro usa el nombre común sin indicar la especie.' },
+        { nombre: 'Cordyceps',      declarado: 'cordyceps', taxon: 'Cordyceps sp.', taxon_estado: 'comun', nodo: 'cordyceps' },
+        { nombre: 'Reishi',         declarado: 'reishi', taxon: 'Ganoderma sp.', taxon_estado: 'comun', nodo: 'reishi' },
         { nombre: 'Melena de león', declarado: "lion's mane", taxon: 'Hericium erinaceus', taxon_estado: 'comun', nodo: 'melena' }
       ],
       texto_breve: 'Esta combinación se investigó durante seis semanas en personas con molestias digestivas ocasionales. El ensayo evaluó síntomas digestivos y microbiota.',
@@ -171,8 +173,9 @@
     },
     {
       id: 'movimiento',
-      intencion: 'Movimiento',
-      titulo_ficha: 'Rendimiento físico',
+      intencion: 'Actuar',
+      titulo_ficha: 'Actuar',
+      tema: 'Rendimiento físico',
       tipo: 'estudiada',
       preparacion: {
         nombre: 'PeakO₂',
@@ -181,8 +184,7 @@
       ingredientes: [
         { nombre: 'Cordyceps',      declarado: 'Cordyceps militaris', taxon: 'Cordyceps militaris', taxon_estado: 'especie', nodo: 'cordyceps' },
         { nombre: 'Reishi',         declarado: 'Ganoderma lucidum', taxon: 'Ganoderma lucidum', taxon_estado: 'especie', nodo: 'reishi' },
-        { nombre: 'Seta de cardo',  declarado: 'Pleurotus eryngii', taxon: 'Pleurotus eryngii', taxon_estado: 'especie', nodo: 'cardo',
-          nota: 'No es la seta de ostra (Pleurotus ostreatus).' },
+        { nombre: 'Seta de cardo',  declarado: 'Pleurotus eryngii', taxon: 'Pleurotus eryngii', taxon_estado: 'especie', nodo: 'cardo' },
         { nombre: 'Shiitake',       declarado: 'Lentinula edodes', taxon: 'Lentinula edodes', taxon_estado: 'especie', nodo: 'shiitake' },
         { nombre: 'Melena de león', declarado: 'Hericium erinaceus', taxon: 'Hericium erinaceus', taxon_estado: 'especie', nodo: 'melena' },
         { nombre: 'Cola de pavo',   declarado: 'Trametes versicolor', taxon: 'Trametes versicolor', taxon_estado: 'especie', nodo: 'cola-pavo' }
@@ -227,7 +229,7 @@
         if (!porClave[ing.nodo]) throw new Error('Nodo desconocido: ' + ing.nodo + ' en ' + r.id);
         if (nodos.indexOf(ing.nodo) < 0) nodos.push(ing.nodo);
         // «Aparece en»: guarda la especie exacta que declaró cada estudio
-        aparece[ing.nodo].push({ ruta: r.id, titulo: r.titulo_ficha, tipo: TIPOS[r.tipo].etiqueta,
+        aparece[ing.nodo].push({ ruta: r.id, titulo: r.titulo_ficha, tema: r.tema, tipo: TIPOS[r.tipo].etiqueta,
           preparacion: r.preparacion.nombre, declarado: ing.declarado, taxon: ing.taxon, taxon_estado: ing.taxon_estado });
       });
       r.nodos = nodos;                       // intención → hongos que se iluminan
