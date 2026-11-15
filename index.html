@@ -747,8 +747,8 @@ html.claro .ci-z.glow span,html.claro .ci-z[aria-pressed="true"] span{color:var(
 html.claro .ci-m{color:rgba(47,42,39,.78)}
 html.claro .ci-m:hover,html.claro .ci-m.lit,html.claro .ci-m:focus-visible{color:var(--cl-gold-tx)}
 html.claro .ci-ring.focus .ci-m:not(.lit){color:rgba(47,42,39,.36)}
-html.claro .ci-m:focus-visible{outline-color:rgba(125,95,39,.5)}
-html.claro .ci-ring.compact .ci-m i.med{border-color:rgba(193,161,92,.3);background:rgba(255,252,244,.4)}
+html.claro .ci-m:focus-visible{outline-color:rgba(125,95,39,.7)}
+html.claro .ci-ring.compact .ci-m i.med{border-color:rgba(150,112,48,.55);background:rgba(255,252,244,.4)}
 html.claro .ci-ring.compact .ci-m i.med svg{opacity:.55}
 html.claro .ci-ring.compact .ci-m.lit i.med,html.claro .ci-ring.compact .ci-m:active i.med{border-color:rgba(193,161,92,.85);background:rgba(255,252,244,.75);box-shadow:0 0 12px rgba(193,161,92,.3)}
 html.claro .ci-ring.compact .ci-m span{color:var(--cl-ink)}
@@ -1797,9 +1797,10 @@ html.claro .vista-nos{background:#F6F1E4}
     if(cmp)RN.forEach(function(n){if(n.drag)return;var hr=12,tw=cmp?0:(n.el.offsetWidth||80)-14,bx0=n.x-42,bx1=n.x+42;
       for(var q=0;q<ZR.length;q++){var z=ZR[q];if(bx1>z[0]&&bx0<z[2]&&n.y+40>z[1]&&n.y-13<z[3]){n.y=n.y<(z[1]+z[3])/2?z[1]-41:z[3]+14;n.vy=0}}});
     // hilos de micelio entre vecinos y algunos atajos; tenues en reposo
+    var CLR=root.classList.contains('claro');fctx.__raw=CLR?1:0; // en claro, anillo en oro más profundo
     fctx.save();fctx.lineCap='round';
     function thread(a,b,base,bow,lit){var mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=mx-cx,dy=my-cy0,dl=Math.hypot(dx,dy)||1,w=reduce?0:Math.sin(t*.4+a.i)*3,qx=mx+dx/dl*(bow+w),qy=my+dy/dl*(bow+w);
-      fctx.strokeStyle='rgba(150,126,90,'+base.toFixed(3)+')';fctx.lineWidth=.6;fctx.beginPath();fctx.moveTo(a.x,a.y);fctx.quadraticCurveTo(qx,qy,b.x,b.y);fctx.stroke();
+      fctx.strokeStyle=CLR?'rgba(150,112,48,'+Math.min(1,base*2.2).toFixed(3)+')':'rgba(150,126,90,'+base.toFixed(3)+')';fctx.lineWidth=.6;fctx.beginPath();fctx.moveTo(a.x,a.y);fctx.quadraticCurveTo(qx,qy,b.x,b.y);fctx.stroke();
       if(lit>.02){fctx.globalCompositeOperation='lighter';fctx.strokeStyle='rgba(193,161,92,'+(.55*lit).toFixed(3)+')';fctx.lineWidth=.9;fctx.stroke();fctx.globalCompositeOperation='source-over'}}
     var foc=LINKS.length>0;ringEl.classList.toggle('focus',foc);for(var i=0;i<N;i++){var a=RN[i],b=RN[(i+1)%N];thread(a,b,foc?.06:.22,10,foc?0:Math.max(a.lit,b.lit)*.8);var c=RN[(i+3)%N];if(i%2===0&&!foc)thread(a,c,.08,-30,Math.max(a.lit,c.lit)*.35)}
     drawRouteLinks(t);
@@ -1807,11 +1808,11 @@ html.claro .vista-nos{background:#F6F1E4}
     RN.forEach(function(n){n.el.classList.toggle('say',!!(n.hold&&now-n.hold<2600));if(n.rt){n.lit=1;n.el.classList.add('lit')}else if(n.inB&&n.lit<.3){n.lit=.3}if(n.hold&&now-n.hold<2600)n.lit=Math.max(n.lit,1-(now-n.hold)/2600*.4);else n.lit*=Math.pow(.25,dt);if(n.lit<.03){n.lit=0;n.el.classList.remove('lit')}
       var br=reduce?.5:.5+.5*Math.sin(t*.25+n.ph),x=n.x,y=n.y;
       if(n.lit>.02){var gr=18,g=fctx.createRadialGradient(x,y,0,x,y,gr);g.addColorStop(0,'rgba(193,161,92,'+(.35*n.lit).toFixed(3)+')');g.addColorStop(1,'rgba(193,161,92,0)');fctx.globalCompositeOperation='lighter';fctx.fillStyle=g;fctx.fillRect(x-gr,y-gr,2*gr,2*gr);fctx.globalCompositeOperation='source-over'}
-      fctx.strokeStyle='rgba(216,200,183,'+((foc&&!n.rt?.12:.28+.15*br)+.4*n.lit).toFixed(3)+')';fctx.lineWidth=.6;fctx.beginPath();fctx.arc(x,y,5.5,0,6.283);fctx.stroke();
-      fctx.fillStyle='rgba(231,222,209,'+(.5+.2*br+.3*n.lit).toFixed(3)+')';fctx.beginPath();fctx.arc(x,y,1.6,0,6.283);fctx.fill();
+      fctx.strokeStyle=(CLR?'rgba(150,112,48,':'rgba(216,200,183,')+((foc&&!n.rt?.12:.28+.15*br)*(CLR?2:1)+.4*n.lit).toFixed(3)+')';fctx.lineWidth=.6;fctx.beginPath();fctx.arc(x,y,5.5,0,6.283);fctx.stroke();
+      fctx.fillStyle=(CLR?'rgba(160,120,52,':'rgba(231,222,209,')+(.5+.2*br+.3*n.lit).toFixed(3)+')';fctx.beginPath();fctx.arc(x,y,1.6,0,6.283);fctx.fill();
       if(n.i===10){n.el.classList.add('b');var bw2=n.el.offsetWidth||80;n.el.style.transform='translate('+(x-bw2/2).toFixed(1)+'px,'+(y-14).toFixed(1)+'px)';return}
       if(cmp){n.el.classList.remove('l');var cw=n.el.offsetWidth||70,clx=Math.max(4,Math.min(W-cw-4,x-cw/2));n.el.style.transform='translate('+clx.toFixed(1)+'px,'+(y-12).toFixed(1)+'px)';return}
-      var left=cmp?x>cx:x<cx;n.el.classList.toggle('l',left);var bwid=n.el.offsetWidth||80,lx=left?x-bwid+14:x-14;if(lx<4){left=false;n.el.classList.remove('l');lx=x-14}if(lx+bwid>W-4){left=true;n.el.classList.add('l');lx=x-bwid+14}n.el.style.transform='translate('+lx.toFixed(1)+'px,'+(y-20).toFixed(1)+'px)'});
+      var left=cmp?x>cx:x<cx;n.el.classList.toggle('l',left);var bwid=n.el.offsetWidth||80,lx=left?x-bwid+14:x-14;if(lx<4){left=false;n.el.classList.remove('l');lx=x-14}if(lx+bwid>W-4){left=true;n.el.classList.add('l');lx=x-bwid+14}n.el.style.transform='translate('+lx.toFixed(1)+'px,'+(y-20).toFixed(1)+'px)'});fctx.__raw=0;
     fctx.restore()}
   // ================= Fichas de los hongos (etapa 3) =================
   // Contenido: Teka_CANDIDATOS.md y Teka_EVIDENCIA.csv. Zona del cuerpo = donde existen estudios en personas en ese archivo (vista previa; validar con COFEPRIS antes de publicar).
