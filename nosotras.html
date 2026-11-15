@@ -81,9 +81,12 @@ html.claro .top nav a::after{background:#C1A15C}
 }
 /* tema claro (prueba): crema luminosa, texto en tinta y oro profundo */
 html.claro .nos{--noche:#F6F1E4;--tx:#2F2A27;--sub:#6B6156;--oro:#7D5F27;--oro-tenue:#7D5F27;
-  background:radial-gradient(ellipse 60% 50% at 50% 38%,rgba(255,252,242,.95),rgba(255,252,242,0) 72%),radial-gradient(ellipse 55% 45% at 4% 0%,rgba(255,243,212,.85),rgba(255,243,212,0) 70%),radial-gradient(ellipse 90% 85% at 50% 50%,#F6F2E6 22%,#E3E7D4 62%,#CFD9C2 90%,#C3CFB5 100%)}
+  background:radial-gradient(ellipse 55% 68% at 50% 46%,#FAF8F0 0%,#F6F4EA 65%,rgba(246,244,234,0) 100%),linear-gradient(112deg,#DDE5D7,#F7F5EA 49%,#E0E9DB)}
 html.claro .ct a:hover{color:#5E4719;background:rgba(193,161,92,.12)}
-html.claro .mic{filter:sepia(.5) saturate(1.4) brightness(.78)}
+/* claro: retratos ilustrados y micelio claro del paquete aprobado (archivos intactos) */
+html:not(.claro) .med img.cl,html:not(.claro) .mic-cl,html.claro .med img.os,html.claro .mic-os{display:none}
+html.claro .mic-cl{top:calc(150px + env(safe-area-inset-top,0px));width:max(100%,1440px);opacity:.75}
+html.claro .med{border-radius:50%;border:1px solid rgba(171,139,81,.5);padding:5px;box-shadow:0 0 0 9px rgba(192,165,111,.045)}
 .halo{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
 /* el micelio de fondo respira: deriva de pocos px, muy lenta */
 @keyframes micVivo{0%{transform:translate(-50%,0);opacity:.86}50%{transform:translate(calc(-50% + 5px),-3px);opacity:1}100%{transform:translate(calc(-50% - 4px),2px);opacity:.92}}
@@ -100,12 +103,13 @@ html.claro .mic{filter:sepia(.5) saturate(1.4) brightness(.78)}
   <span class="end" aria-hidden="true"></span>
 </header>
 <main class="nos" id="nosotras">
-  <img class="mic" src="assets/nosotras/micelio.svg" width="1200" height="720" alt="" aria-hidden="true">
+  <img class="mic mic-os" src="assets/nosotras/micelio.svg" width="1200" height="720" alt="" aria-hidden="true">
+  <img class="mic mic-cl" src="assets/nosotras/claro/micelio-claro.svg" width="1440" height="620" alt="" aria-hidden="true">
   <canvas class="halo" id="halo" aria-hidden="true"></canvas>
   <h1>Nosotras</h1>
   <div class="fichas">
     <article class="ficha" aria-labelledby="n-chio">
-      <div class="med"><img src="assets/nosotras/chio-medina.svg" width="1080" height="1080" alt="Retrato dibujado de Chío Medina"></div>
+      <div class="med"><img class="os" src="assets/nosotras/chio-medina.svg" width="1080" height="1080" alt="Retrato dibujado de Chío Medina"><img class="cl" src="assets/nosotras/claro/chio-medina.png" alt="Retrato ilustrado de Chío Medina" loading="lazy"></div>
       <div class="quien"><h2 id="n-chio">Chío Medina</h2><p>Psicóloga y docente</p></div>
       <p class="bio">Me gustan la ciencia, la cultura y las sobremesas que se alargan con una cumbia. De Sayula, mi pueblo en Jalisco, siempre me queda algo por contar.</p>
       <div class="ct"><span>Contacto</span>
@@ -114,7 +118,7 @@ html.claro .mic{filter:sepia(.5) saturate(1.4) brightness(.78)}
       </div>
     </article>
     <article class="ficha" aria-labelledby="n-faby">
-      <div class="med"><img src="assets/nosotras/faby-martinez.svg" width="1080" height="1080" alt="Retrato de Faby Martínez"></div>
+      <div class="med"><img class="os" src="assets/nosotras/faby-martinez.svg" width="1080" height="1080" alt="Retrato de Faby Martínez"><img class="cl" src="assets/nosotras/claro/faby-martinez.png" alt="Retrato ilustrado de Faby Martínez" loading="lazy"></div>
       <div class="quien"><h2 id="n-faby">Faby Martínez</h2><p>Psicóloga y terapeuta de reiki</p></div>
       <p class="bio">Vivo entre libros, canciones y sueños. En las fiestas, búscame con la gente rara. A veces basta una buena pregunta para que se nos haga de día.</p>
       <div class="ct"><span>Contacto</span>
