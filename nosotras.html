@@ -86,6 +86,14 @@ html.claro .ct a:hover{color:#5E4719;background:rgba(193,161,92,.12)}
 /* claro: retratos ilustrados y micelio claro del paquete aprobado (archivos intactos) */
 html:not(.claro) .med img.cl,html:not(.claro) .mic-cl,html.claro .med img.os,html.claro .mic-os{display:none}
 html.claro .mic-cl{top:calc(150px + env(safe-area-inset-top,0px));width:max(100%,1440px);opacity:.75}
+.mic-vivo svg{display:block;width:100%;height:auto}
+.mic-vivo .luz path{stroke:#C9A04E;stroke-opacity:.9;stroke-width:1.3;stroke-dasharray:70 1500;animation:micLuz 16s linear infinite;filter:drop-shadow(0 0 2px rgba(214,170,82,.7))}
+.mic-vivo g g path{animation:micRespira 9s ease-in-out infinite alternate}
+.mic-vivo circle{transform-box:fill-box;transform-origin:center;animation:micNodo 4.5s ease-in-out infinite}
+@keyframes micLuz{from{stroke-dashoffset:1570}to{stroke-dashoffset:0}}
+@keyframes micRespira{from{stroke-opacity:.22}to{stroke-opacity:.5}}
+@keyframes micNodo{0%,100%{opacity:.45;transform:scale(.8)}50%{opacity:1;transform:scale(1.6)}}
+@media (prefers-reduced-motion:reduce){.mic-vivo .luz{display:none}.mic-vivo g g path,.mic-vivo circle{animation:none}}
 html.claro .med{border-radius:50%;border:1px solid rgba(171,139,81,.5);padding:5px;box-shadow:0 0 0 9px rgba(192,165,111,.045)}
 .halo{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
 /* el micelio de fondo respira: deriva de pocos px, muy lenta */
@@ -99,7 +107,7 @@ html.claro .med{border-radius:50%;border:1px solid rgba(171,139,81,.5);padding:5
 <body>
 <header class="top">
   <a class="brand" href="./" aria-label="TEKIA, volver al atlas"><img src="assets/tekia-emblema-oro-web.png" alt=""><span aria-hidden="true">TEKIA</span></a>
-  <nav aria-label="Navegación general"><a href="./">Explorar el atlas</a><a class="m" aria-current="page">Nosotras</a><a class="m" href="./#f-precauciones">Precauciones</a><a href="./#f-acomp">Escríbenos</a></nav>
+  <nav aria-label="Navegación general"><a href="./">Explorar el atlas</a><a class="m" href="./#f-precauciones">Precauciones</a><a href="./#f-acomp">Escríbenos</a><a class="m" aria-current="page">Acerca de</a></nav>
   <span class="end" aria-hidden="true"></span>
 </header>
 <main class="nos" id="nosotras">
@@ -167,9 +175,10 @@ html.claro .med{border-radius:50%;border:1px solid rgba(171,139,81,.5);padding:5
     w=Math.sin(u*(9+o*2.3)+t*.35+o*1.7)*a.r*.07+Math.sin(u*(23-o*4)-t*.5+o)*a.r*.025,
     lift=-Math.exp(-Math.pow((x-(a.x+b.x)/2)/(a.r*1.4),2))*a.r*.08;return [x,y0+w+lift+o*a.r*.045]}
   function seg(pts,al,c,lw,fade){cx.lineWidth=lw;var n=pts.length,ch=6;for(var i=0;i<n-1;i+=ch){var e=Math.min(n-1,i+ch),u=(i+e)/2/(n-1),f=fade?fade(u,pts[i]):1;
-      if(al*f<.01)continue;cx.strokeStyle='rgba('+c+','+(al*f).toFixed(3)+')';cx.beginPath();cx.moveTo(pts[i][0],pts[i][1]);for(var j=i+1;j<=e;j++)cx.lineTo(pts[j][0],pts[j][1]);cx.stroke()}}
+      if(al*f<.01)continue;cx.strokeStyle='rgba('+(CLN?CLC[c]||c:c)+','+Math.min(1,al*f*(CLN?1.5:1)).toFixed(3)+')';cx.beginPath();cx.moveTo(pts[i][0],pts[i][1]);for(var j=i+1;j<=e;j++)cx.lineTo(pts[j][0],pts[j][1]);cx.stroke()}}
   function quad(p0,c,p2,g,n){var o=[];n=n||10;for(var i=0;i<=n;i++){var s=g*i/n,z=1-s;o.push([z*z*p0[0]+2*z*s*c[0]+s*s*p2[0],z*z*p0[1]+2*z*s*c[1]+s*s*p2[1]])}return o}
-  function draw(T){cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);if(M.length<2)return;var mv=!still.matches,t=mv?(T-t0)/1000+40:47;
+  var CLC={'203,186,153':'168,134,70','217,195,138':'176,140,66','232,212,158':'190,152,74','201,176,113':'150,118,56','226,204,150':'184,146,70'},CLN=false;
+  function draw(T){CLN=document.documentElement.classList.contains('claro');cx.__raw=CLN?1:0;cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);if(M.length<2)return;var mv=!still.matches,t=mv?(T-t0)/1000+40:47;
     cx.lineCap='round';cx.lineJoin='round';
     // hebras horizontales
     [[0,.34,.8],[-1,.2,.55],[1.2,.16,.5]].forEach(function(s){var pts=[];for(var i=0;i<=140;i++)pts.push(strand(i/140,t,s[0]));
@@ -193,11 +202,17 @@ html.claro .med{border-radius:50%;border:1px solid rgba(171,139,81,.5);padding:5
     // partículas que viajan por la hebra
     P.forEach(function(p){var u=((p.u+(mv?t*p.v:0))%1+1)%1,q=strand(u,t,0),edge=Math.min(1,u*6,(1-u)*6),y=q[1]+p.o*M[0].r*.05;
       dot(q[0],y,p.s,p.a*edge*(mv?.55+.35*Math.sin(t*1.2+p.ph):.6))})}
-  function dot(x,y,s,a){var g=cx.createRadialGradient(x,y,0,x,y,s*3);g.addColorStop(0,'rgba(250,236,198,'+a+')');g.addColorStop(.35,'rgba(232,212,158,'+a*.4+')');g.addColorStop(1,'rgba(201,176,113,0)');cx.fillStyle=g;cx.beginPath();cx.arc(x,y,s*3,0,6.2832);cx.fill()}
+  function dot(x,y,s,a){var g=cx.createRadialGradient(x,y,0,x,y,s*3);if(CLN){g.addColorStop(0,'rgba(255,248,226,'+Math.min(1,a*1.6)+')');g.addColorStop(.3,'rgba(206,166,82,'+Math.min(1,a*.9)+')');g.addColorStop(1,'rgba(193,161,92,0)')}else{g.addColorStop(0,'rgba(250,236,198,'+a+')');g.addColorStop(.35,'rgba(232,212,158,'+a*.4+')');g.addColorStop(1,'rgba(201,176,113,0)')}cx.fillStyle=g;cx.beginPath();cx.arc(x,y,s*3,0,6.2832);cx.fill()}
   function off(){return still.matches||document.hidden||!nos.isConnected||!nos.getClientRects().length}
   function loop(t){draw(t);raf=off()?0:requestAnimationFrame(loop)}
   function go(){if(!raf&&!off())raf=requestAnimationFrame(loop);else draw(performance.now())}
   window.TEKIA_nosHalo=function(){layout();go()};
+  (function(){var im=nos.querySelector('img.mic-cl');if(!im||!window.fetch)return;fetch(im.getAttribute('src')).then(function(r){return r.ok?r.text():null}).then(function(tx){if(!tx)return;
+    var d=document.createElement('div');d.className='mic mic-cl mic-vivo';d.setAttribute('aria-hidden','true');d.innerHTML=tx;var sv=d.querySelector('svg');if(!sv)return;sv.removeAttribute('role');
+    var g=sv.querySelector('g g'),lz=document.createElementNS('http://www.w3.org/2000/svg','g');lz.setAttribute('class','luz');
+    [].forEach.call(sv.querySelectorAll('g g path'),function(p,i){var c=p.cloneNode();c.style.animationDelay=(-i*3.7)+'s';lz.appendChild(c)});
+    sv.querySelector('g').appendChild(lz);[].forEach.call(sv.querySelectorAll('circle'),function(c,i){c.style.animationDelay=(-i*1.3)+'s'});
+    im.parentNode.replaceChild(d,im)}).catch(function(){})})();
   addEventListener('resize',layout);document.addEventListener('visibilitychange',go);still.addEventListener&&still.addEventListener('change',go);
   [].forEach.call(nos.querySelectorAll('.med img'),function(i){if(!i.complete)i.addEventListener('load',layout)});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);layout();go()})();
