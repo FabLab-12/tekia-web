@@ -2129,10 +2129,10 @@ html.claro .vista-nos{background:#F6F4EA}
   sec.addEventListener('click',function(e){if(!RUTA||!tapAt||Math.hypot(e.clientX-tapAt[0],e.clientY-tapAt[1])>8)return;if(e.target.closest&&e.target.closest('.ci-z,.ci-m,.ci-go,.hm,.bt,a,button'))return;clearRoute()});
   // vida en las hebras: puntitos brillantes que viajan, cada uno a su ritmo, por los filamentos que se ven de cerca
   var VIDA=[],vidaT=0;(function(){var n=reduce?0:(LOW?420:800);for(var i=0;i<n;i++)VIDA.push({f:-1})})();
-  function nuevaV(R){for(var k=0;k<14;k++){var f=Math.floor(Math.random()*FIB.length),F2=FIB[f];if(F2&&F2.n>8){var m0=F2.s+(F2.n>>1);if(k<13&&(SX[m0]!==SX[m0]||SX[m0]<0||SY[m0]<0||SX[m0]>W||SY[m0]>H))continue;R.f=f;R.u=Math.random();R.d=Math.random()<.5?1:-1;R.v=(.04+Math.random()*.09)*(30/Math.max(30,F2.n))*.9;R.z=Math.random()<.06?1.8:.7+Math.random()*.5;R.w=Math.random()*6.283;return}}R.f=-1}
+  function nuevaV(R){for(var k=0;k<14;k++){var f=Math.floor(Math.random()*FIB.length),F2=FIB[f];if(F2&&F2.n>8){var m0=F2.s+(F2.n>>1);if(k<13&&(SX[m0]!==SX[m0]||SX[m0]<0||SY[m0]<0||SX[m0]>W||SY[m0]>H))continue;R.f=f;R.u=Math.random();R.d=Math.random()<.5?1:-1;R.v=(.04+Math.random()*.09)*(30/Math.max(30,F2.n))*.45;R.z=Math.random()<.06?1.8:.7+Math.random()*.5;R.w=Math.random()*6.283;return}}R.f=-1}
   // energía que pasa: un tramo de la hebra se enciende con suavidad y avanza despacio; antes y después la luz se apaga en degradado
   var ONDA=[];(function(){var n=reduce?0:(LOW?26:46);for(var i=0;i<n;i++)ONDA.push({f:-1,d0:i*.4})})();
-  function nuevaO(R){nuevaV(R);if(R.f<0)return;var F2=FIB[R.f];R.u=R.d>0?-.15:1.15;R.v=(.025+Math.random()*.03)*(40/Math.max(40,F2.n))*1.6;R.h=.06+Math.random()*.06}
+  function nuevaO(R){nuevaV(R);if(R.f<0)return;var F2=FIB[R.f];R.u=R.d>0?-.15:1.15;R.v=(.025+Math.random()*.03)*(40/Math.max(40,F2.n))*.8;R.h=.06+Math.random()*.06}
   function drawOndas(t,dt,vis,CLV){for(var i=0;i<ONDA.length;i++){var R=ONDA[i];if(R.d0>0){R.d0-=dt;continue}if(R.f<0){nuevaO(R);if(R.f<0)continue}var F2=FIB[R.f];R.u+=R.d*R.v*dt;
       if(R.u<-.2||R.u>1.2){R.f=-1;R.d0=1+Math.random()*4;continue}
       var n=F2.n,c=R.u*(n-1),hw=R.h*(n-1),j0=Math.max(0,Math.floor(c-hw*2)),j1=Math.min(n-1,Math.ceil(c+hw*2));
@@ -2141,15 +2141,15 @@ html.claro .vista-nos{background:#F6F4EA}
         fctx.beginPath();fctx.moveTo(SX[a],SY[a]);fctx.lineTo(SX[b],SY[b]);fctx.stroke()}}}
   function drawVida(now){var vis=smooth(1.25,2.6,Z.m);if(!VIDA.length||vis<.02)return;var t=now/1000,dt=vidaT?Math.min(.05,t-vidaT):0;vidaT=t;
     var CLV=root.classList.contains('claro'),hc=t%1.7,hb=Math.exp(-hc/.22)+.55*(hc>.34?Math.exp(-(hc-.34)/.3):0),wv=Math.min(2.2,Math.sqrt(Z.m)*.7);
-    fctx.save();fctx.globalCompositeOperation=CLV?'source-over':'lighter';if(CLV)fctx.__raw=1;
+    fctx.save();fctx.globalCompositeOperation='lighter';if(CLV)fctx.__raw=1;
     fctx.lineCap='round';drawOndas(t,dt,vis,CLV);
     for(var i=0;i<VIDA.length;i++){var R=VIDA[i];if(R.f<0){nuevaV(R);if(R.f<0)continue}var F2=FIB[R.f];R.u+=R.d*R.v*dt*(1+.25*hb);if(R.u<=0||R.u>=1){nuevaV(R);continue}
       var env=Math.sin(Math.PI*R.u),tw=.6+.4*Math.sin(t*2.3+R.w);
       var pos=R.u*(F2.n-1),j0=Math.floor(pos),fr=pos-j0,a=F2.s+j0,b=F2.s+Math.min(F2.n-1,j0+1);if(SX[a]!==SX[a]||SX[b]!==SX[b])continue;
       var x=SX[a]+(SX[b]-SX[a])*fr,y=SY[a]+(SY[b]-SY[a])*fr;if(x<-4||y<-4||x>W+4||y>H+4)continue;
       // polvo luminoso: puntos finos, casi todos diminutos, algunos un poco mayores y más tenues
-      var al=vis*env*tw*(.7+.3*hb)*(R.z>1.5?.35:.75),rr=(R.z>1.5?1.15:.45+.35*(R.z-.7))*Math.min(1.6,wv);
-      fctx.fillStyle=CLV?'rgba(255,253,244,'+Math.min(1,al*1.15).toFixed(3)+')':'rgba(255,240,205,'+al.toFixed(3)+')';fctx.beginPath();fctx.arc(x,y,rr,0,6.283);fctx.fill()}
+      var al=vis*env*tw*(.7+.3*hb)*(R.z>1.5?.5:.95),rr=3.2*(R.z>1.5?1.15:.5+.4*(R.z-.7))*Math.min(1.6,wv);
+      var gh=rr*2.2,gg=fctx.createRadialGradient(x,y,0,x,y,gh);gg.addColorStop(0,CLV?'rgba(255,236,190,'+Math.min(1,al*.9).toFixed(3)+')':'rgba(255,226,160,'+Math.min(1,al*.8).toFixed(3)+')');gg.addColorStop(.35,CLV?'rgba(240,196,120,'+(al*.35).toFixed(3)+')':'rgba(230,180,100,'+(al*.3).toFixed(3)+')');gg.addColorStop(1,'rgba(230,180,100,0)');fctx.fillStyle=gg;fctx.fillRect(x-gh,y-gh,2*gh,2*gh);fctx.fillStyle=CLV?'rgba(255,252,240,'+Math.min(1,al*1.2).toFixed(3)+')':'rgba(255,244,214,'+Math.min(1,al*1.1).toFixed(3)+')';fctx.beginPath();fctx.arc(x,y,rr*.6,0,6.283);fctx.fill()}
     if(CLV)fctx.__raw=0;fctx.restore()}
   function drawFx(now){fctx.setTransform(dpr,0,0,dpr,0,0);fctx.clearRect(0,0,W,H);var hadGL=glDrawn;glDrawn=false;drawSkin(now);if(hadGL&&!glDrawn&&GLOK)GLX.clear();if(!reduce)drawVida(now);fctx.lineCap='round';fctx.lineJoin='round';var fd=fade(),wz=Math.min(3.4,Math.sqrt(Z.m));
     // hebra elegida: se reconoce en todas las escalas
