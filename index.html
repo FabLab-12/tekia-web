@@ -1559,6 +1559,15 @@ html.claro .vista-nos{background:#F6F4EA}
     return new Uint16Array(out)})();
   // fibras finas que recorren la piel (como pelusa luminosa vista en macro)
   var SEAM=null;
+  // corrientes: cada punto de la piel apunta a un vecino más arriba, con un leve giro; las partículas viajan de punto en punto
+  var NEXT=(function(){var h=10,G3={},N=new Int32Array(NSURF),i,j;function key(x,y,z){return Math.floor(x/h)+','+Math.floor(y/h)+','+Math.floor(z/h)}
+    for(i=0;i<NSURF;i++){var k3=key(SP[i*3],SP[i*3+1],SP[i*3+2]);(G3[k3]||(G3[k3]=[])).push(i)}
+    for(i=0;i<NSURF;i++){var x=SP[i*3],y=SP[i*3+1],z=SP[i*3+2],dx=.5*Math.sin(y*.03+x*.02),dz=.5*Math.cos(y*.027-z*.03),dl=Math.hypot(dx,1,dz),bx=dx/dl,by=-1/dl,bz=dz/dl,best=-1,bs=.35;
+      var cx=Math.floor(x/h),cy=Math.floor(y/h),cz=Math.floor(z/h);
+      for(var a=-1;a<=1;a++)for(var b=-1;b<=1;b++)for(var c=-1;c<=1;c++){var L=G3[(cx+a)+','+(cy+b)+','+(cz+c)];if(!L)continue;
+        for(var m=0;m<L.length;m++){j=L[m];var ex=SP[j*3]-x,ey=SP[j*3+1]-y,ez=SP[j*3+2]-z,d=Math.hypot(ex,ey,ez);if(d<2.5||d>h)continue;var sc=(ex*bx+ey*by+ez*bz)/d-d*.006;if(sc>bs){bs=sc;best=j}}}
+      N[i]=best}return N})();
+  function nuevaP(r,age){var big=r()<.07;return {q:Math.floor(r()*NSURF),u:r(),v:.25+r()*.45,ox:(r()-.5)*7,oy:(r()-.5)*7,z:big?1.7+r()*.9:.55+r()*.65,a:age*6,L:4+r()*6,w:r()*6.283}}
   var FBR=(function(){var h=5.6,G3={},r=rnd(2611),out=[],NF=useGL?(LOW?2200:3500):(LOW?1250:1700);function key(x,y,z){return Math.floor(x/h)+','+Math.floor(y/h)+','+Math.floor(z/h)}
     for(var i=0;i<NSURF;i++){var kk=key(SP[i*3],SP[i*3+1],SP[i*3+2]);(G3[kk]||(G3[kk]=[])).push(i)}
     function nb(i){var x=SP[i*3],y=SP[i*3+1],z=SP[i*3+2],gx=Math.floor(x/h),gy=Math.floor(y/h),gz=Math.floor(z/h),c=[];for(var a=-1;a<=1;a++)for(var b=-1;b<=1;b++)for(var d=-1;d<=1;d++){var L2=G3[(gx+a)+','+(gy+b)+','+(gz+d)];if(!L2)continue;for(var j=0;j<L2.length;j++){var q=L2[j];if(q===i)continue;var dx=SP[q*3]-x,dy=SP[q*3+1]-y,dz=SP[q*3+2]-z,dd=dx*dx+dy*dy+dz*dz;if(dd<h*h&&dd>1)c.push(q)}}return c}
@@ -1784,10 +1793,11 @@ html.claro .vista-nos{background:#F6F4EA}
     // nodos escasos: en el arranque de algunas fibras principales (donde se ramifican)
     for(i=0;i<fib.length;i+=4){if(fib[i+2]&&r()<.2)nod.push(FBR[fib[i]],r()*6.283)}
     // flujo como el sanguíneo: cada partícula lleva su propio sentido, velocidad y ritmo
-    var par=[],NPAR=LOW?170:320;for(i=0;i<NPAR;i++)par.push({f:Math.floor(r()*(fib.length/4)),u:r(),v:.05+r()*.11,s:r()<.5?1:-1,w:r()*6.283,q:.6+r()*.6});
+    // partículas de vida: polvo luminoso que sube en corrientes por la superficie del cuerpo (no sigue las fibras)
+    var par=[],NPAR=LOW?520:900;for(i=0;i<NPAR;i++)par.push(nuevaP(r,r()));
     var nV=(NSK-NSURF)+Math.ceil(nD/2)+Math.ceil(NSURF/2);
     GLG={SUB:SUB,fib:fib,dp:new Float32Array(dp),ds:new Int32Array(ds),df:df,nD:nD,DX:new Float32Array(nD),DY:new Float32Array(nD),DZ:new Float32Array(nD),DV:new Uint8Array(nD),nod:nod,
-      back:{d:new Float32Array((nsF+nsD)*6),n:0},front:{d:new Float32Array(nsF*6),n:0},vol:{d:new Float32Array(nV*3),n:0,r:9},par:par,parB:new Float32Array(par.length*12),nodB:{d:new Float32Array(nod.length*2),n:0}};
+      back:{d:new Float32Array((nsF+nsD)*6),n:0},front:{d:new Float32Array(nsF*6),n:0},vol:{d:new Float32Array(nV*3),n:0,r:9},par:par,parB:new Float32Array(par.length*4),nodB:{d:new Float32Array(nod.length*2),n:0}};
     return GLG}
   // fibra continua: se suaviza en pantalla (sin quiebres de malla) y se traza con Catmull-Rom
   var GTR=new Float32Array(64),GTA=new Float32Array(64),GTX=new Float32Array(64),GTY=new Float32Array(64),GTL=new Float32Array(64),GTN=new Float32Array(64),GTV=new Uint8Array(64),GSX=new Float32Array(64),GSY=new Float32Array(64);
@@ -1805,7 +1815,7 @@ html.claro .vista-nos{background:#F6F4EA}
           wave=.84+.16*Math.sin(uf*8+ph+t*.22),bv=deep?Math.min(.5,(.08+lb*.3+nr*.22)*wave):Math.min(1,(.14+lb*.55+nr*.38)*wave),
           tip=Math.min(1,Math.min(uf,1-uf)*7),wd=w0*(.35+.65*Math.sin(Math.PI*Math.min(1,Math.max(0,uf))))*tip*(deep?.8:(.75+.4*nr)),T=TF,o6=T.n*6,D=T.d;
         if(CAPA==='B'){bv=deep?.25:.55}else if(!deep){bv=Math.min(1,Math.pow(bv,1.2)*(TONO?TONO[0]:1.5));if(CAPA>='E'){var rv=GTR[a]+(GTR[b]-GTR[a])*um;if(rv>.01){bv=Math.min(1,bv+rv*.8);wd*=1-.3*Math.min(1,rv)}}}
-        if(AI.amt>.002){var av=GTA[a]+(GTA[b]-GTA[a])*um;bv*=1-.3*AI.amt*(1-av);if(av>.01){var mm=actMod(ph,uf,t)*av*(AI.gan||1);bv=deep?Math.min(.8,bv+mm*.5):Math.min(1,bv*(1+mm*.9)+mm*.32);wd*=1+mm*.35}}
+        if(AI.amt>.002){var av=GTA[a]+(GTA[b]-GTA[a])*um;bv*=1-.12*AI.amt*(1-av);if(av>.01){var mm=actMod(ph,uf,t)*av*(AI.gan||1);bv=deep?Math.min(.6,bv+mm*.25):Math.min(Math.max(bv,.86),bv*(1+mm*.3)+mm*.1);wd*=1+mm*.12}}
         D[o6]=px;D[o6+1]=py;D[o6+2]=cx;D[o6+3]=cy;D[o6+4]=bv;D[o6+5]=wd;T.n++;px=cx;py=cy}}}
   function drawGL(t,gA,wz){var G=glGeo(),CL=root.classList.contains('claro'),i,zmn=1e9,zmx=-1e9;actPaso(t);
     // fibras de la intención activa: las partículas que renacen prefieren recorrerlas
@@ -1828,18 +1838,17 @@ html.claro .vista-nos{background:#F6F4EA}
     prj(PIV[0],PIV[1],PIV[2],o);V.n=nv;V.r=Math.max(6,(LOW?7.5:6.5)*o.s*k);
     // nodos: pocos, respiran despacio; solo los cercanos e iluminados
     var N=G.nod,nb=G.nodB,nd=nb.d,nn=0;if(!G.nodF)G.nodF=new Float32Array(N.length*2);var NF=G.nodF;
-    for(i=0;i<N.length;i+=2){var c=N[i];if(!MV[c])continue;var near=1-(MZ[c]-zmn)*zr,ac=ACT[c],bb=Math.min(1,SB[c]*.7+near*.5+(ac>.01?ac*.5*actMod(N[i+1],.5,t):0))*(reduce?.9:.8+.2*Math.sin(t*.5+N[i+1]));if((near<.45&&!(ac>.3&&near>.2))||bb<.3)continue;
+    for(i=0;i<N.length;i+=2){var c=N[i];if(!MV[c])continue;var near=1-(MZ[c]-zmn)*zr,ac=ACT[c],bb=Math.min(1,SB[c]*.7+near*.5+(ac>.01?ac*.25*actMod(N[i+1],.5,t):0))*(reduce?.9:.8+.2*Math.sin(t*.5+N[i+1]));if((near<.45&&!(ac>.3&&near>.2))||bb<.3)continue;
       NF[nn*4]=MX[c];NF[nn*4+1]=MY[c];NF[nn*4+2]=bb*.85;NF[nn*4+3]=(3+3*near)*Math.min(1.5,wz);nn++}
     // partículas de vida: viajan por dentro de las fibras, despacio; las cercanas en marfil, las profundas tenues
     var PA=G.par,pd=G.parB,np=0,dtp=Math.min(.05,Math.max(0,t-(G.lt||t)));G.lt=t;
-    if(!reduce)for(i=0;i<PA.length;i++){var P2=PA[i],fs=F[P2.f*4],fl=F[P2.f*4+1];var qv=FBR[fs+Math.floor(P2.u*(fl-1))],acp=ACT[qv];
-      var sp=P2.v*(.7+.3*Math.sin(t*(.6+P2.q*.5)+P2.w));P2.u+=P2.s*sp*dtp*(1+acp*(AI.preset==='movement'?1.6:.9));
-      if(P2.u>=1||P2.u<=0){P2.f=(ACTF.length&&AI.amt>.2&&Math.random()<.5)?ACTF[Math.floor(Math.random()*ACTF.length)]:Math.floor(Math.random()*(F.length/4));P2.s=Math.random()<.5?1:-1;P2.u=P2.s>0?0:1;P2.v=.05+Math.random()*.11;P2.w=Math.random()*6.283;continue}
-      // la partícula y una estela corta detrás, cada vez más tenue
-      for(var tr=0;tr<3;tr++){var uu=P2.u-P2.s*tr*.012*(fl>40?40/fl:1);if(uu<=0||uu>=1)break;
-        var pos=uu*(fl-1),j0=Math.floor(pos),fr=pos-j0,qa=FBR[fs+j0],qb=FBR[fs+Math.min(fl-1,j0+1)];if(!MV[qa]||!MV[qb])break;
-        var nr2=1-(MZ[qa]-zmn)*zr,env=Math.sin(Math.PI*uu),br=env*(.25+.75*nr2)*(.55+.45*SB[qa])*(1+ACT[qa]*1.1)*[1,.42,.18][tr];if(br<.05)break;
-        pd[np*4]=MX[qa]+(MX[qb]-MX[qa])*fr;pd[np*4+1]=MY[qa]+(MY[qb]-MY[qa])*fr;pd[np*4+2]=Math.min(1,br*1.2);pd[np*4+3]=(2.4+3*nr2)*P2.q*[1,.8,.6][tr]*Math.min(1.4,wz);np++}}
+    // latido profundo: dos golpes suaves y una larga caída, como un corazón en reposo; las corrientes se avivan y se calman
+    var hc=(t%1.7),HB=reduce?0:Math.exp(-hc/.22)*(hc>0?1:0)+.55*(hc>.34?Math.exp(-(hc-.34)/.3):0),hbS=1+.9*HB,hbB=.7+.45*HB;
+    if(!reduce)for(i=0;i<PA.length;i++){var P2=PA[i],qa=P2.q,qb=NEXT[qa];P2.a+=dtp;
+      if(qb<0||P2.a>P2.L){var nq=Math.floor(Math.random()*NSURF);if(AI.amt>.2&&ACT[nq]<.2)nq=Math.floor(Math.random()*NSURF);PA[i]=P2=nuevaP(Math.random,0);P2.q=nq;continue}
+      P2.u+=P2.v*dtp*hbS*(1+ACT[qa]*.5);while(P2.u>=1&&qb>=0){P2.u-=1;qa=P2.q=qb;qb=NEXT[qa]}if(qb<0||!MV[qa]||!MV[qb])continue;
+      var nr2=1-(MZ[qa]-zmn)*zr,fd=Math.min(1,P2.a/1.2,(P2.L-P2.a)/1.5),tw2=.75+.25*Math.sin(t*1.3+P2.w),br=fd*tw2*(.15+.85*nr2*nr2)*(.5+.5*SB[qa])*(1+ACT[qa]*.4)*(P2.z>1.5?.45:.8)*hbB;if(br<.04)continue;
+      var fr=P2.u,sw=Math.min(1.6,wz);pd[np*4]=MX[qa]+(MX[qb]-MX[qa])*fr+P2.ox*sw;pd[np*4+1]=MY[qa]+(MY[qb]-MY[qa])*fr+P2.oy*sw;pd[np*4+2]=Math.min(1,br);pd[np*4+3]=(1.6+2.2*nr2)*P2.z*Math.min(1.4,wz);np++}
     prj(PIV[0],PIV[1],PIV[2],o);var pS=o.s*k;prj(100,105,0,o);
     GLX.draw({W:W,H:H,dpr:dpr,tema:CL?'claro':'oscuro',gA:gA,t:t,back:G.back,front:G.front,vol:V,nod:{d:NF,n:nn},par:{d:pd,n:np},pulso:null,capa:CAPA,verde:VERDE,tono:TONO});glDrawn=true}
   function drawSkin(now){drawBg(now);var m=Z.m,a=1-smooth(4,18,m);if(a<.01||grow<.02)return;var t=now/1000,dt=lastT?Math.min(.05,t-lastT):0;lastT=t;
