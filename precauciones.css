@@ -147,7 +147,7 @@ html.claro .pc-ct span{color:#7D5F27}html.claro .pc-ct b{color:#6B6156}html.clar
 }
 @media (max-width:640px){.pc-k{letter-spacing:.16em;font-size:.56rem}.pc{padding-left:10px;padding-right:10px}.pc-box{width:100%}.pc-c{padding:2.4rem 1.15rem 1.6rem}.pc-pr li,.pc-gr li{gap:.8rem}}
 @media (prefers-reduced-motion:reduce){.pc-box{transition:none}.pc-rec.on{animation:none}}
-html.claro .pc-box{background:rgba(248,245,235,.94);color:#2F2A27;border-color:rgba(193,161,92,.4)}
+html.claro .pc-box{background:rgba(248,245,235,.86);color:#2F2A27;border-color:rgba(193,161,92,.4)}
 html.claro .pc-c{color:#4A423B;scrollbar-color:rgba(193,161,92,.45) transparent}
 html.claro .pc .pc-ic{stroke:#5F6D4D;opacity:1}
 html.claro .pc h2,html.claro .pc h3,html.claro .pc-in-t b,html.claro .pc-sum,html.claro .pc-more{color:#2F2A27}
