@@ -11,10 +11,10 @@
 (function(){
   var gl,cv,P={},V={},F={},w=0,h=0,bufs={};
   var TEMAS={
-    claro:{fib:[[.60,.40,.12],[.92,.66,.24],[1,.86,.52],[1,.97,.90]],aMin:.4,aMax:1,
-           volEdge:[.506,.604,.467],volCore:[.259,.361,.263],volA:.3,bloom:[1,.8,.48],bloomK:.45},
-    oscuro:{fib:[[.42,.30,.14],[.80,.60,.28],[.96,.80,.50],[1,.96,.87]],aMin:.18,aMax:1,
-           volEdge:[.20,.29,.22],volCore:[.16,.24,.18],volA:.28,bloom:[.95,.8,.55],bloomK:.55}};
+    claro:{fib:[[.60,.40,.12],[.92,.66,.24],[1,.84,.50],[1,.92,.72]],aMin:.4,aMax:1,
+           volEdge:[.506,.604,.467],volCore:[.259,.361,.263],volA:.15,bloom:[1,.8,.48],bloomK:.22},
+    oscuro:{fib:[[.42,.30,.14],[.80,.60,.28],[.96,.80,.50],[1,.92,.75]],aMin:.18,aMax:1,
+           volEdge:[.20,.29,.22],volCore:[.16,.24,.18],volA:.14,bloom:[.95,.8,.55],bloomK:.28}};
   function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,'#version 300 es\nprecision highp float;\n'+s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o}
   function prog(vs,fs){var p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,vs));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw gl.getProgramInfoLog(p);
     var u={},n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS);for(var i=0;i<n;i++){var a=gl.getActiveUniform(p,i);u[a.name.replace(/\[0\]$/,'')]=gl.getUniformLocation(p,a.name)}return {p:p,u:u}}
