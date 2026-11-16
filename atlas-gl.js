@@ -12,9 +12,9 @@
   var gl,cv,P={},V={},F={},w=0,h=0,bufs={};
   var TEMAS={
     claro:{fib:[[.60,.40,.12],[.92,.66,.24],[1,.86,.52],[1,.97,.90]],aMin:.4,aMax:1,
-           volEdge:[.94,.64,.22],volCore:[.34,.36,.11],volA:.82,volE:[.66,.76],volBlur:.75,bloom:[1,.8,.48],bloomK:.45},
+           volEdge:[.506,.604,.467],volCore:[.259,.361,.263],volA:.6,bloom:[1,.8,.48],bloomK:.45},
     oscuro:{fib:[[.42,.30,.14],[.80,.60,.28],[.96,.80,.50],[1,.96,.87]],aMin:.18,aMax:1,
-           volEdge:[.40,.30,.13],volCore:[.09,.16,.08],volA:.75,volE:[.6,.78],volBlur:1.2,bloom:[.95,.8,.55],bloomK:.55}};
+           volEdge:[.20,.29,.22],volCore:[.16,.24,.18],volA:.5,bloom:[.95,.8,.55],bloomK:.55}};
   function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,'#version 300 es\nprecision highp float;\n'+s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o}
   function prog(vs,fs){var p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,vs));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw gl.getProgramInfoLog(p);
     var u={},n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS);for(var i=0;i<n;i++){var a=gl.getActiveUniform(p,i);u[a.name.replace(/\[0\]$/,'')]=gl.getUniformLocation(p,a.name)}return {p:p,u:u}}
@@ -40,10 +40,11 @@
       P.seg=prog(SEG_VS,SEG_FS);
       P.pt=prog('in vec3 p;uniform vec2 res;uniform float ps;out float wt;void main(){vec2 c=p.xy/res*2.-1.;gl_Position=vec4(c.x,-c.y,0,1);gl_PointSize=ps;wt=p.z;}',
         'in float wt;out vec4 o;void main(){vec2 d=gl_PointCoord*2.-1.;float r=dot(d,d);if(r>1.)discard;float g=(exp(-r*3.)-exp(-3.))*.04*wt;o=vec4(g);}');
-      P.vol=prog(FSQ,'in vec2 uv;out vec4 o;uniform sampler2D d;uniform vec3 ce,cc;uniform vec2 E;uniform float A,ga,t;'+
-        'void main(){float v=texture(d,uv).r;float a0=1.-exp(-v*6.);float a=smoothstep(E.x,E.y,a0);if(a<.003){o=vec4(0);return;}'+
-        'float n=sin(uv.x*23.+t*.05)*sin(uv.y*13.-uv.x*7.-t*.04)*.5+.5;float core=smoothstep(.55,1.,a0);'+
-        'vec3 c=mix(ce,cc,core)*(.96+.07*n);float al=a*A*ga*(.9+.1*n)*(.6+.4*core);o=vec4(c*al,al);}');
+      // verde interior (como en la versión publicada): bruma translúcida bajo las fibras cercanas
+      P.vol=prog(FSQ,'in vec2 uv;out vec4 o;uniform sampler2D d;uniform vec3 ce,cc;uniform float A,ga,t;'+
+        'void main(){float v=texture(d,uv).r;float a=max(0.,1.-exp(-v*6.)-.1)/.9;if(a<.003){o=vec4(0);return;}'+
+        'float n=sin(uv.x*23.+t*.05)*sin(uv.y*13.-uv.x*7.-t*.04)*.5+.5;float core=smoothstep(.25,.95,a);'+
+        'vec3 c=mix(ce,cc,core)*(.96+.07*n);float al=a*A*ga*(.9+.1*n);o=vec4(c*al,al);}');
       P.nod=prog('in vec4 p;uniform vec2 res;uniform float dpr;out float b;void main(){vec2 c=p.xy/res*2.-1.;gl_Position=vec4(c.x,-c.y,0,1);gl_PointSize=p.w*dpr;b=p.z;}',
         'in float b;out vec4 o;uniform vec3 col;void main(){vec2 d=gl_PointCoord*2.-1.;float r=length(d);if(r>1.)discard;float core=1.-smoothstep(.12,.24,r);float halo=exp(-r*r*9.)*.12;float a=(core+halo)*b;o=vec4(col*a,a);}');
       P.cp=prog(FSQ,'in vec2 uv;out vec4 o;uniform sampler2D s;void main(){o=texture(s,uv);}');
@@ -66,7 +67,7 @@
   function target(f){gl.bindFramebuffer(gl.FRAMEBUFFER,f?f.f:null);gl.viewport(0,0,f?f.w:w,f?f.h:h)}
   function full(){gl.bindVertexArray(V.q);gl.drawArrays(gl.TRIANGLE_STRIP,0,4)}
   function segs(k,data,n,o,T,sc,thr){if(!n)return;var p=P.seg,u=p.u;gl.useProgram(p.p);gl.uniform2f(u.res,sc<1?F.b1.w:w,sc<1?F.b1.h:h);gl.uniform1f(u.dpr,o.dpr);gl.uniform1f(u.sc,sc);gl.uniform1f(u.thr,thr);
-    gl.uniform3fv(u.c0,T.fib[0]);gl.uniform3fv(u.c1,T.fib[1]);gl.uniform3fv(u.c2,T.fib[2]);gl.uniform3fv(u.c3,T.fib[3]);gl.uniform1f(u.tt,o.t);gl.uniform3fv(u.pul,o.pulso?[o.pulso.x,o.pulso.y,o.pulso.s]:[0,0,0]);gl.uniform1f(u.aMin,T.aMin);gl.uniform1f(u.aMax,T.aMax);gl.uniform1f(u.ga,o.gA);
+    gl.uniform3fv(u.c0,o.tono&&o.tono.length>5?o.tono.slice(3,6):T.fib[0]);gl.uniform3fv(u.c1,T.fib[1]);gl.uniform3fv(u.c2,T.fib[2]);gl.uniform3fv(u.c3,T.fib[3]);gl.uniform1f(u.tt,o.t);gl.uniform3fv(u.pul,o.pulso?[o.pulso.x,o.pulso.y,o.pulso.s]:[0,0,0]);gl.uniform1f(u.aMin,o.tono?o.tono[1]:T.aMin);gl.uniform1f(u.aMax,T.aMax);gl.uniform1f(u.ga,o.gA);
     gl.bindVertexArray(V[k]);gl.bindBuffer(gl.ARRAY_BUFFER,bufs[k]);gl.bufferData(gl.ARRAY_BUFFER,data.subarray(0,n*6),gl.STREAM_DRAW);gl.drawArraysInstanced(gl.TRIANGLE_STRIP,0,4,n)}
   var api={ok:false,TEMAS:TEMAS,
     clear:function(){if(!api.ok)return;target(null);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT)},
@@ -80,7 +81,7 @@
       // la densidad se suaviza una vez: el verde es una bruma continua, sin manchas
       gl.disable(gl.BLEND);gl.useProgram(P.bl.p);gl.uniform1i(P.bl.u.s,0);
       // tres pasadas de difuminado con radio proporcional al tamaño de cada punto: un velo continuo, sin algodón
-      var bs=Math.max(1.2,o.vol.r*o.dpr*.5/3.2*(T.volBlur||1));for(var it=0;it<3;it++){
+      var bs=Math.max(1.4,o.vol.r*o.dpr*.5/3.2);for(var it=0;it<3;it++){
         target(F.v2);gl.bindTexture(gl.TEXTURE_2D,F.d.t);gl.uniform2f(P.bl.u.st,bs/F.d.w,0);full();
         target(F.d);gl.bindTexture(gl.TEXTURE_2D,F.v2.t);gl.uniform2f(P.bl.u.st,0,bs/F.d.h);full()}
       gl.enable(gl.BLEND);
@@ -91,10 +92,10 @@
       target(F.b1);gl.bindTexture(gl.TEXTURE_2D,F.b2.t);gl.uniform2f(P.bl.u.st,0,1/F.b1.h);full();
       // composición en pantalla
       target(null);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
-      if(cV){gl.useProgram(P.vol.p);gl.bindTexture(gl.TEXTURE_2D,F.d.t);gl.uniform1i(P.vol.u.d,0);gl.uniform3fv(P.vol.u.ce,T.volEdge);gl.uniform3fv(P.vol.u.cc,T.volCore);gl.uniform1f(P.vol.u.A,T.volA*(o.pulso?.93+.07*Math.sin(o.t*1.142):1));gl.uniform1f(P.vol.u.ga,o.gA);gl.uniform1f(P.vol.u.t,o.t);gl.uniform2fv(P.vol.u.E,T.volE||[.1,1]);full();}
       if(cF)segs('back',o.back.d,o.back.n,o,T,1,0);
+      if(cV){gl.useProgram(P.vol.p);gl.bindTexture(gl.TEXTURE_2D,F.d.t);gl.uniform1i(P.vol.u.d,0);gl.uniform3fv(P.vol.u.ce,T.volEdge);gl.uniform3fv(P.vol.u.cc,T.volCore);gl.uniform1f(P.vol.u.A,T.volA*(o.pulso?.93+.07*Math.sin(o.t*1.142):1));gl.uniform1f(P.vol.u.ga,o.gA);gl.uniform1f(P.vol.u.t,o.t);full();}
       if(cF)segs('front',o.front.d,o.front.n,o,T,1,0);
-      if(cX){gl.blendFunc(gl.ONE,gl.ONE);gl.useProgram(P.gw.p);gl.bindTexture(gl.TEXTURE_2D,F.b1.t);gl.uniform1i(P.gw.u.s,0);gl.uniform3fv(P.gw.u.tint,T.bloom);gl.uniform1f(P.gw.u.k,T.bloomK*o.gA);full();}
+      if(cX){gl.blendFunc(gl.ONE,gl.ONE);gl.useProgram(P.gw.p);gl.bindTexture(gl.TEXTURE_2D,F.b1.t);gl.uniform1i(P.gw.u.s,0);gl.uniform3fv(P.gw.u.tint,T.bloom);gl.uniform1f(P.gw.u.k,(o.tono?o.tono[2]:T.bloomK)*o.gA);full();}
       if(cX&&o.nod.n){gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(P.nod.p);gl.uniform2f(P.nod.u.res,o.W,o.H);gl.uniform1f(P.nod.u.dpr,o.dpr);gl.uniform3fv(P.nod.u.col,T.fib[3]);
         gl.bindVertexArray(V.nod);gl.bindBuffer(gl.ARRAY_BUFFER,bufs.nod);gl.bufferData(gl.ARRAY_BUFFER,o.nod.d.subarray(0,o.nod.n*4),gl.STREAM_DRAW);gl.drawArrays(gl.POINTS,0,o.nod.n)}
       // partículas de vida: viajan dentro de las fibras (mismo dibujo que los nodos, más pequeñas)

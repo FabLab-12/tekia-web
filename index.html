@@ -665,6 +665,8 @@ html.ci-open .cuerpo-in p.ci-hintg,html.ci-deep .cuerpo-in p.ci-hintg{opacity:0}
 .ci-legend .k-fib{width:18px;height:6px;border-radius:50%;background:radial-gradient(ellipse at center,#2F2A27 0 28%,rgba(191,170,140,.8) 32%)}
 .ci-back{position:fixed;top:max(76px,calc(env(safe-area-inset-top,0px) + 76px));left:max(16px,env(safe-area-inset-left,0px));z-index:3;min-height:44px;padding:0 1rem;border-radius:99px;border:1px solid var(--ci-line);background:rgba(251,248,239,.9);color:var(--ci-ink);font:600 .62rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
 .ci-back:hover{border-color:var(--ci-gold)}
+.ci-zones{transition:opacity 1.2s}
+html.dentro .ci-zones,html.dentro .ci-hintg,html.dentro .ci-go{opacity:0;pointer-events:none;transition:opacity 1.2s}
 #ci-back.inicio{top:50%!important;left:50%;transform:translate(-50%,-50%);min-height:52px;padding:0 1.7rem;font-size:.7rem;letter-spacing:.24em;animation:ciIni 1.6s ease 1.4s both,hmglow 3.6s ease-in-out 3s infinite}
 @keyframes ciIni{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){#ci-back.inicio{animation:none}}
@@ -1520,7 +1522,7 @@ html.claro .vista-nos{background:#F6F4EA}
   var ISK=[];
   (function(){var r=rnd(733),n=LOW?1500:2800;for(var i=0;i<n;i++){var q=Math.floor(r()*NSURF),x=SP[q*3],y=SP[q*3+1],dx=Math.abs(x-100),lim=(dx>30||y>225)?4:(y<60?7:9),d=1.2+r()*lim;
       SP.push(x-SN[q*3]*d,y-SN[q*3+1]*d,SP[q*3+2]-SN[q*3+2]*d);SN.push(0,0,0);ISK.push(q)}})();
-  var CAPA=(/[?&]capa=([A-F])\b/.exec(location.search)||[])[1]||'F';
+  var CAPA=(/[?&]capa=([A-F])\b/.exec(location.search)||[])[1]||'F',TONO=(function(m){return m?m[1].split(',').map(Number):null})(/[?&]tono=([\d.,]+)/.exec(location.search)),VERDE=(function(m){return m?m[1].split(',').map(Number):null})(/[?&]verde=([\d.,]+)/.exec(location.search));
   var NSK=SP.length/3,SPh=new Float32Array(NSK),SB=new Float32Array(NSK),SR=new Float32Array(NSK),SG=new Float32Array(NSK),MX=new Float32Array(NSK),MY=new Float32Array(NSK),MZ=new Float32Array(NSK),MV=new Uint8Array(NSK);
   // ===== Luz por intención: zonas del modelo (TEKIA_CUERPO, la misma fuente del mapa 2D) → emisión de fibras, nodos, volumen y partículas existentes =====
   var CU=window.TEKIA_CUERPO||null,ACT=new Float32Array(NSK),ACTF=[],REGW={},AI={id:null,cur:{},tgt:{},preset:'breathing',per:5,verde:0,amt:0,lt:0,dirty:true,fdirty:true};
@@ -1674,7 +1676,7 @@ html.claro .vista-nos{background:#F6F4EA}
       var zx=o.x-(fr2.left-sr.left)-22;z.el.classList.toggle('tight',o.x-22+z.el.offsetWidth+(z.el.classList.contains('tight')?22:0)>sr.width-4);z.el.style.transform='translate('+zx.toFixed(1)+'px,'+(o.y-(fr2.top-sr.top)).toFixed(1)+'px) translateY(-50%)'});
     // capas de interfaz según escala
     root.classList.toggle('ci-deep',m>1.2);leg.style.opacity=smooth(.55,.85,fd.tis).toFixed(2);leg.setAttribute('aria-hidden',fd.tis>.7?'false':'true');
-    back.hidden=!(m>1.3||cy<.94||cp<.94);if(back.hidden)back.classList.remove('inicio');
+    back.hidden=!(m>1.3||cy<.94||cp<.94);if(back.hidden&&back.classList.contains('inicio')){back.classList.remove('inicio');ringEl.classList.remove('hide');document.documentElement.classList.remove('dentro')}
     var lvl=fd.tis>.7?'t':(m>2.5?'n':'g');if(lvl!==lastLvl){lastLvl=lvl;live.textContent=lvl==='t'?'Tejido conectivo laxo, dermis papilar. Esquema con colágeno, fibras elásticas y fibroblastos.':lvl==='n'?'Vista cercana de las hebras.':'Cuerpo entero.'}
     dg.setAttribute('aria-valuenow',String(Math.round(((yaw*180/Math.PI)%360+360)%360)));
     dirty=false}
@@ -1802,7 +1804,7 @@ html.claro .vista-nos{background:#F6F4EA}
         var uf=(j+um)/(n-1),nr=GTN[a]+(GTN[b]-GTN[a])*um,lb=GTL[a]+(GTL[b]-GTL[a])*um,
           wave=.84+.16*Math.sin(uf*8+ph+t*.22),bv=deep?Math.min(.5,(.08+lb*.3+nr*.22)*wave):Math.min(1,(.14+lb*.55+nr*.38)*wave),
           tip=Math.min(1,Math.min(uf,1-uf)*7),wd=w0*(.35+.65*Math.sin(Math.PI*Math.min(1,Math.max(0,uf))))*tip*(deep?.8:(.75+.4*nr)),T=TF,o6=T.n*6,D=T.d;
-        if(CAPA==='B'){bv=deep?.25:.55}else if(!deep){bv=Math.min(1,Math.pow(bv,1.2)*1.5);if(CAPA>='E'){var rv=GTR[a]+(GTR[b]-GTR[a])*um;if(rv>.01){bv=Math.min(1,bv+rv*.8);wd*=1-.3*Math.min(1,rv)}}}
+        if(CAPA==='B'){bv=deep?.25:.55}else if(!deep){bv=Math.min(1,Math.pow(bv,1.2)*(TONO?TONO[0]:1.5));if(CAPA>='E'){var rv=GTR[a]+(GTR[b]-GTR[a])*um;if(rv>.01){bv=Math.min(1,bv+rv*.8);wd*=1-.3*Math.min(1,rv)}}}
         if(AI.amt>.002){var av=GTA[a]+(GTA[b]-GTA[a])*um;bv*=1-.3*AI.amt*(1-av);if(av>.01){var mm=actMod(ph,uf,t)*av*(AI.gan||1);bv=deep?Math.min(.8,bv+mm*.5):Math.min(1,bv*(1+mm*.9)+mm*.32);wd*=1+mm*.35}}
         D[o6]=px;D[o6+1]=py;D[o6+2]=cx;D[o6+3]=cy;D[o6+4]=bv;D[o6+5]=wd;T.n++;px=cx;py=cy}}}
   function drawGL(t,gA,wz){var G=glGeo(),CL=root.classList.contains('claro'),i,zmn=1e9,zmx=-1e9;actPaso(t);
@@ -1839,7 +1841,7 @@ html.claro .vista-nos{background:#F6F4EA}
         var nr2=1-(MZ[qa]-zmn)*zr,env=Math.sin(Math.PI*uu),br=env*(.25+.75*nr2)*(.55+.45*SB[qa])*(1+ACT[qa]*1.1)*[1,.42,.18][tr];if(br<.05)break;
         pd[np*4]=MX[qa]+(MX[qb]-MX[qa])*fr;pd[np*4+1]=MY[qa]+(MY[qb]-MY[qa])*fr;pd[np*4+2]=Math.min(1,br*1.2);pd[np*4+3]=(2.4+3*nr2)*P2.q*[1,.8,.6][tr]*Math.min(1.4,wz);np++}}
     prj(PIV[0],PIV[1],PIV[2],o);var pS=o.s*k;prj(100,105,0,o);
-    GLX.draw({W:W,H:H,dpr:dpr,tema:CL?'claro':'oscuro',gA:gA,t:t,back:G.back,front:G.front,vol:V,nod:{d:NF,n:nn},par:{d:pd,n:np},pulso:null,capa:CAPA});glDrawn=true}
+    GLX.draw({W:W,H:H,dpr:dpr,tema:CL?'claro':'oscuro',gA:gA,t:t,back:G.back,front:G.front,vol:V,nod:{d:NF,n:nn},par:{d:pd,n:np},pulso:null,capa:CAPA,verde:VERDE,tono:TONO});glDrawn=true}
   function drawSkin(now){drawBg(now);var m=Z.m,a=1-smooth(4,18,m);if(a<.01||grow<.02)return;var t=now/1000,dt=lastT?Math.min(.05,t-lastT):0;lastT=t;
     var gA=Math.min(1,grow*1.6)*a,amp=reduce?0:.12,Lx=.62,Ly=-.72,Lz=-.32,wz=Math.min(3,Math.sqrt(m)),tch=TOUCH&&(now-TOUCH.t)<1600?1-(now-TOUCH.t)/1600:0;
     for(var i=0;i<NSK;i++){var i3=i*3,nx=SN[i3],ny=SN[i3+1],nz=SN[i3+2],w=amp*Math.sin(t*.9+SPh[i]),sk3=(i<NSURF?i:ISK[i-NSURF])*3;prj(SP[i3]+nx*w+DXS[sk3],SP[i3+1]+ny*w+DXS[sk3+1],SP[i3+2]+nz*w+DXS[sk3+2],o);
@@ -2204,8 +2206,8 @@ html.claro .vista-nos{background:#F6F4EA}
     if(K==='Enter'||K===' '){e.preventDefault();if(HINT&&!LIT){var q2=HINT.a+2;light(q2,q2)}}});
   // inicio cinematográfico: tras «Entrar» la cámara empieza dentro de las fibras del pecho; «Centrar», al centro de la pantalla, aleja con calma hasta ver el personaje
   var lentoH=0;window.TEKIA_inicioCerca=function(){if(reduce)return true;var n=0,sx=0,y0=1e9,y1=-1e9;for(var i=0;i<NP;i++){if(SX[i]!==SX[i])continue;n++;sx+=SX[i];if(SY[i]<y0)y0=SY[i];if(SY[i]>y1)y1=SY[i]}
-    if(n<50)return false;setFocus(sx/n,y0+.07*(y1-y0));if(!Z.P)return false;Z.m=Z.mt=Z.max;dirty=true;back.classList.add('inicio');back.hidden=false;return true};
-  back.addEventListener('click',function(){var ini=back.classList.contains('inicio');back.classList.remove('inicio');calmaH=performance.now()+(ini?5000:5000);if(ini)lentoH=calmaH;zoomTo(1);yawV=0;pitchV=0;yawT=Math.round(yaw/(2*Math.PI))*2*Math.PI;pitchT=0;dirty=true;dg.focus({preventScroll:true})});
+    if(n<50)return false;setFocus(sx/n,y0+.46*(y1-y0));if(!Z.P)return false;Z.max=12;Z.m=Z.mt=12;dirty=true;back.classList.add('inicio');ringEl.classList.add('hide');document.documentElement.classList.add('dentro');back.hidden=false;return true};
+  back.addEventListener('click',function(){var ini=back.classList.contains('inicio');back.classList.remove('inicio');if(ini){ringEl.classList.remove('hide');document.documentElement.classList.remove('dentro');Z.max=Z.tissue?72:10}calmaH=performance.now()+(ini?5000:5000);if(ini)lentoH=calmaH;zoomTo(1);yawV=0;pitchV=0;yawT=Math.round(yaw/(2*Math.PI))*2*Math.PI;pitchT=0;dirty=true;dg.focus({preventScroll:true})});
   var coarse=matchMedia('(pointer:coarse)').matches;hintEl.textContent=coarse?'Acerca dos dedos para explorar':'Usa la rueda o doble clic para explorar';
   // ---- diagramas de los hongos (trazo fino, paleta TEKIA) ----
   function illo(kind){var r=rnd(kind.length*733+11),s='<svg viewBox="0 0 300 200" role="img" aria-label="Ilustración: '+(kind==='care'?'lupa sobre una red de micelio':D[{melena:'hericium',reishi:'reishi',cordyceps:'cordyceps'}[kind]].name)+'">';
